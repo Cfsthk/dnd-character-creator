@@ -46,7 +46,7 @@ Each class includes:
 
 ```bash
 # Clone the repository
-git clone https://github.com/Cfsthk/dnd-character-creator.git
+git clone https://github.com/YOUR_USERNAME/dnd-character-creator.git
 
 # Navigate to project directory
 cd dnd-character-creator
