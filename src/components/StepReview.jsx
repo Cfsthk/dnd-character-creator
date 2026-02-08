@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { generateAIPrompt, exportPromptForPlatform, getEquipmentOptions, getPoseOptions, getBackgroundOptions } from '../utils/promptGenerator'
+import CharacterSheet from './CharacterSheet'
 
 const StepReview = ({ character, previousStep }) => {
+  const [showCharacterSheet, setShowCharacterSheet] = useState(true)
   const [showPromptGenerator, setShowPromptGenerator] = useState(false)
   const [promptOptions, setPromptOptions] = useState({
     style: 'fantasy-art',
@@ -37,11 +39,45 @@ const StepReview = ({ character, previousStep }) => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">角色完成！</h2>
-        <p className="text-gray-600">檢視您的角色並下載資料</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Character Complete!</h2>
+        <p className="text-gray-600">Review your character sheet and generate images</p>
       </div>
 
-      <div className="card max-w-2xl mx-auto space-y-4">
+      {/* View Toggle */}
+      <div className="flex justify-center gap-4 mb-6">
+        <button
+          onClick={() => setShowCharacterSheet(true)}
+          className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+            showCharacterSheet
+              ? 'bg-dnd-blue text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          📄 Character Sheet
+        </button>
+        <button
+          onClick={() => setShowCharacterSheet(false)}
+          className={`px-6 py-2 rounded-lg font-semibold transition-all ${
+            !showCharacterSheet
+              ? 'bg-dnd-blue text-white'
+              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          }`}
+        >
+          🎨 AI Image Generator
+        </button>
+      </div>
+
+      {/* Character Sheet View */}
+      {showCharacterSheet && (
+        <div>
+          <CharacterSheet character={character} />
+        </div>
+      )}
+
+      {/* AI Image Generator View */}
+      {!showCharacterSheet && (
+        <>
+          <div className="card max-w-2xl mx-auto space-y-4">
         <div className="border-b pb-4">
           <h3 className="text-2xl font-bold text-dnd-blue">{character.name || '未命名角色'}</h3>
           <p className="text-gray-600 mt-1">
@@ -217,11 +253,12 @@ const StepReview = ({ character, previousStep }) => {
             </div>
           )}
         </div>
+        </>
       )}
 
-      <div className="flex justify-between max-w-2xl mx-auto">
-        <button onClick={previousStep} className="btn-secondary">上一步</button>
-        <button onClick={downloadJSON} className="btn-primary">下載角色資料</button>
+      <div className="flex justify-between max-w-2xl mx-auto mt-8">
+        <button onClick={previousStep} className="btn-secondary">Previous</button>
+        <button onClick={downloadJSON} className="btn-primary">Download Character Data</button>
       </div>
     </div>
   )
