@@ -42,11 +42,15 @@ Each class includes:
 - Visual appearance data for AI generation
 - Recommended playstyles
 
+## Live Demo
+
+🎮 **[Try it now on GitHub Pages](https://cfsthk.github.io/dnd-character-creator/)**
+
 ## Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/dnd-character-creator.git
+git clone https://github.com/Cfsthk/dnd-character-creator.git
 
 # Navigate to project directory
 cd dnd-character-creator
