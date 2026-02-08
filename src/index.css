@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-parchment-100 via-parchment-200 to-parchment-300 min-h-screen;
+    font-family: 'Georgia', 'Cambria', 'Times New Roman', serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-dnd-blue hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-lg border-2 border-dnd-gold p-6;
+  }
+  
+  .card-hover {
+    @apply card hover:shadow-xl hover:border-dnd-blue transition-all duration-300 cursor-pointer;
+  }
+  
+  .progress-dot {
+    @apply w-3 h-3 rounded-full transition-colors duration-300;
+  }
+  
+  .progress-dot-active {
+    @apply progress-dot bg-dnd-blue;
+  }
+  
+  .progress-dot-inactive {
+    @apply progress-dot bg-gray-300;
+  }
+}
