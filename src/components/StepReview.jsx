@@ -256,7 +256,6 @@ const StepReview = ({ character, previousStep }) => {
       )}
         </div>
       )}
-      </div>
 
       <div className="flex justify-between max-w-2xl mx-auto mt-8">
         <button onClick={previousStep} className="btn-secondary">Previous</button>
