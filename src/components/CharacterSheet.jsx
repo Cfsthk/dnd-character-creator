@@ -64,25 +64,25 @@ const CharacterSheet = ({ character }) => {
     charisma: '魅力'
   }
 
-  const skills = [\
-    { name: 'Acrobatics', nameChinese: '特技', ability: 'dexterity' },\
-    { name: 'Animal Handling', nameChinese: '馴養動物', ability: 'wisdom' },\
-    { name: 'Arcana', nameChinese: '奧秘', ability: 'intelligence' },\
-    { name: 'Athletics', nameChinese: '運動', ability: 'strength' },\
-    { name: 'Deception', nameChinese: '欺瞞', ability: 'charisma' },\
-    { name: 'History', nameChinese: '歷史', ability: 'intelligence' },\
-    { name: 'Insight', nameChinese: '洞察', ability: 'wisdom' },\
-    { name: 'Intimidation', nameChinese: '威嚇', ability: 'charisma' },\
-    { name: 'Investigation', nameChinese: '調查', ability: 'intelligence' },\
-    { name: 'Medicine', nameChinese: '醫藥', ability: 'wisdom' },\
-    { name: 'Nature', nameChinese: '自然', ability: 'intelligence' },\
-    { name: 'Perception', nameChinese: '察覺', ability: 'wisdom' },\
-    { name: 'Performance', nameChinese: '表演', ability: 'charisma' },\
-    { name: 'Persuasion', nameChinese: '說服', ability: 'charisma' },\
-    { name: 'Religion', nameChinese: '宗教', ability: 'intelligence' },\
-    { name: 'Sleight of Hand', nameChinese: '巧手', ability: 'dexterity' },\
-    { name: 'Stealth', nameChinese: '隱匿', ability: 'dexterity' },\
-    { name: 'Survival', nameChinese: '生存', ability: 'wisdom' }\
+  const skills = [
+    { name: 'Acrobatics', nameChinese: '特技', ability: 'dexterity' },
+    { name: 'Animal Handling', nameChinese: '馴養動物', ability: 'wisdom' },
+    { name: 'Arcana', nameChinese: '奧秘', ability: 'intelligence' },
+    { name: 'Athletics', nameChinese: '運動', ability: 'strength' },
+    { name: 'Deception', nameChinese: '欺瞞', ability: 'charisma' },
+    { name: 'History', nameChinese: '歷史', ability: 'intelligence' },
+    { name: 'Insight', nameChinese: '洞察', ability: 'wisdom' },
+    { name: 'Intimidation', nameChinese: '威嚇', ability: 'charisma' },
+    { name: 'Investigation', nameChinese: '調查', ability: 'intelligence' },
+    { name: 'Medicine', nameChinese: '醫藥', ability: 'wisdom' },
+    { name: 'Nature', nameChinese: '自然', ability: 'intelligence' },
+    { name: 'Perception', nameChinese: '察覺', ability: 'wisdom' },
+    { name: 'Performance', nameChinese: '表演', ability: 'charisma' },
+    { name: 'Persuasion', nameChinese: '說服', ability: 'charisma' },
+    { name: 'Religion', nameChinese: '宗教', ability: 'intelligence' },
+    { name: 'Sleight of Hand', nameChinese: '巧手', ability: 'dexterity' },
+    { name: 'Stealth', nameChinese: '隱匿', ability: 'dexterity' },
+    { name: 'Survival', nameChinese: '生存', ability: 'wisdom' }
   ]
 
   return (
