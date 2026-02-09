@@ -1,228 +1,321 @@
-import { useState } from 'react'
-import { equipmentByClass } from '../data/equipmentData'
+import React, { useState } from 'react';
+import equipmentData from '../data/equipmentData';
 
-function StepEquipment({ character, updateCharacter, nextStep, previousStep }) {
-  const [selectedEquipment, setSelectedEquipment] = useState(character.equipment || [])
-  const [showTooltip, setShowTooltip] = useState(null)
+function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
+  const [selectedEquipment, setSelectedEquipment] = useState(character.equipment || []);
+  const [hoveredItem, setHoveredItem] = useState(null);
 
-  // Get equipment options for the selected class
-  const classKey = character.characterClass?.toLowerCase().replace(/\s+/g, '')
-  const equipmentOptions = equipmentByClass[classKey] || null
-
-  const handleToggleEquipment = (item, category) => {
-    const itemKey = `${category}-${item.name}`
-    const isSelected = selectedEquipment.some(e => e.key === itemKey)
-    
-    if (isSelected) {
-      setSelectedEquipment(selectedEquipment.filter(e => e.key !== itemKey))
-    } else {
-      setSelectedEquipment([...selectedEquipment, {
-        key: itemKey,
-        name: item.name,
-        nameChinese: item.nameChinese,
-        category,
-        description: item.description
-      }])
+  // Filter equipment by character class
+  const getClassEquipment = () => {
+    const classKey = character.characterClass?.toLowerCase();
+    if (!classKey || !equipmentData[classKey]) {
+      return {
+        weapons: [],
+        armor: [],
+        tools: [],
+        gear: []
+      };
     }
-  }
+    return equipmentData[classKey];
+  };
+
+  const classEquipment = getClassEquipment();
+
+  const toggleEquipment = (item) => {
+    const itemName = item.name;
+    if (selectedEquipment.includes(itemName)) {
+      setSelectedEquipment(selectedEquipment.filter(eq => eq !== itemName));
+    } else {
+      setSelectedEquipment([...selectedEquipment, itemName]);
+    }
+  };
 
   const handleNext = () => {
-    updateCharacter({ equipment: selectedEquipment })
-    nextStep()
-  }
+    updateCharacter({ equipment: selectedEquipment });
+    nextStep();
+  };
 
-  const Tooltip = ({ text }) => (
-    <div className="absolute z-10 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg -top-2 left-8 transform -translate-y-full">
-      <div className="relative">
-        {text}
-        <div className="absolute w-3 h-3 bg-gray-900 transform rotate-45 -bottom-4 left-4"></div>
-      </div>
-    </div>
-  )
-
-  const EquipmentCheckbox = ({ item, category, categoryLabel }) => {
-    const itemKey = `${category}-${item.name}`
-    const isSelected = selectedEquipment.some(e => e.key === itemKey)
+  const renderEquipmentItem = (item) => {
+    const isSelected = selectedEquipment.includes(item.name);
     
     return (
-      <div className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-        <input
-          type="checkbox"
-          id={itemKey}
-          checked={isSelected}
-          onChange={() => handleToggleEquipment(item, categoryLabel)}
-          className="mt-1 w-5 h-5 text-dnd-red border-gray-300 rounded focus:ring-dnd-red"
-        />
-        <label htmlFor={itemKey} className="flex-1 cursor-pointer">
-          <div className="flex items-center space-x-2">
-            <span className="font-medium text-gray-900">{item.nameChinese}</span>
-            <span className="text-sm text-gray-500">({item.name})</span>
-            <div className="relative">
-              <button
-                type="button"
-                onMouseEnter={() => setShowTooltip(itemKey)}
-                onMouseLeave={() => setShowTooltip(null)}
-                className="text-gray-400 hover:text-dnd-red transition-colors w-5 h-5 flex items-center justify-center rounded-full border border-gray-300 text-xs font-bold"
-              >
-                ❓
-              </button>
-              {showTooltip === itemKey && <Tooltip text={item.description} />}
-            </div>
-          </div>
-        </label>
-      </div>
-    )
-  }
-
-  if (!character.characterClass) {
-    return (
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-dnd-red mb-4">選擇裝備</h2>
-          <p className="text-gray-600 mb-6">請先選擇職業才能查看裝備選項</p>
-          <button
-            onClick={previousStep}
-            className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+      <div key={item.name} className="equipment-item">
+        <label className="equipment-label">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => toggleEquipment(item)}
+          />
+          <span className="equipment-name">{item.name}</span>
+          <span 
+            className="tooltip-icon"
+            onMouseEnter={() => setHoveredItem(item.name)}
+            onMouseLeave={() => setHoveredItem(null)}
           >
-            返回選擇職業
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  if (!equipmentOptions) {
-    return (
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-dnd-red mb-4">選擇裝備</h2>
-          <p className="text-gray-600 mb-6">此職業暫無裝備數據</p>
-          <div className="flex justify-between mt-8">
-            <button
-              onClick={previousStep}
-              className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              上一步
-            </button>
-            <button
-              onClick={handleNext}
-              className="px-6 py-3 bg-dnd-red text-white rounded-lg hover:bg-red-700 transition-colors"
-            >
-              下一步
-            </button>
+            ❓
+          </span>
+        </label>
+        {hoveredItem === item.name && (
+          <div className="tooltip-content">
+            {item.description && <p><strong>說明：</strong>{item.description}</p>}
+            {item.damage && <p><strong>傷害：</strong>{item.damage}</p>}
+            {item.properties && <p><strong>屬性：</strong>{item.properties}</p>}
+            {item.armorClass && <p><strong>護甲等級：</strong>{item.armorClass}</p>}
+            {item.useCase && <p><strong>用途：</strong>{item.useCase}</p>}
           </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderCategory = (categoryName, items) => {
+    if (!items || items.length === 0) return null;
+    
+    return (
+      <div className="equipment-category">
+        <h3>{categoryName}</h3>
+        <div className="equipment-list">
+          {items.map(item => renderEquipmentItem(item))}
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-dnd-red mb-2">選擇裝備</h2>
-        <p className="text-gray-600">
-          為你的 <span className="font-semibold text-dnd-red">{equipmentOptions.nameChinese}</span> 選擇起始裝備
-        </p>
-        <p className="text-sm text-gray-500 mt-2">
-          點擊 ❓ 圖標查看裝備說明
-        </p>
+    <div className="step-equipment">
+      <h2>選擇裝備</h2>
+      <p className="instruction">為你的 {character.characterClass} 選擇起始裝備</p>
+      
+      <div className="equipment-categories">
+        {renderCategory('武器 (Weapons)', classEquipment.weapons)}
+        {renderCategory('護甲 (Armor)', classEquipment.armor)}
+        {renderCategory('工具 (Tools)', classEquipment.tools)}
+        {renderCategory('裝備 (Gear)', classEquipment.gear)}
       </div>
 
-      <div className="space-y-8 mb-8">
-        {/* Weapons */}
-        {equipmentOptions.weapons && equipmentOptions.weapons.length > 0 && (
-          <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-dnd-red">
-              武器 (Weapons)
-            </h3>
-            <div className="space-y-2">
-              {equipmentOptions.weapons.map((weapon, idx) => (
-                <EquipmentCheckbox
-                  key={`weapon-${idx}`}
-                  item={weapon}
-                  category="weapons"
-                  categoryLabel="武器"
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Armor */}
-        {equipmentOptions.armor && equipmentOptions.armor.length > 0 && (
-          <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-dnd-red">
-              護甲 (Armor)
-            </h3>
-            <div className="space-y-2">
-              {equipmentOptions.armor.map((armor, idx) => (
-                <EquipmentCheckbox
-                  key={`armor-${idx}`}
-                  item={armor}
-                  category="armor"
-                  categoryLabel="護甲"
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Equipment/Tools */}
-        {equipmentOptions.equipment && equipmentOptions.equipment.length > 0 && (
-          <div>
-            <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-dnd-red">
-              裝備 (Equipment)
-            </h3>
-            <div className="space-y-2">
-              {equipmentOptions.equipment.map((equip, idx) => (
-                <EquipmentCheckbox
-                  key={`equipment-${idx}`}
-                  item={equip}
-                  category="equipment"
-                  categoryLabel="裝備"
-                />
-              ))}
-            </div>
-          </div>
+      <div className="selected-summary">
+        <h3>已選擇的裝備：</h3>
+        {selectedEquipment.length > 0 ? (
+          <ul>
+            {selectedEquipment.map(eq => <li key={eq}>{eq}</li>)}
+          </ul>
+        ) : (
+          <p>尚未選擇任何裝備</p>
         )}
       </div>
 
-      {/* Selected Equipment Summary */}
-      {selectedEquipment.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
-          <h4 className="font-semibold text-gray-800 mb-2">
-            已選擇 ({selectedEquipment.length})
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {selectedEquipment.map((item) => (
-              <span
-                key={item.key}
-                className="px-3 py-1 bg-white border border-gray-300 rounded-full text-sm"
-              >
-                {item.nameChinese}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Navigation Buttons */}
-      <div className="flex justify-between pt-6 border-t border-gray-200">
-        <button
-          onClick={previousStep}
-          className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold"
-        >
-          上一步
-        </button>
-        <button
-          onClick={handleNext}
-          className="px-6 py-3 bg-dnd-red text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
-        >
-          下一步
-        </button>
+      <div className="button-group">
+        <button onClick={prevStep} className="btn-secondary">返回</button>
+        <button onClick={handleNext} className="btn-primary">下一步</button>
       </div>
+
+      <style jsx>{`
+        .step-equipment {
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+
+        h2 {
+          color: #8b4513;
+          font-size: 2em;
+          margin-bottom: 10px;
+        }
+
+        .instruction {
+          color: #666;
+          margin-bottom: 30px;
+          font-size: 1.1em;
+        }
+
+        .equipment-categories {
+          margin-bottom: 30px;
+        }
+
+        .equipment-category {
+          margin-bottom: 30px;
+          padding: 20px;
+          background: #f9f9f9;
+          border-radius: 8px;
+          border: 2px solid #ddd;
+        }
+
+        .equipment-category h3 {
+          color: #8b4513;
+          margin-bottom: 15px;
+          font-size: 1.3em;
+          border-bottom: 2px solid #8b4513;
+          padding-bottom: 8px;
+        }
+
+        .equipment-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .equipment-item {
+          position: relative;
+          padding: 10px;
+          background: white;
+          border-radius: 6px;
+          border: 1px solid #ddd;
+          transition: all 0.2s;
+        }
+
+        .equipment-item:hover {
+          border-color: #8b4513;
+          box-shadow: 0 2px 8px rgba(139, 69, 19, 0.1);
+        }
+
+        .equipment-label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          font-size: 1.05em;
+        }
+
+        .equipment-label input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          cursor: pointer;
+        }
+
+        .equipment-name {
+          flex: 1;
+          font-weight: 500;
+        }
+
+        .tooltip-icon {
+          font-size: 1.2em;
+          cursor: help;
+          padding: 0 5px;
+          transition: transform 0.2s;
+        }
+
+        .tooltip-icon:hover {
+          transform: scale(1.2);
+        }
+
+        .tooltip-content {
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: 8px;
+          padding: 15px;
+          background: #2c2c2c;
+          color: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+          z-index: 1000;
+          min-width: 300px;
+          max-width: 400px;
+          font-size: 0.95em;
+          line-height: 1.5;
+        }
+
+        .tooltip-content p {
+          margin: 8px 0;
+        }
+
+        .tooltip-content strong {
+          color: #ffd700;
+          margin-right: 5px;
+        }
+
+        .selected-summary {
+          margin: 30px 0;
+          padding: 20px;
+          background: #e8f5e9;
+          border-radius: 8px;
+          border: 2px solid #4caf50;
+        }
+
+        .selected-summary h3 {
+          color: #2e7d32;
+          margin-bottom: 10px;
+        }
+
+        .selected-summary ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .selected-summary li {
+          padding: 5px 10px;
+          margin: 5px 0;
+          background: white;
+          border-radius: 4px;
+          border-left: 3px solid #4caf50;
+        }
+
+        .button-group {
+          display: flex;
+          justify-content: space-between;
+          gap: 15px;
+          margin-top: 30px;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+          padding: 12px 30px;
+          font-size: 1.1em;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: all 0.3s;
+          font-weight: 600;
+        }
+
+        .btn-primary {
+          background: #8b4513;
+          color: white;
+        }
+
+        .btn-primary:hover {
+          background: #a0522d;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+        }
+
+        .btn-secondary {
+          background: #666;
+          color: white;
+        }
+
+        .btn-secondary:hover {
+          background: #777;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+          .step-equipment {
+            padding: 15px;
+          }
+
+          .tooltip-content {
+            left: 10px;
+            right: 10px;
+            transform: none;
+            min-width: auto;
+          }
+
+          .button-group {
+            flex-direction: column;
+          }
+
+          .btn-primary,
+          .btn-secondary {
+            width: 100%;
+          }
+        }
+      `}</style>
     </div>
-  )
+  );
 }
 
-export default StepEquipment
+export default StepEquipment;
