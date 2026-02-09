@@ -4,39 +4,39 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
   const abilities = [
     { 
       key: 'strength', 
-      name: '力量 (STR)', 
-      description: '物理力量，近戰攻擊',
-      explanation: '影響近戰武器傷害、運動能力檢定、力量檢定。戰士、野蠻人、聖武士的主要屬性。'
+      name: 'Strength (STR)', 
+      description: 'Physical power, melee attacks',
+      explanation: 'Affects melee weapon damage, athletics checks, strength checks. Primary for Fighters, Barbarians, and Paladins.'
     },
     { 
       key: 'dexterity', 
-      name: '敏捷 (DEX)', 
-      description: '靈活度、護甲等級、遠程攻擊',
-      explanation: '影響先攻值、AC（護甲等級）、遠程武器攻擊、靈巧檢定。遊俠、盜賊、武僧的主要屬性。'
+      name: 'Dexterity (DEX)', 
+      description: 'Agility, reflexes, ranged attacks',
+      explanation: 'Affects initiative, AC (armor class), ranged weapon attacks, stealth checks. Primary for Rogues, Rangers, and Monks.'
     },
     { 
       key: 'constitution', 
-      name: '體質 (CON)', 
-      description: '生命值、耐力',
-      explanation: '影響生命值上限、專注檢定、耐力檢定。對所有職業都很重要，特別是前排角色。'
+      name: 'Constitution (CON)', 
+      description: 'Health, stamina',
+      explanation: 'Affects hit point maximum, concentration checks, endurance checks. Important for all classes, especially front-line fighters.'
     },
     { 
       key: 'intelligence', 
-      name: '智力 (INT)', 
-      description: '推理、知識',
-      explanation: '影響法術攻擊（法師）、調查檢定、知識類技能。法師的主要屬性。'
+      name: 'Intelligence (INT)', 
+      description: 'Reasoning, memory',
+      explanation: 'Affects spell attacks (Wizards), investigation checks, knowledge skills. Primary for Wizards.'
     },
     { 
       key: 'wisdom', 
-      name: '感知 (WIS)', 
-      description: '洞察力、覺察',
-      explanation: '影響法術攻擊（牧師/德魯伊）、察覺檢定、洞察檢定。牧師、德魯伊的主要屬性。'
+      name: 'Wisdom (WIS)', 
+      description: 'Awareness, intuition',
+      explanation: 'Affects spell attacks (Clerics/Druids), perception checks, insight checks. Primary for Clerics and Druids.'
     },
     { 
       key: 'charisma', 
-      name: '魅力 (CHA)', 
-      description: '個性、影響力',
-      explanation: '影響法術攻擊（術士/吟遊詩人）、說服檢定、表演檢定。術士、吟遊詩人、聖武士的主要屬性。'
+      name: 'Charisma (CHA)', 
+      description: 'Force of personality, leadership',
+      explanation: 'Affects spell attacks (Sorcerers/Bards), persuasion checks, performance checks. Primary for Sorcerers, Bards, and Paladins.'
     },
   ]
 
@@ -57,8 +57,8 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">分配屬性值</h2>
-        <p className="text-gray-600">標準陣列：15、14、13、12、10、8 | 或使用點數購買（27點）</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Assign Ability Scores</h2>
+        <p className="text-gray-600">Standard Array: 15, 14, 13, 12, 10, 8 | Or use point buy (27 points)</p>
       </div>
 
       {/* Suggestions Box */}
@@ -67,84 +67,88 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="font-bold text-gray-800 mb-2">
-                💡 {classData.name} 推薦配置
+                💡 {classData.name} Recommended Setup
               </h3>
               <p className="text-sm text-gray-700 mb-2">
-                主要屬性：<span className="font-bold capitalize">{classData.primaryAbility}</span> | 
-                次要屬性：<span className="font-bold capitalize ml-1">{classData.secondaryAbility}</span>
+                Primary: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
+                Secondary: <span className="font-bold capitalize ml-1">{classData.secondaryAbility}</span>
               </p>
-              <div className="grid grid-cols-6 gap-2 text-xs">
-                {Object.entries(suggestions).map(([key, value]) => (
-                  <div key={key} className="text-center">
-                    <div className="font-bold uppercase text-gray-600">{key.slice(0, 3)}</div>
-                    <div className="font-bold text-dnd-blue">{value}</div>
-                  </div>
-                ))}
+              <div className="flex flex-wrap gap-2 text-sm">
+                {abilities.map(ability => {
+                  const suggestedScore = suggestions[ability.key]
+                  return (
+                    <span key={ability.key} className="bg-white px-2 py-1 rounded border">
+                      {ability.name.split(' ')[0]}: {suggestedScore}
+                    </span>
+                  )
+                })}
               </div>
             </div>
             <button
               onClick={applySuggestions}
-              className="btn-secondary text-sm ml-4"
+              className="btn btn-secondary ml-4"
             >
-              使用推薦
+              Apply Suggestions
             </button>
           </div>
         </div>
       )}
 
-      {/* Ability Score Input */}
-      <div className="card max-w-2xl mx-auto space-y-4">
+      {/* Ability Score Inputs */}
+      <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
         {abilities.map((ability) => {
-          const score = character.abilities[ability.key]
+          const score = character.abilities?.[ability.key] || 10
           const modifier = getAbilityModifier(score)
-          const modifierText = modifier >= 0 ? `+${modifier}` : modifier
-
+          
           return (
-            <div key={ability.key} className="space-y-2">
-              <div className="flex items-center gap-4">
+            <div key={ability.key} className="card bg-white p-4 border-2 border-gray-200 hover:border-dnd-blue transition-colors">
+              <div className="flex items-center justify-between mb-2">
                 <div className="flex-1">
-                  <label className="font-semibold text-gray-800">
-                    {ability.name}
-                  </label>
+                  <h3 className="font-bold text-lg text-gray-800">{ability.name}</h3>
                   <p className="text-sm text-gray-600">{ability.description}</p>
                 </div>
-
-                <input
-                  type="number"
-                  min="3"
-                  max="20"
-                  value={score}
-                  onChange={(e) => updateCharacter({
-                    abilities: {
-                      ...character.abilities,
-                      [ability.key]: parseInt(e.target.value) || 0,
-                    },
-                  })}
-                  className="input w-20 text-center text-lg font-bold"
-                />
-
-                <div className="text-center w-16">
-                  <div className="text-xs text-gray-600">調整值</div>
-                  <div className="text-xl font-bold text-dnd-blue">{modifierText}</div>
+                <div className="text-center ml-4">
+                  <div className="text-3xl font-bold text-dnd-red">{score}</div>
+                  <div className="text-sm text-gray-600">
+                    Modifier: {modifier >= 0 ? '+' : ''}{modifier}
+                  </div>
                 </div>
               </div>
               
-              {/* Explanation tooltip */}
-              <div className="ml-4 pl-4 border-l-2 border-blue-200 bg-blue-50 p-2 rounded text-sm text-gray-700">
-                ℹ️ {ability.explanation}
-              </div>
+              <input
+                type="range"
+                min="3"
+                max="18"
+                value={score}
+                onChange={(e) => updateCharacter({
+                  abilities: {
+                    ...character.abilities,
+                    [ability.key]: parseInt(e.target.value)
+                  }
+                })}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              />
+              
+              <details className="mt-2">
+                <summary className="text-sm text-dnd-blue cursor-pointer hover:underline">
+                  📖 Learn More
+                </summary>
+                <p className="text-sm text-gray-600 mt-2 pl-4">
+                  {ability.explanation}
+                </p>
+              </details>
             </div>
           )
         })}
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between max-w-2xl mx-auto">
-        <button onClick={previousStep} className="btn-secondary">
-          ← 返回
+      <div className="flex justify-between max-w-4xl mx-auto pt-4">
+        <button onClick={previousStep} className="btn btn-secondary">
+          ← Previous
         </button>
-        <button onClick={nextStep} className="btn-primary">
-          繼續 →
+        <button onClick={nextStep} className="btn btn-primary">
+          Next →
         </button>
       </div>
     </div>
