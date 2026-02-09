@@ -1,64 +1,90 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { equipmentByClass } from '../data/equipmentData'
 
 function StepEquipment({ character, updateCharacter, nextStep, previousStep }) {
   const [selectedEquipment, setSelectedEquipment] = useState(character.equipment || [])
   const [showTooltip, setShowTooltip] = useState(null)
 
-  // Get equipment options based on selected class
-  const classKey = character.characterClass?.toLowerCase()
+  // Get equipment options for the selected class
+  const classKey = character.characterClass?.toLowerCase().replace(/\s+/g, '')
   const equipmentOptions = equipmentByClass[classKey] || null
 
-  useEffect(() => {
-    if (!equipmentOptions) return
+  const handleToggleEquipment = (item, category) => {
+    const itemKey = `${category}-${item.name}`
+    const isSelected = selectedEquipment.some(e => e.key === itemKey)
     
-    // Initialize with empty equipment array if not set
-    if (!character.equipment) {
-      updateCharacter({ equipment: [] })
-    }
-  }, [character.characterClass])
-
-  const handleToggleEquipment = (item) => {
-    const itemKey = `${item.nameChienese || item.nameChinese}-${item.name}`
-    const isSelected = selectedEquipment.some(eq => 
-      `${eq.nameChienese || eq.nameChinese}-${eq.name}` === itemKey
-    )
-    
-    let newEquipment
     if (isSelected) {
-      newEquipment = selectedEquipment.filter(eq => 
-        `${eq.nameChienese || eq.nameChinese}-${eq.name}` !== itemKey
-      )
+      setSelectedEquipment(selectedEquipment.filter(e => e.key !== itemKey))
     } else {
-      newEquipment = [...selectedEquipment, item]
+      setSelectedEquipment([...selectedEquipment, {
+        key: itemKey,
+        name: item.name,
+        nameChinese: item.nameChinese,
+        category,
+        description: item.description
+      }])
     }
+  }
+
+  const handleNext = () => {
+    updateCharacter({ equipment: selectedEquipment })
+    nextStep()
+  }
+
+  const Tooltip = ({ text }) => (
+    <div className="absolute z-10 w-64 p-3 bg-gray-900 text-white text-sm rounded-lg shadow-lg -top-2 left-8 transform -translate-y-full">
+      <div className="relative">
+        {text}
+        <div className="absolute w-3 h-3 bg-gray-900 transform rotate-45 -bottom-4 left-4"></div>
+      </div>
+    </div>
+  )
+
+  const EquipmentCheckbox = ({ item, category, categoryLabel }) => {
+    const itemKey = `${category}-${item.name}`
+    const isSelected = selectedEquipment.some(e => e.key === itemKey)
     
-    setSelectedEquipment(newEquipment)
-    updateCharacter({ equipment: newEquipment })
-  }
-
-  const isSelected = (item) => {
-    const itemKey = `${item.nameChienese || item.nameChinese}-${item.name}`
-    return selectedEquipment.some(eq => 
-      `${eq.nameChienese || eq.nameChinese}-${eq.name}` === itemKey
+    return (
+      <div className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+        <input
+          type="checkbox"
+          id={itemKey}
+          checked={isSelected}
+          onChange={() => handleToggleEquipment(item, categoryLabel)}
+          className="mt-1 w-5 h-5 text-dnd-red border-gray-300 rounded focus:ring-dnd-red"
+        />
+        <label htmlFor={itemKey} className="flex-1 cursor-pointer">
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-900">{item.nameChinese}</span>
+            <span className="text-sm text-gray-500">({item.name})</span>
+            <div className="relative">
+              <button
+                type="button"
+                onMouseEnter={() => setShowTooltip(itemKey)}
+                onMouseLeave={() => setShowTooltip(null)}
+                className="text-gray-400 hover:text-dnd-red transition-colors w-5 h-5 flex items-center justify-center rounded-full border border-gray-300 text-xs font-bold"
+              >
+                ❓
+              </button>
+              {showTooltip === itemKey && <Tooltip text={item.description} />}
+            </div>
+          </div>
+        </label>
+      </div>
     )
-  }
-
-  const toggleTooltip = (itemKey) => {
-    setShowTooltip(showTooltip === itemKey ? null : itemKey)
   }
 
   if (!character.characterClass) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-dnd-red mb-6">選擇裝備</h2>
-        <p className="text-gray-600 mb-6">請先選擇職業才能選擇裝備。</p>
-        <div className="flex gap-4">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-dnd-red mb-4">選擇裝備</h2>
+          <p className="text-gray-600 mb-6">請先選擇職業才能查看裝備選項</p>
           <button
             onClick={previousStep}
-            className="px-6 py-2 border-2 border-dnd-red text-dnd-red rounded-lg hover:bg-dnd-red hover:text-white transition-colors"
+            className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
           >
-            返回
+            返回選擇職業
           </button>
         </div>
       </div>
@@ -68,66 +94,23 @@ function StepEquipment({ character, updateCharacter, nextStep, previousStep }) {
   if (!equipmentOptions) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-dnd-red mb-6">選擇裝備</h2>
-        <p className="text-gray-600 mb-6">此職業暫無可用裝備選項。</p>
-        <div className="flex gap-4">
-          <button
-            onClick={previousStep}
-            className="px-6 py-2 border-2 border-dnd-red text-dnd-red rounded-lg hover:bg-dnd-red hover:text-white transition-colors"
-          >
-            返回
-          </button>
-          <button
-            onClick={nextStep}
-            className="px-6 py-2 bg-dnd-red text-white rounded-lg hover:bg-red-700 transition-colors"
-          >
-            下一步
-          </button>
-        </div>
-      </div>
-    )
-  }
-
-  const renderEquipmentCategory = (categoryName, categoryNameChinese, items) => {
-    if (!items || items.length === 0) return null
-
-    return (
-      <div key={categoryName} className="mb-6">
-        <h3 className="text-xl font-semibold text-gray-800 mb-3">
-          {categoryNameChinese} ({categoryName})
-        </h3>
-        <div className="space-y-2">
-          {items.map((item, idx) => {
-            const itemKey = `${categoryName}-${idx}`
-            return (
-              <div key={itemKey} className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                <input
-                  type="checkbox"
-                  id={itemKey}
-                  checked={isSelected(item)}
-                  onChange={() => handleToggleEquipment(item)}
-                  className="w-5 h-5 text-dnd-red border-gray-300 rounded focus:ring-dnd-red"
-                />
-                <label htmlFor={itemKey} className="flex-1 cursor-pointer text-gray-700">
-                  <span className="font-medium">{item.nameChienese || item.nameChinese}</span>
-                  <span className="text-gray-500 text-sm ml-2">({item.name})</span>
-                </label>
-                <button
-                  onClick={() => toggleTooltip(itemKey)}
-                  className="text-blue-600 hover:text-blue-800 font-bold text-lg relative"
-                  title="查看說明"
-                >
-                  ❓
-                  {showTooltip === itemKey && (
-                    <div className="absolute right-0 top-8 z-10 w-64 p-4 bg-gray-900 text-white text-sm rounded-lg shadow-xl">
-                      <div className="absolute -top-2 right-4 w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-gray-900"></div>
-                      {item.description}
-                    </div>
-                  )}
-                </button>
-              </div>
-            )
-          })}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-dnd-red mb-4">選擇裝備</h2>
+          <p className="text-gray-600 mb-6">此職業暫無裝備數據</p>
+          <div className="flex justify-between mt-8">
+            <button
+              onClick={previousStep}
+              className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+            >
+              上一步
+            </button>
+            <button
+              onClick={handleNext}
+              className="px-6 py-3 bg-dnd-red text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              下一步
+            </button>
+          </div>
         </div>
       </div>
     )
@@ -135,40 +118,105 @@ function StepEquipment({ character, updateCharacter, nextStep, previousStep }) {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-8">
-      <h2 className="text-2xl font-bold text-dnd-red mb-2">選擇裝備</h2>
-      <p className="text-gray-600 mb-6">
-        為您的 <span className="font-semibold">{equipmentOptions.nameChienese || equipmentOptions.nameChinese}</span> 選擇起始裝備
-      </p>
-
       <div className="mb-8">
-        {renderEquipmentCategory('Weapons', '武器', equipmentOptions.weapons)}
-        {renderEquipmentCategory('Armor', '護甲', equipmentOptions.armor)}
-        {renderEquipmentCategory('Equipment', '裝備', equipmentOptions.equipment)}
+        <h2 className="text-3xl font-bold text-dnd-red mb-2">選擇裝備</h2>
+        <p className="text-gray-600">
+          為你的 <span className="font-semibold text-dnd-red">{equipmentOptions.nameChinese}</span> 選擇起始裝備
+        </p>
+        <p className="text-sm text-gray-500 mt-2">
+          點擊 ❓ 圖標查看裝備說明
+        </p>
       </div>
 
+      <div className="space-y-8 mb-8">
+        {/* Weapons */}
+        {equipmentOptions.weapons && equipmentOptions.weapons.length > 0 && (
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-dnd-red">
+              武器 (Weapons)
+            </h3>
+            <div className="space-y-2">
+              {equipmentOptions.weapons.map((weapon, idx) => (
+                <EquipmentCheckbox
+                  key={`weapon-${idx}`}
+                  item={weapon}
+                  category="weapons"
+                  categoryLabel="武器"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Armor */}
+        {equipmentOptions.armor && equipmentOptions.armor.length > 0 && (
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-dnd-red">
+              護甲 (Armor)
+            </h3>
+            <div className="space-y-2">
+              {equipmentOptions.armor.map((armor, idx) => (
+                <EquipmentCheckbox
+                  key={`armor-${idx}`}
+                  item={armor}
+                  category="armor"
+                  categoryLabel="護甲"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Equipment/Tools */}
+        {equipmentOptions.equipment && equipmentOptions.equipment.length > 0 && (
+          <div>
+            <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-dnd-red">
+              裝備 (Equipment)
+            </h3>
+            <div className="space-y-2">
+              {equipmentOptions.equipment.map((equip, idx) => (
+                <EquipmentCheckbox
+                  key={`equipment-${idx}`}
+                  item={equip}
+                  category="equipment"
+                  categoryLabel="裝備"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Selected Equipment Summary */}
       {selectedEquipment.length > 0 && (
-        <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-          <h4 className="font-semibold text-gray-800 mb-2">已選擇的裝備：</h4>
-          <ul className="list-disc list-inside text-gray-700">
-            {selectedEquipment.map((item, idx) => (
-              <li key={idx}>
-                {item.nameChienese || item.nameChinese} ({item.name})
-              </li>
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8">
+          <h4 className="font-semibold text-gray-800 mb-2">
+            已選擇 ({selectedEquipment.length})
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {selectedEquipment.map((item) => (
+              <span
+                key={item.key}
+                className="px-3 py-1 bg-white border border-gray-300 rounded-full text-sm"
+              >
+                {item.nameChinese}
+              </span>
             ))}
-          </ul>
+          </div>
         </div>
       )}
 
-      <div className="flex gap-4">
+      {/* Navigation Buttons */}
+      <div className="flex justify-between pt-6 border-t border-gray-200">
         <button
           onClick={previousStep}
-          className="px-6 py-2 border-2 border-dnd-red text-dnd-red rounded-lg hover:bg-dnd-red hover:text-white transition-colors"
+          className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-semibold"
         >
-          返回
+          上一步
         </button>
         <button
-          onClick={nextStep}
-          className="px-6 py-2 bg-dnd-red text-white rounded-lg hover:bg-red-700 transition-colors"
+          onClick={handleNext}
+          className="px-6 py-3 bg-dnd-red text-white rounded-lg hover:bg-red-700 transition-colors font-semibold"
         >
           下一步
         </button>
