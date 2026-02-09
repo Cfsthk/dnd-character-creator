@@ -88,104 +88,68 @@ npm run preview
 ### Using the AI Prompt Generator
 
 1. Complete your character creation
-2. On the Review step, click "展開" (Expand) in the AI Image Generation section
-3. Select your preferred:
-   - Art Style (Fantasy, Realistic, Anime, etc.)
-   - Language (English recommended for most AI platforms)
-   - Target Platform (Midjourney, DALL-E, etc.)
-4. Copy the generated prompt
-5. Paste into your chosen AI image generator
-
-### Class Selection Helper
-
-Click "🎯 不確定選哪個？幫我選擇職業" to:
-1. Answer 3 simple questions about your playstyle
-2. Get top 3 class recommendations with match percentages
-3. See detailed explanations for each recommendation
+2. On the Review step, click "展開" (Expand) to see AI prompts
+3. Choose your preferred AI platform (Midjourney, DALL-E, Stable Diffusion, Leonardo)
+4. Select an art style
+5. Copy the generated prompt and use it in your chosen AI platform
 
 ## Technology Stack
 
-- **React 18**: Modern UI library
-- **Vite**: Fast build tool and dev server
-- **Tailwind CSS**: Utility-first styling
-- **Lucide React**: Icon library
+- **Frontend**: React 18.3, Vite 5.4
+- **Styling**: Tailwind CSS 3.4
+- **UI Components**: Reactinis/Hero Icons
+- **Data Storage**: Local State Management
+- **Deployment**: GitHub Pages
 
 ## Project Structure
 
 ```
 src/
-├── components/
-│   ├── ProgressBar.jsx       # Step progress indicator
-│   ├── StepRace.jsx          # Race selection
-│   ├── StepClass.jsx         # Class selection with helper
-│   ├── StepAbilities.jsx     # Ability score allocation
-│   ├── StepBackground.jsx    # Background selection
-│   ├── StepDetails.jsx       # Character details
-│   └── StepReview.jsx        # Review & AI prompt generator
+├── components/ 
+│   ├── App.jsx                # Main application component
+│   ├── CharacterCreator.jsx    # Main wizard component
+│   ├── StepRace.jsx            # Race selection
+│   ├── StepClass.jsx           # Class selection with questionnaire
+│   ├── StepAbilities.jsx       # Ability score allocation
+│   ├── StepEquipment.jsx       # Equipment selection
+│   ├── StepDetails.jsx         # Character details and background
+│   └── StepReview.jsx          # Final review and AI prompt generator
 ├── data/
-│   └── classes.js            # Complete D&D class database
-├── utils/
-│   └── promptGenerator.js    # AI prompt generation logic
-├── App.jsx                   # Main application
-├── main.jsx                  # Entry point
-└── index.css                 # Global styles
+│   ├── classes.jsx             # Class information database
+│   ├── visualData.jsx          # AI image generation data
+│   └── backgrounds.jsx         # Character backgrounds
+├── styles/
+│   └── index.css               # Global styles
+└── main.jsx                    # Application entry point
 ```
 
-## AI Prompt Generation
+## Development Roadmap
 
-The prompt generator intelligently combines:
-- Character race and class
-- Physical appearance and build
-- Equipment and armor
-- Poses and actions
-- Background settings
-- Lighting and atmosphere
-- Art style preferences
-
-Example generated prompt:
-```
-human Fighter, neutral, muscular and athletic build, confident battle-ready stance, 
-wearing heavy plate armor, wielding longsword and shield, combat stance with weapon drawn, 
-background: training grounds, dramatic side lighting emphasizing muscle definition, 
-determined and battle-ready atmosphere, fantasy art style, high quality, detailed, 
-professional artwork, best quality --ar 2:3 --v 6
-```
-
-## D&D Classes Overview
-
-| Class | Icon | Difficulty | Hit Die | Role | Magic |
-|-------|------|-----------|---------|------|-------|
-| Fighter | ⚔️ | ⭐⭐ | d10 | Tank/DPS | No |
-| Rogue | 🗡️ | ⭐⭐ | d8 | DPS/Utility | No |
-| Cleric | ✨ | ⭐⭐⭐ | d8 | Support/Healer | Full |
-| Wizard | 🔮 | ⭐⭐⭐⭐ | d6 | DPS/Control | Full |
-| Paladin | 🛡️ | ⭐⭐⭐ | d10 | Tank/Support | Half |
-| Barbarian | ⚡ | ⭐⭐ | d12 | Tank/DPS | No |
-| Ranger | 🏹 | ⭐⭐⭐ | d10 | DPS/Utility | Half |
-| Monk | 🥋 | ⭐⭐⭐ | d8 | DPS/Mobility | No |
-| Sorcerer | 💫 | ⭐⭐⭐ | d6 | DPS | Full |
-| Bard | 🎵 | ⭐⭐⭐ | d8 | Support/Utility | Full |
-| Druid | 🌿 | ⭐⭐⭐⭐ | d8 | Support/Control | Full |
-| Warlock | 👁️ | ⭐⭐⭐ | d8 | DPS | Pact |
+- [x] Basic character creation workflow
+- [x] All 12 basic classes with detailed information
+- [x] Interactive questionnaire for class recommendation
+- [x] AI image prompt generator with multiple styles
+- [x] Bilingual support (EN/ZH)
+- [ ] Subclass selection (Planned)
+- [ ] Feat selection (Planned)
+- [ ] Spell selection for spellcasters (Planned)
+- [ ] PDF export of character sheet (Planned)
+- [ ] Save/load characters to local storage (Planned)
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please open an issue or submit a pull request.
 
 ## License
 
-MIT License - feel free to use this project for your own D&D campaigns!
-
-## Credits
-
-- Based on D&D 5E rules by Wizards of the Coast
-- Built with React, Vite, and Tailwind CSS
-- Icons from Lucide React
+MIT License - See LICENSE file for details
 
 ## Acknowledgments
 
-This tool is designed to help players create D&D characters more easily and visualize them through AI art. It is a fan-made project and is not affiliated with or endorsed by Wizards of the Coast.
+This project is not affiliated with Wizards of the Coast. D&D is a trademark of Wizards of the Coast.
 
 ---
 
-Made with ❤️ for the D&D community
+✨ Created with ❤ by your friendly neighborhood DM (with some help from Claude)
+
+Last updated: 2026-02-09 23:41 UTC
