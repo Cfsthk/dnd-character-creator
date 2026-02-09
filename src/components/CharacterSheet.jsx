@@ -65,8 +65,8 @@ const CharacterSheet = ({ character }) => {
   }
 
   const skills = [
-    { name: 'Acrobatics', nameChinese: '特技', ability: 'dexterity' },
-    { name: 'Animal Handling', nameChinese: '馴養動物', ability: 'wisdom' },
+    { name: 'Acrobatics', nameChines: '特技', ability: 'dexterity' },
+    { name: 'Animal Handling', nameChinese: '馴獸動物', ability: 'wisdom' },
     { name: 'Arcana', nameChinese: '奧秘', ability: 'intelligence' },
     { name: 'Athletics', nameChinese: '運動', ability: 'strength' },
     { name: 'Deception', nameChinese: '欺瞞', ability: 'charisma' },
@@ -74,7 +74,7 @@ const CharacterSheet = ({ character }) => {
     { name: 'Insight', nameChinese: '洞察', ability: 'wisdom' },
     { name: 'Intimidation', nameChinese: '威嚇', ability: 'charisma' },
     { name: 'Investigation', nameChinese: '調查', ability: 'intelligence' },
-    { name: 'Medicine', nameChinese: '醫藥', ability: 'wisdom' },
+    { name: 'Medicine', nameChinese: '醫術', ability: 'wisdom' },
     { name: 'Nature', nameChinese: '自然', ability: 'intelligence' },
     { name: 'Perception', nameChinese: '察覺', ability: 'wisdom' },
     { name: 'Performance', nameChinese: '表演', ability: 'charisma' },
@@ -85,281 +85,243 @@ const CharacterSheet = ({ character }) => {
     { name: 'Survival', nameChinese: '生存', ability: 'wisdom' }
   ]
 
+  const getSkillModifier = (ability) => {
+    const score = character.abilities?.[ability] || 10
+    const mod = Math.floor((score - 10) / 2)
+    return mod >= 0 ? `+${mod}` : `${mod}`
+  }
+
+  const getSavingThrowModifier = (ability) => {
+    const score = character.abilities?.[ability] || 10
+    const baseMod = Math.floor((score - 10) / 2)
+    const prof = savingThrows[ability] ? 2 : 0 // Level 1 proficiency bonus
+    const total = baseMod + prof
+    return total >= 0 ? `+${total}` : `${total}`
+  }
+
+  const getAC = () => {
+    const dexMod = Math.floor(((character.abilities?.dexterity || 10) - 10) / 2)
+    if (character.armor) {
+      return character.armor.ac + dexMod
+    }
+    return 10 + dexMod
+  }
+
+  const getInitiative = () => {
+    const dexMod = Math.floor(((character.abilities?.dexterity || 10) - 10) / 2)
+    return dexMod >= 0 ? `+${dexMod}` : `${dexMod}`
+  }
+
+  const getSpeed = () => {
+    return raceData?.speed || 30
+  }
+
+  const getHP = () => {
+    const conMod = Math.floor(((character.abilities?.constitution || 10) - 10) / 2)
+    if (classData) {
+      return classData.hitDie + conMod
+    }
+    return 8 + conMod
+  }
+
+  const getHitDice = () => {
+    if (classData) {
+      return `1d${classData.hitDie}`
+    }
+    return '1d8'
+  }
+
+  const getProficiencies = () => {
+    const all = []
+
+    if (raceData?.traits) {
+      const profTrait = raceData.traits.find(t => t.name.includes('Proficiency') || t.name.includes('Training'))
+      if (profTrait) {
+        all.push(profTrait.description)
+      }
+    }
+
+    if (classData) {
+      if (classData.armorProficiencies) {
+        all.push(`裝甲熟練：${classData.armorProficiencies.join('、')}`)
+      }
+      if (classData.weaponProficiencies) {
+        all.push(`武器熟練：${classData.weaponProficiencies.join('、')}`)
+      }
+      if (classData.tools) {
+        all.push(`工具：${classData.tools.join('、')}`)
+      }
+    }
+
+    return all
+  }
+
+  const getLanguages = () => {
+    const langs = ['通用'] // Default Common
+    if (raceData?.languages) {
+      langs.push(...raceData.languages)
+    }
+    return langs
+  }
+
+  const getFeaturesAndTraits = () => {
+    const all = []
+
+    if (raceData?.traits) {
+      all.push(...raceData.traits)
+    }
+
+    if (classData?.features) {
+      all.push(...classData.features.filter(f => f.level === 1))
+    }
+
+    return all
+  }
+
+  const getEquipment = () => {
+    const items = []
+    if (character.weapon) items.push(character.weapon.name)
+    if (character.armor) items.push(character.armor.name)
+    if (character.equipment) items.push(...character.equipment)
+    return items
+  }
+
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg max-w-5xl mx-auto" id="character-sheet">
-      {/* Header */}
-      <div className="border-4 border-black p-4 mb-4">
-        <div className="text-center mb-4">
-          <h1 className="text-4xl font-bold">{character.name || '未命名角色'}</h1>
-        </div>
-
-        <div className="grid grid-cols-4 gap-4 text-sm">
-          <div>
-            <div className="font-bold uppercase text-xs text-gray-600">職業與等級</div>
-            <div className="text-lg font-semibold">{classData ? classData.name : '無'} 1</div>
-          </div>
-          <div>
-            <div className="font-bold uppercase text-xs text-gray-600">背景</div>
-            <div className="text-lg font-semibold">{character.background || '無'}</div>
-          </div>
-          <div>
-            <div className="font-bold uppercase text-xs text-gray-600">種族</div>
-            <div className="text-lg font-semibold">{character.race || '無'}</div>
-          </div>
-          <div>
-            <div className="font-bold uppercase text-xs text-gray-600">陣營</div>
-            <div className="text-lg font-semibold">{character.alignment || '無'}</div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-6">
-        {/* Left Column - Ability Scores & Skills */}
-        <div className="space-y-4">
-          {/* Ability Scores */}
-          <div className="space-y-2">
-            {Object.entries(character.abilities || {}).map(([ability, score]) => (
-              <div key={ability} className="border-2 border-gray-800 rounded-lg p-3 text-center">
-                <div className="text-xs font-bold uppercase text-gray-600">{abilityNames[ability]}</div>
-                <div className="text-3xl font-bold">{getAbilityModifier(score)}</div>
-                <div className="text-sm text-gray-600">{score}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Proficiency Bonus */}
-          <div className="border-2 border-gray-800 rounded-lg p-3 text-center">
-            <div className="text-xs font-bold uppercase text-gray-600">熟練加值</div>
-            <div className="text-2xl font-bold">{getProficiencyBonus()}</div>
-          </div>
-
-          {/* Saving Throws */}
-          <div className="border-2 border-gray-800 rounded-lg p-3">
-            <div className="text-sm font-bold uppercase text-gray-600 mb-2">豁免檢定</div>
-            {Object.entries(savingThrows).map(([ability, proficient]) => (
-              <div key={ability} className="flex items-center text-sm py-1">
-                <input type="checkbox" checked={proficient} readOnly className="mr-2" />
-                <span className="flex-1">{abilityNames[ability]}</span>
-                <span className="font-semibold">
-                  {getAbilityModifier(character.abilities?.[ability] || 10)}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Skills */}
-          <div className="border-2 border-gray-800 rounded-lg p-3">
-            <div className="text-sm font-bold uppercase text-gray-600 mb-2">技能</div>
-            {skills.map((skill) => (
-              <div key={skill.name} className="flex items-center text-sm py-1">
-                <input type="checkbox" className="mr-2" />
-                <span className="flex-1">{skill.nameChinese}</span>
-                <span className="font-semibold text-xs text-gray-500 mr-2">
-                  ({abilityNames[skill.ability]})
-                </span>
-                <span className="font-semibold">
-                  {getAbilityModifier(character.abilities?.[skill.ability] || 10)}
-                </span>
-              </div>
-            ))}
+    <div className="character-sheet px-8 py-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+        {/* Header */}
+        <div className="text-center mb-8 border-b-2 border-gray-300 pb-4">
+          <h1 className="text-4xl font-bold mb-2">{character.name || '未命名角色'}</h1>
+          <div className="text-xl text-gray-700">
+            {character.race && raceData?.nameChinese || character.race} {' '}
+            {character.class && classData?.nameChinese || character.class}
           </div>
         </div>
 
-        {/* Middle Column - Combat Stats */}
-        <div className="space-y-4">
-          {/* Armor Class */}
-          <div className="border-2 border-gray-800 rounded-lg p-4 text-center">
-            <div className="text-xs font-bold uppercase text-gray-600">護甲等級</div>
-            <div className="text-4xl font-bold">
-              {10 + Math.floor((character.abilities?.dexterity - 10) / 2)}
-            </div>
-          </div>
-
-          {/* Initiative */}
-          <div className="border-2 border-gray-800 rounded-lg p-4 text-center">
-            <div className="text-xs font-bold uppercase text-gray-600">先攻</div>
-            <div className="text-4xl font-bold">
-              {getAbilityModifier(character.abilities?.dexterity || 10)}
-            </div>
-          </div>
-
-          {/* Speed */}
-          <div className="border-2 border-gray-800 rounded-lg p-4 text-center">
-            <div className="text-xs font-bold uppercase text-gray-600">速度</div>
-            <div className="text-4xl font-bold">30 呎</div>
-          </div>
-
-          {/* Hit Points */}
-          <div className="border-2 border-gray-800 rounded-lg p-4">
-            <div className="text-xs font-bold uppercase text-gray-600 text-center mb-2">
-              生命值
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">
-                {classData
-                  ? parseInt(classData.hitDie.substring(1)) + Math.floor((character.abilities?.constitution - 10) / 2)
-                  : 10
-                }
-              </div>
-              <div className="text-xs text-gray-500 mt-1">
-                最大生命值（1級）
-              </div>
-            </div>
-          </div>
-
-          {/* Hit Dice */}
-          <div className="border-2 border-gray-800 rounded-lg p-4 text-center">
-            <div className="text-xs font-bold uppercase text-gray-600">生命骰</div>
-            <div className="text-2xl font-bold">
-              1{classData?.hitDie || 'd8'}
-            </div>
-          </div>
-
-          {/* Death Saves */}
-          <div className="border-2 border-gray-800 rounded-lg p-4">
-            <div className="text-xs font-bold uppercase text-gray-600 mb-2">死亡豁免</div>
-            <div className="space-y-1 text-xs">
-              <div className="flex items-center">
-                <span className="w-12">成功：</span>
-                <div className="flex gap-1">
-                  <input type="checkbox" className="w-4 h-4" />
-                  <input type="checkbox" className="w-4 h-4" />
-                  <input type="checkbox" className="w-4 h-4" />
+        {/* Ability Scores */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">能力值</h2>
+          <div className="grid grid-cols-6 gap-4">
+            {Object.entries(character.abilities || {}).map(([ability, score]) => {
+              const modifier = getAbilityModifier(score)
+              return (
+                <div key={ability} className="text-center bg-gray-50 p-3 rounded">
+                  <div className="text-sm font-semibold text-gray-600 mb-1">
+                    {abilityNames[ability] || ability}
+                  </div>
+                  <div className="text-3xl font-bold mb-1">{score}</div>
+                  <div className="text-sm text-gray-600">{modifier}</div>
                 </div>
-              </div>
-              <div className="flex items-center">
-                <span className="w-12">失敗：</span>
-                <div className="flex gap-1">
-                  <input type="checkbox" className="w-4 h-4" />
-                  <input type="checkbox" className="w-4 h-4" />
-                  <input type="checkbox" className="w-4 h-4" />
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Combat Stats */}
+        <div className="mb-8 grid grid-cols-3 gap-4">
+          <div className="bg-gray-50 p-4 rounded">
+            <div className="text-sm text-gray-600 mb-1">裝甲值 (AC)</div>
+            <div className="text-3xl font-bold">{getAC()}</div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded">
+            <div className="text-sm text-gray-600 mb-1">先攻權 (Initiative)</div>
+            <div className="text-3xl font-bold">{getInitiative()}</div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded">
+            <div className="text-sm text-gray-600 mb-1">速度 (Speed)</div>
+            <div className="text-3xl font-bold">{getSpeed()} 英尺</div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded">
+            <div className="text-sm text-gray-600 mb-1">生命值 (HP)</div>
+            <div className="text-3xl font-bold">{getHP()}</div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded">
+            <div className="text-sm text-gray-600 mb-1">生命骰 (Hit Dice)</div>
+            <div className="text-3xl font-bold">{getHitDice()}</div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded">
+            <div className="text-sm text-gray-600 mb-1">熟練加值 (Proficiency Bonus)</div>
+            <div className="text-3xl font-bold">{getProficiencyBonus()}</div>
+          </div>
+        </div>
+
+        {/* Saving Throws */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">豁免檢定</h2>
+          <div className="grid grid-cols-3 gap-3">
+            {Object.entries(savingThrows).map(([ability, isProficient]) => (
+              <div key={ability} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" checked={isProficient} readOnly />
+                  <span className="text-sm">{abilityNames[ability]}</span>
                 </div>
+                <span className="font-bold">{getSavingThrowModifier(ability)}</span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Right Column - Features & Traits */}
-        <div className="space-y-4">
-          {/* Physical Characteristics */}
-          <div className="border-2 border-gray-800 rounded-lg p-4">
-            <div className="text-sm font-bold uppercase text-gray-600 mb-3">
-              外觀特徵
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">年齡：</span>
-                <span className="font-semibold">{character.age || '-'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">身高：</span>
-                <span className="font-semibold">{character.height || '-'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">體重：</span>
-                <span className="font-semibold">{character.weight || '-'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">眼睛：</span>
-                <span className="font-semibold">{character.eyeColor || '-'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">膚色：</span>
-                <span className="font-semibold">{character.skinColor || '-'}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">頭髮：</span>
-                <span className="font-semibold">{character.hairColor || '-'}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Racial Traits */}
-          {raceData && (
-            <div className="border-2 border-gray-800 rounded-lg p-4">
-              <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-                種族特性
-              </div>
-              <div className="text-sm space-y-1">
-                <p className="font-semibold">{raceData.nameChinese || raceData.name}</p>
-                {character.subrace && (
-                  <p className="text-gray-600">亞種：{character.subrace}</p>
-                )}
-                {raceData.description && (
-                  <p className="text-xs text-gray-600 mt-2">{raceData.description}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Class Features */}
-          {classData && (
-            <div className="border-2 border-gray-800 rounded-lg p-4">
-              <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-                職業特性
-              </div>
-              <div className="text-sm">
-                <p className="font-semibold mb-2">{classData.name} 特性</p>
-                <p className="text-gray-600 text-xs">{classData.description}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Languages */}
-          <div className="border-2 border-gray-800 rounded-lg p-4">
-            <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-              語言
-            </div>
-            <div className="text-sm text-gray-600">
-              通用語 + 種族語言
-            </div>
-          </div>
-
-          {/* Equipment */}
-          <div className="border-2 border-gray-800 rounded-lg p-4">
-            <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-              裝備
-            </div>
-            <div className="text-sm text-gray-600">
-              基於職業和背景的起始裝備
-            </div>
+        {/* Skills */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">技能</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {skills.map(skill => {
+              const modifier = getSkillModifier(skill.ability)
+              return (
+                <div key={skill.name} className="flex items-center justify-between bg-gray-50 p-3 rounded">
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" readOnly />
+                    <span className="text-sm">{skill.nameChinese} ({abilityNames[skill.ability]})</span>
+                  </div>
+                  <span className="font-bold">{modifier}</span>
+                </div>
+              )
+            })}
           </div>
         </div>
-      </div>
 
-      {/* Personality & Backstory */}
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <div className="border-2 border-gray-800 rounded-lg p-4">
-          <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-            性格特質
+        {/* Proficiencies & Languages */}
+        <div className="mb-8 grid grid-cols-2 gap-6">
+          <div>
+            <h2 className="text-xl font-bold mb-3">熟練度</h2>
+            <ul className="list-disc list-inside space-y-2 text-sm">
+              {getProficiencies().map((prof, idx) => (
+                <li key={idx}>{prof}</li>
+              ))}
+            </ul>
           </div>
-          <p className="text-sm text-gray-700">{character.personalityTraits || '無'}</p>
-        </div>
-        <div className="border-2 border-gray-800 rounded-lg p-4">
-          <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-            理念
+          <div>
+            <h2 className="text-xl font-bold mb-3">語言</h2>
+            <ul className="list-disc list-inside space-y-2 text-sm">
+              {getLanguages().map((lang, idx) => (
+                <li key={idx}>{lang}</li>
+              ))}
+            </ul>
           </div>
-          <p className="text-sm text-gray-700">{character.ideals || '無'}</p>
         </div>
-        <div className="border-2 border-gray-800 rounded-lg p-4">
-          <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-            羈絆
-          </div>
-          <p className="text-sm text-gray-700">{character.bonds || '無'}</p>
-        </div>
-        <div className="border-2 border-gray-800 rounded-lg p-4">
-          <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-            缺陷
-          </div>
-          <p className="text-sm text-gray-700">{character.flaws || '無'}</p>
-        </div>
-      </div>
 
-      <div className="border-2 border-gray-800 rounded-lg p-4 mt-4">
-        <div className="text-sm font-bold uppercase text-gray-600 mb-2">
-          背景故事
+        {/* Features & Traits */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">特質與特質</h2>
+          <div className="space-y-4">
+            {getFeaturesAndTraits().map((feature, idx) => (
+              <div key={idx} className="bg-gray-50 p-4 rounded">
+                <h3 className="font-bold mb-2">{feature.name}</h3>
+                <p className="text-sm text-gray-700">{feature.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
-        <p className="text-sm text-gray-700">{character.backstory || '無'}</p>
+
+        {/* Equipment */}
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">裝備</h2>
+          <ul className="list-disc list-inside space-y-2 text-sm">
+            {getEquipment().map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   )
