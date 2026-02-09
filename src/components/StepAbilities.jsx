@@ -71,22 +71,13 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
               </h3>
               <p className="text-sm text-gray-700 mb-2">
                 主要: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
-                次要: <span className="font-bold capitalize">{classData.secondaryAbility}</span>
+                次要: <span className="font-bold capitalize">{classData.secondaryAbilities?.join(', ')}</span>
               </p>
-              <div className="text-sm text-gray-600">
-                <p className="mb-1">建議數值:</p>
-                <ul className="list-disc list-inside space-y-1">
-                  {Object.entries(suggestions || {}).map(([key, value]) => (
-                    <li key={key}>
-                      <span className="capitalize">{key}</span>: {value}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <p className="text-xs text-gray-600 mb-3">建議數值: {JSON.stringify(suggestions)}</p>
             </div>
             <button
               onClick={applySuggestions}
-              className="btn-secondary ml-4 whitespace-nowrap"
+              className="btn btn-sm btn-secondary whitespace-nowrap"
             >
               套用這些
             </button>
@@ -94,56 +85,62 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
         </div>
       )}
 
-      {/* Ability Scores Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
-        {abilities.map(ability => {
+      {/* Ability Score Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
+        {abilities.map((ability) => {
           const score = character.abilities?.[ability.key] || 10
           const modifier = getAbilityModifier(score)
-          
+          const modifierSign = modifier >= 0 ? '+' : ''
+
           return (
             <div key={ability.key} className="card p-4">
               <div className="flex items-center justify-between mb-2">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-800">{ability.name}</h3>
-                  <p className="text-sm text-gray-600">{ability.description}</p>
-                </div>
-                <div className="text-center ml-4">
-                  <div className="text-3xl font-bold text-dnd-red">{score}</div>
+                <h3 className="font-bold text-lg text-gray-800">{ability.name}</h3>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-dnd-gold">{score}</div>
                   <div className="text-sm text-gray-600">
-                    {modifier >= 0 ? '+' : ''}{modifier}
+                    ({modifierSign}{modifier})
                   </div>
                 </div>
               </div>
               
+              <p className="text-sm text-gray-600 mb-3">{ability.description}</p>
+              
               <input
-                type="number"
+                type="range"
                 min="3"
-                max="20"
+                max="18"
                 value={score}
                 onChange={(e) => {
-                  const newScore = parseInt(e.target.value) || 10
                   updateCharacter({
                     abilities: {
                       ...character.abilities,
-                      [ability.key]: newScore
+                      [ability.key]: parseInt(e.target.value)
                     }
                   })
                 }}
-                className="input-field w-full"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               />
               
-              <p className="text-xs text-gray-500 mt-2">{ability.explanation}</p>
+              <details className="mt-2">
+                <summary className="text-xs text-dnd-blue cursor-pointer hover:underline">
+                  Learn more
+                </summary>
+                <p className="text-xs text-gray-600 mt-1">
+                  {ability.explanation}
+                </p>
+              </details>
             </div>
           )
         })}
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between max-w-4xl mx-auto pt-4">
-        <button onClick={previousStep} className="btn-secondary">
+      <div className="flex justify-between max-w-4xl mx-auto">
+        <button onClick={previousStep} className="btn btn-secondary">
           ← 上一步
         </button>
-        <button onClick={nextStep} className="btn-primary">
+        <button onClick={nextStep} className="btn btn-primary">
           下一步：裝備 →
         </button>
       </div>
