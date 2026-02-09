@@ -4,37 +4,37 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
   const abilities = [
     { 
       key: 'strength', 
-      name: '力量 (STR)', 
+      name: 'Strength (STR)', 
       description: 'Physical power, melee attacks',
       explanation: 'Affects melee weapon damage, athletics checks, strength checks. Primary for Fighters, Barbarians, and Paladins.'
     },
     { 
       key: 'dexterity', 
-      name: '敏捷 (DEX)', 
+      name: 'Dexterity (DEX)', 
       description: 'Agility, reflexes, ranged attacks',
       explanation: 'Affects initiative, AC (armor class), ranged weapon attacks, stealth checks. Primary for Rogues, Rangers, and Monks.'
     },
     { 
       key: 'constitution', 
-      name: '體質 (CON)', 
+      name: 'Constitution (CON)', 
       description: 'Health, stamina',
       explanation: 'Affects hit point maximum, concentration checks, endurance checks. Important for all classes, especially front-line fighters.'
     },
     { 
       key: 'intelligence', 
-      name: '智力 (INT)', 
+      name: 'Intelligence (INT)', 
       description: 'Reasoning, memory',
       explanation: 'Affects spell attacks (Wizards), investigation checks, knowledge skills. Primary for Wizards.'
     },
     { 
       key: 'wisdom', 
-      name: '感知 (WIS)', 
+      name: 'Wisdom (WIS)', 
       description: 'Awareness, intuition',
       explanation: 'Affects spell attacks (Clerics/Druids), perception checks, insight checks. Primary for Clerics and Druids.'
     },
     { 
       key: 'charisma', 
-      name: '魅力 (CHA)', 
+      name: 'Charisma (CHA)', 
       description: 'Force of personality, leadership',
       explanation: 'Affects spell attacks (Sorcerers/Bards), persuasion checks, performance checks. Primary for Sorcerers, Bards, and Paladins.'
     },
@@ -57,8 +57,8 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">分配屬性值</h2>
-        <p className="text-gray-600">標準陣列：15, 14, 13, 12, 10, 8 | 或使用點數購買（27點）</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Assign Ability Scores</h2>
+        <p className="text-gray-600">Standard Array: 15, 14, 13, 12, 10, 8 | Or use point buy (27 points)</p>
       </div>
 
       {/* Suggestions Box */}
@@ -67,19 +67,19 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="font-bold text-gray-800 mb-2">
-                💡 {classData.name} 推薦設置
+                💡 {classData.name} Recommended Setup
               </h3>
               <p className="text-sm text-gray-700 mb-2">
-                主要: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
-                次要: <span className="font-bold capitalize">{classData.secondaryAbilities?.join(', ')}</span>
+                Primary: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
+                Secondary: <span className="font-bold capitalize">{classData.secondaryAbilities?.join(', ')}</span>
               </p>
-              <p className="text-xs text-gray-600 mb-3">建議數值: {JSON.stringify(suggestions)}</p>
+              <p className="text-xs text-gray-600 mb-3">Recommended Scores: {JSON.stringify(suggestions)}</p>
             </div>
             <button
               onClick={applySuggestions}
               className="btn btn-sm btn-secondary whitespace-nowrap"
             >
-              套用這些
+              Apply These
             </button>
           </div>
         </div>
@@ -138,10 +138,10 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
       {/* Navigation */}
       <div className="flex justify-between max-w-4xl mx-auto">
         <button onClick={previousStep} className="btn btn-secondary">
-          ← 上一步
+          ← Previous
         </button>
         <button onClick={nextStep} className="btn btn-primary">
-          下一步：裝備 →
+          Next: Equipment →
         </button>
       </div>
     </div>
