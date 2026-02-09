@@ -71,77 +71,78 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
               </h3>
               <p className="text-sm text-gray-700 mb-2">
                 Primary: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
-                Secondary: <span className="font-bold capitalize">{classData.secondaryAbilities?.join(', ')}</span>
+                Secondary: <span className="font-bold capitalize">{classData.secondaryAbility}</span>
               </p>
-              <p className="text-xs text-gray-600 mb-3">Recommended Scores: {JSON.stringify(suggestions)}</p>
             </div>
             <button
+              className="px-3 py-1 bg-white text-sm rounded border border-gray-300 hover:bg-gray-50 text-dnd-blue"
               onClick={applySuggestions}
-              className="btn btn-sm btn-secondary whitespace-nowrap"
             >
-              Apply These
+              Apply
             </button>
+          </div>
+          <div className="mt-2 grid grid-cols-3 gap-2">
+            {abilities.map((ability) => {
+              const value = suggestions[ability.key] || 0
+              const modifier = getAbilityModifier(value)
+              return (
+                <div key={ability.key} className="text-center">
+                  <div className="font-semibold text-xs">{ability.key.toUpperCase().substring(0, 3)}</div>
+                  <div className="text-2xl font-bold text-dnd-blue">{value}</div>
+                  <div className="text-xs text-gray-600">{modifier >= 0 ? '+' : ''}{modifier}</div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}
 
-      {/* Ability Score Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
+      {/* Ability Score Inputs */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {abilities.map((ability) => {
-          const score = character.abilities?.[ability.key] || 10
-          const modifier = getAbilityModifier(score)
-          const modifierSign = modifier >= 0 ? '+' : ''
-
+          const value = character.abilities?.[ability.key] || 10
+          const modifier = getAbilityModifier(value)
           return (
-            <div key={ability.key} className="card p-4">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-bold text-lg text-gray-800">{ability.name}</h3>
+            <div key={ability.key} className="p.4 border border-gray-300 rounded-lg">
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <h4 className="font-bold text-gray-800">{ability.name}</h4>
+                  <p className="text-xs text-gray-600">{ability.description}</p>
+                </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-dnd-gold">{score}</div>
-                  <div className="text-sm text-gray-600">
-                    ({modifierSign}{modifier})
-                  </div>
+                  <input
+                    type="number"
+                    className="form-control text-center text-2xl font-bold w-16"
+                    value={value}
+                    onChange={(e) => {
+                      updateCharacter({
+                        abilities: {
+                          ...character.abilities,
+                          [ability.key]: parseInt(e.target.value) || 10,
+                        },
+                      })
+                    }}
+                    min="3"
+                    max="18"
+                  />
+                  <p className="text-sm text-gray-600 mt-1">
+                    Mod: {modifier >= 0 ? '+' : ''}{modifier}
+                  </p>
                 </div>
               </div>
-              
-              <p className="text-sm text-gray-600 mb-3">{ability.description}</p>
-              
-              <input
-                type="range"
-                min="3"
-                max="18"
-                value={score}
-                onChange={(e) => {
-                  updateCharacter({
-                    abilities: {
-                      ...character.abilities,
-                      [ability.key]: parseInt(e.target.value)
-                    }
-                  })
-                }}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
-              
-              <details className="mt-2">
-                <summary className="text-xs text-dnd-blue cursor-pointer hover:underline">
-                  Learn more
-                </summary>
-                <p className="text-xs text-gray-600 mt-1">
-                  {ability.explanation}
-                </p>
-              </details>
+              <p className="text-xs text-gray-600 mt-2">{ability.explanation}</p>
             </div>
           )
         })}
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between max-w-4xl mx-auto">
-        <button onClick={previousStep} className="btn btn-secondary">
-          ← Previous
+      <div className="flex justify-between mt-8">
+        <button className="btn-secondary" onClick={previousStep}>
+          ← Back to Class
         </button>
-        <button onClick={nextStep} className="btn btn-primary">
-          Next: Equipment →
+        <button className="btn-primary" onClick={nextStep}>
+          Next: Choose Skills →
         </button>
       </div>
     </div>
