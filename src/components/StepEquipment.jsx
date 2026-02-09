@@ -47,19 +47,21 @@ function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
             onChange={() => toggleEquipment(item)}
           />
           <span className="equipment-name">{item.name}</span>
-          <span 
-            className="tooltip-icon"
+          <button
+            type="button"
+            className="tooltip-button"
             onMouseEnter={() => setHoveredItem(item.name)}
             onMouseLeave={() => setHoveredItem(null)}
+            aria-label="More information"
           >
             ❓
-          </span>
+          </button>
         </label>
         {hoveredItem === item.name && (
           <div className="tooltip-content">
             {item.description && <p><strong>說明：</strong>{item.description}</p>}
             {item.damage && <p><strong>傷害：</strong>{item.damage}</p>}
-            {item.properties && <p><strong>尬性：</strong>{item.properties}</p>}
+            {item.properties && <p><strong>屬性：</strong>{item.properties}</p>}
             {item.armorClass && <p><strong>護甲等級：</strong>{item.armorClass}</p>}
             {item.useCase && <p><strong>用途：</strong>{item.useCase}</p>}
           </div>
@@ -90,12 +92,16 @@ function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
         {renderCategory('武器 (Weapons)', classEquipment.weapons)}
         {renderCategory('護甲 (Armor)', classEquipment.armor)}
         {renderCategory('工具 (Tools)', classEquipment.tools)}
-        {renderCategory('衕備 (Gear)', classEquipment.gear)}
+        {renderCategory('裝備 (Equipment)', classEquipment.equipment)}
       </div>
 
-      <div className="actions">
-        <button onClick={prevStep}>回上一步</button>
-        <button onClick={handleNext} className="next-button">下一步</button>
+      <div className="navigation-buttons">
+        <button onClick={prevStep} className="btn btn-secondary">
+          ← 上一步
+        </button>
+        <button onClick={handleNext} className="btn btn-primary">
+          下一步：檢視 →
+        </button>
       </div>
     </div>
   );
