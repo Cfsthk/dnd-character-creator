@@ -4,6 +4,7 @@ import StepClass from './components/StepClass'
 import StepAbilities from './components/StepAbilities'
 import StepDetails from './components/StepDetails'
 import StepBackground from './components/StepBackground'
+import StepEquipment from './components/StepEquipment'
 import StepReview from './components/StepReview'
 import ProgressBar from './components/ProgressBar'
 
@@ -12,8 +13,9 @@ const STEPS = [
   { id: 2, name: '職業', component: StepClass },
   { id: 3, name: '屬性', component: StepAbilities },
   { id: 4, name: '背景', component: StepBackground },
-  { id: 5, name: '細節', component: StepDetails },
-  { id: 6, name: '完成', component: StepReview }
+  { id: 5, name: '裝備', component: StepEquipment },
+  { id: 6, name: '細節', component: StepDetails },
+  { id: 7, name: '完成', component: StepReview }
 ]
 
 function App() {
@@ -31,6 +33,7 @@ function App() {
       charisma: 10
     },
     background: null,
+    equipment: [],
     name: '',
     alignment: '',
     details: {
@@ -91,7 +94,7 @@ function App() {
 
         {/* Footer */}
         <footer className="mt-12 text-center text-gray-600 text-sm">
-          <p>基於 D&D 5E 規則 | 支援 AI 圖像生成</p>
+          <p>基於 D&D 5E 規則 | 支援 AI 場景生成</p>
         </footer>
       </div>
     </div>
