@@ -40,7 +40,7 @@ const StepReview = ({ character, previousStep }) => {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-    alert('已複製到剪貼簿！')
+    alert('已複製到ŉ�貼簿！')
   }
 
   return (
@@ -81,226 +81,141 @@ const StepReview = ({ character, previousStep }) => {
           
           {/* Recommended Equipment Section */}
           {recommendedEquipment && (
-            <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-dnd-blue mt-6">
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                {recommendedEquipment.icon} 建議裝備
-              </h3>
-              <p className="text-gray-600 mb-4">{recommendedEquipment.description}</p>
+            <div className="bg-gray-50 rounded-lg p-6 mt-6">
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">🖡️ 建硒({character.class}曼灦裝</h3>
               
-              {/* Starting Items */}
-              <div className="mb-6">
-                <h4 className="text-lg font-semibold text-gray-700 mb-2">起始裝備</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {recommendedEquipment.startingItems.map((item, index) => (
-                    <div key={index} className="bg-gray-50 p-3 rounded border">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-800">{item.name}</span>
-                        {item.quantity && (
-                          <span className="text-sm text-gray-500">x{item.quantity}</span>
-                        )}
-                      </div>
-                      {item.description && (
-                        <p className="text-sm text-gray-600 mt-1">{item.description}</p>
-                      )}
-                      {item.stats && (
-                        <p className="text-xs text-gray-500 mt-1">{item.stats}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Recommended Upgrades */}
-              {recommendedEquipment.recommendedUpgrades && (
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-700 mb-2">推薦升級</h4>
-                  <div className="space-y-2">
-                    {recommendedEquipment.recommendedUpgrades.map((upgrade, index) => (
-                      <div key={index} className="bg-blue-50 p-3 rounded border border-blue-200">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium text-gray-800">{upgrade.name}</span>
-                          <span className="text-sm text-blue-600">等級 {upgrade.level}</span>
-                        </div>
-                        <p className="text-sm text-gray-600 mt-1">{upgrade.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="flex flex-col sm:flex-row gap-4 mt-6">
-            <button
-              onClick={previousStep}
-              className="px-6 py-2 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors"
-            >
-              ← 返回修改
-            </button>
-            <button
-              onClick={downloadJSON}
-              className="px-6 py-2 rounded-lg bg-dnd-gold text-white font-semibold hover:bg-gray-600 transition-colors"
-            >
-              💾 下載角色 JSON
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* AI Image Generator View */}
-      {!showCharacterSheet && (
-        <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-dnd-blue">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">🎨 AI 圖像生成器</h3>
-          <p className="text-gray-600 mb-6">
-            根據您的角色資料生成 AI 繪圖提示詞，可用於 Midjourney、Stable Diffusion 等平台
-          </p>
-
-          {!character.class && (
-            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
-              <p className="text-yellow-800">⚠️ 請先完成角色創建（包括職業選擇）才能生成 AI 圖像提示詞</p>
-            </div>
-          )}
-
-          {/* Platform Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              選擇平台
-            </label>
-            <select
-              value={selectedPlatform}
-              onChange={(e) => setSelectedPlatform(e.target.value)}
-              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-            >
-              <option value="midjourney">Midjourney</option>
-              <option value="stable-diffusion">Stable Diffusion</option>
-              <option value="dalle">DALL-E</option>
-              <option value="leonardo">Leonardo.ai</option>
-            </select>
-          </div>
-
-          {/* Style Options */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              藝術風格
-            </label>
-            <select
-              value={promptOptions.style}
-              onChange={(e) => setPromptOptions({...promptOptions, style: e.target.value})}
-              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-            >
-              <option value="fantasy-art">奇幻藝術</option>
-              <option value="anime">動漫風格</option>
-              <option value="realistic">寫實風格</option>
-              <option value="oil-painting">油畫風格</option>
-              <option value="watercolor">水彩風格</option>
-              <option value="comic-book">漫畫風格</option>
-            </select>
-          </div>
-
-          {/* Pose Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              角色姿勢
-            </label>
-            <select
-              value={promptOptions.pose}
-              onChange={(e) => setPromptOptions({...promptOptions, pose: e.target.value})}
-              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-            >
-              {getPoseOptions(character.class).map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* View Type Selection */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              視角類型
-            </label>
-            <select
-              value={promptOptions.viewType}
-              onChange={(e) => setPromptOptions({...promptOptions, viewType: e.target.value})}
-              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-            >
-              <option value="portrait">肖像 (Portrait)</option>
-              <option value="full-body">全身 (Full Body)</option>
-              <option value="action-shot">動作場景 (Action Shot)</option>
-              <option value="3d-reference">3D 參考 (多視角)</option>
-            </select>
-          </div>
-
-          {/* Background Toggle */}
-          <div className="mb-6">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={promptOptions.includeBackground}
-                onChange={(e) => setPromptOptions({...promptOptions, includeBackground: e.target.checked})}
-                className="w-5 h-5 text-dnd-blue rounded focus:ring-2 focus:ring-dnd-blue"
-              />
-              <span className="text-sm font-semibold text-gray-700">包含場景背景</span>
-            </label>
-          </div>
-
-          {/* Generated Prompt Display */}
-          {platformExport && character.class && (
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-300">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-semibold text-gray-700">生成的提示詞</h4>
-                  <button
-                    onClick={() => copyToClipboard(platformExport.prompt)}
-                    className="px-3 py-1 bg-dnd-blue text-white text-sm rounded hover:bg-blue-700 transition-colors"
-                  >
-                    📋 複製提示詞
-                  </button>
-                </div>
-                <p className="text-sm text-gray-800 whitespace-pre-wrap font-mono">
-                  {platformExport.prompt}
-                </p>
-              </div>
-
-              {/* Platform-specific Parameters */}
-              {platformExport.parameters && (
-                <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
-                  <h4 className="font-semibold text-gray-700 mb-2">平台參數</h4>
-                  <div className="space-y-1">
-                    {Object.entries(platformExport.parameters).map(([key, value]) => (
-                      <div key={key} className="flex justify-between text-sm">
-                        <span className="font-medium text-gray-600">{key}:</span>
-                        <span className="text-gray-800">{value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Usage Tips */}
-              {platformExport.tips && (
-                <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-200">
-                  <h4 className="font-semibold text-gray-700 mb-2">💡 使用提示</h4>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
-                    {platformExport.tips.map((tip, index) => (
-                      <li key={index}>{tip}</li>
+              {/* Weapons */}
+              {recommendedEquipment.weapons && recommendedEquipment.weapons.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-2">武器:</h4>
+                  <ul className="list-disc space-y-1 ml-6">
+                    {recommendedEquipment.weapons.map((weapon, idx) => (
+                      <li key={idx} className="text-gray-600">
+                        {weapon.name}
+                        {weapon.damage && <span className="text-sm text-gray-500"> — {�weapon.damage}傷害，{weapon.damageType}伤宰�/span>}
+                      </li>
                     ))}
                   </ul>
                 </div>
               )}
-
-              {/* Back Button */}
-              <div className="flex justify-start mt-6">
-                <button
-                  onClick={() => setShowCharacterSheet(true)}
-                  className="px-6 py-2 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors"
-                >
-                  ← 返回角色卡
-                </button>
-              </div>
+              
+              {/* Armor */}
+              {(recommendedEquipment.armor || recommendedEquipment.shield) && (
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-2">随疐:</h4>
+                  <ul className="list-disc space-y-1 ml-6">
+                    {recommendedEquipment.armor && (
+                      <li className="text-gray-600">
+                        {recommendedEquipment.armor.name}
+                        {recommendedEquipment.armor.ac && <span className="text-sm text-gray-500"> — AC: {recommendedEquipment.armor.ac}</span>}
+                      </li>
+                    )}
+                    {recommendedEquipment.shield && (
+                      <li className="text-gray-600">
+                        {recommendedEquipment.shield.name}
+                        {recommendedEquipment.shield.acBonus && <span className="text-sm text-gray-500"> — +{recommendedEquipment.shield.acBonus} AC</span>}
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+              
+              {/* Other Items */}
+              {recommendedEquipment.other && recommendedEquipment.other.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="font-medium text-gray-700 mb-2">其他物啫)</h4>
+                  <ul className="list-disc space-y-1 ml-6">
+                    {recommendedEquipment.other.map((item, idx) => (
+                      <li key={idx} className="text-gray-600">{item.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
+
+          {/* Action Buttons */�H]��\�Ә[YOH��^�\M]M�����]ۂ�ې�X��^��ۛ�Y��ӟB��\�Ә[YOH��^LH��Y�X�YH^]�]HKL�M���[�Y[��۝\�[ZX��ݙ\����X�YKM��[��][ۋX��ܜȏ��<'��9."�/"���ӂ�؝]ۏ���]ۂ�ې�X��^��]�[�\��\B��\�Ә[YOH��^LH��Yܘ^KL�^Yܘ^KM�KL�M���[�Y[��۝\�[ZX��ݙ\����Yܘ^KM�[��][ۋX��ܜȏ��<'�&H9f�b,9."�. 9�iB�؝]ۏ���]����]���
+_B���ʈRH��\�[�\�]܈�Y]�
+��B��\����\�X�\��Y]	���\�X�\���\��	��
+�]���]��\�Ә[YOH���Yܘ^KML��[�Y[�M������\�Ә[YOH�^^�۝\�[ZX��^Yܘ^KNX�M��'�RH9g%�`���'��$9fj�ς���ʈ��\�[ۜ�
+��B�]��\�Ә[YOH��X�K^KMX�M�����ʈ�[H
+��B�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'�9g%�`��i���.��X�[���[X���[YO^���\�[ۜ˜�[_B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ��[N�K�\��]��[YHJ_B��\�Ә[YOH��Y�[L��ܙ\��ܙ\�Yܘ^KL���[�Y[����\Θ�ܙ\�Y�X�YH���\Λ�][�K[�ۙH�����[ۈ�[YOH��[�\�KX\���ia�nm�&�z"*����[ۏ���[ۈ�[YOH��X[\�Xȏ�m�n��k�k�..�*�h���[ۏ���[ۈ�[YOH�[�[YH����ze�:,hO��[ۏ���[ۈ�[YOH��\��ۈ��chz`&�h���[ۏ���[ۈ�[YOH�Z[�[�ȏ��l9/cy�)y�jO��[ۏ���[ۈ�[YOH��[[�[���9�(yg��c��  ���[ۏ����[X����]�����ʈ�Y]�\H
+��B�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'宏9���f��b�n���X�[���[X���[YO^���\�[ۜ˝�Y]�\_B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ��Y]�\N�K�\��]��[YHJ_B��\�Ә[YOH��Y�[L��ܙ\��ܙ\�Yܘ^KL���[�Y[����\Θ�ܙ\�Y�X�YH���\Λ�][�K[�ۙH�����[ۈ�[YOH�Y�][��aj:.��`���"9�&y����"O��[ۏ���[ۈ�[YOH�ܝ�Z]�� ��`���":h%�`�9�%�*'�`���"O��[ۏ���[ۈ�[YOH�X�[ۈ��b�y�b��k�yb!�`���"9�,:-���%��.y���"O��[ۏ���[ۈ�[YOH��\�Y�\�[��H��� 9k�/k�.��`���"�9�(yg��)����9g%�c��*&��oyg��(�y�b�#��.��9��/k��c�`c��"O��[ۏ����[X����]�����ʈ��H
+��ۈۛHY��Y]�\H\�	�X�[ۉ�H
+��B����\�[ۜ˝�Y]�\HOOH	�X�[ۉ�	��
+�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'�9g���b��X�[���[X���[YO^���\�[ۜ˜��_B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ���N�K�\��]��[YHJ_B��\�Ә[YOH��Y�[L��ܙ\��ܙ\�Yܘ^KL���[�Y[����\Θ�ܙ\�Y�X�YH���\Λ�][�K[�ۙH������]��S�[ۜ��\�X�\���\��K�X\
+��HO�
+��[ۈ�^O^���K��[Y_H�[YO^���K��[Y_O����K�X�[O��[ۏ��
+J_B���[X����]���
+_B���ʈ�X��ܛ�[�
+��B�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'�!�: �9�k��.�)�9k���"�X�[��]��\�Ә[YOH��^][\�X�[�\��\L����[�]�\OH��X�؛����X��Y^���\�[ۜ˚[��YP�X��ܛ�[�B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ�[��YP�X��ܛ�[��K�\��]��X��YJ_B��\�Ә[YOH��MM��ς��[��\�Ә[YOH�^Yܘ^KM���c!yd*�o�9�k�*+yk���"Y˘Y�k�9�d�$g9�k�9�`�hc�he�h���b{�"O��[����]����]����]�����ʈ�[�\�]Y��\
+��B�]��\�Ә[YOH��X�K^KL�����\�Ә[YOH��۝[YY][H^Yܘ^KM����'��$9�RH9��9�.�	��]��\�Ә[YOH���]�]H�ܙ\��ܙ\�Yܘ^KL���[�Y[�MZ[�ZV�̜�[WHX^ZV͍�[WHݙ\����^KX]]Ȃ��[O^���]T�X�N�	��K]ܘ\	��ܙܘ\�	؜�XZ�]�ܙ	�_O���\�Ә[YOH�^\�H^Yܘ^KM�XY[��\�[^Y�����[�\�]Y��\	�,�����a�� �� �� ��B�����]����]ۂ�ې�X��^�
+HO���U��\��\�
+�[�\�]Y��\
+_B��\�Ә[YOH��Y�[��Y�X�YH^]�]HKL�M���[�Y[��۝\�[ZX��ݙ\����X�YKM��[��][ۋX��ܜ�]L�����<'���:)!�(�y��9�.��":`jy�*9b���"�ZY��\��^yg,9nl��bJ��"B�؝]ۏ���]�����ʈ]�ܛKT�X�Y�X�^ܝ
+��B�]��\�Ә[YOH��X�K^KM]M�M��ܙ\�]�ܙ\�Yܘ^KL�����\�Ә[YOH��۝[YY][H^Yܘ^KM�X�Lȏ�'�H9o!�b,9�빪&ynl�!��)���o#������ʈ]�ܛH�[X�܈
+��B�]��\�Ә[YOH��^�\L�X�M������^N�	�ZY��\��^I�X�[�	�ZY��\��^I�K���^N�	��X�KYY��\�[ۉ�X�[�	��X�HY��\�[ۉ�K���^N�	�[I�X�[�	�S0��l ' },
+                  { key: 'leonardo', label: 'Leonardo.Ai' },
+                  { key: 'comhy', label: 'ComfyUI' }
+                ].map(platform => (
+                  <button
+                    key={platform.key}
+                    onClick={() => setSelectedPlatform(platform.key)}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      selectedPlatform === platform.key
+                        ? 'bg-dnd-blue text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bo-gray-300'
+                    }`}
+                  >
+                    {platform.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Platform-Specific Prompt */}
+              <div className="bg-white border border-gray-300 rounded-lg p-4 min-h-[16rem] max-h-[48rem] overflow-y-auto"
+                   style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {platformExport ? platformExport.prompt : '訋释。。。'}
+                </p>
+              </div>
+              
+              {/* Platform-Specific Parameters */}
+              {platformExport && platformExport.parameters && (
+                <div className="mt-4 space-y-2">
+                  <h5 className="font-medium text-gray-700 mb-2">建硒 參數:h5>
+                  <div className="bg-gray-50 rounded-lg p-3 text-sm">
+                    {Object.entries(platformExport.parameters).map(([key, value]) => (
+                      <div key={key} className="text-gray-700 mb-1">
+                        <span className="font-medium">{key}:</span> {value}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={() => copyToClipboard(platformExport ? platformExport.prompt : '')}
+                className="w-full bg-dnd-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mt-3"
+              >
+                📋 複製弇到目標平至皊觔示（釉遨用隬 {selectedPlatform})
+              </button>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-4 mt-6">
+            <button
+              onClick={downloadJSON}
+              className="flex-1 bg-dnd-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+               📾 下輢oJSON
+            </button>
+            <button
+              onClick={previousStep}
+              className="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
+              🔙 回到9.�K���
+            </button>
+          </div>
         </div>
       )}
     </div>
