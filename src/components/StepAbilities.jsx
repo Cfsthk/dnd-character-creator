@@ -2,12 +2,42 @@ import { classes } from '../data/classData'
 
 const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) => {
   const abilities = [
-    { key: 'strength', name: 'Strength (STR)', description: 'Physical power, melee attacks' },
-    { key: 'dexterity', name: 'Dexterity (DEX)', description: 'Agility, AC, ranged attacks' },
-    { key: 'constitution', name: 'Constitution (CON)', description: 'Hit points, endurance' },
-    { key: 'intelligence', name: 'Intelligence (INT)', description: 'Reasoning, knowledge' },
-    { key: 'wisdom', name: 'Wisdom (WIS)', description: 'Awareness, insight' },
-    { key: 'charisma', name: 'Charisma (CHA)', description: 'Personality, influence' },
+    { 
+      key: 'strength', 
+      name: '力量 (STR)', 
+      description: '物理力量，近戰攻擊',
+      explanation: '影響近戰武器傷害、運動能力檢定、力量檢定。戰士、野蠻人、聖武士的主要屬性。'
+    },
+    { 
+      key: 'dexterity', 
+      name: '敏捷 (DEX)', 
+      description: '靈活度、護甲等級、遠程攻擊',
+      explanation: '影響先攻值、AC（護甲等級）、遠程武器攻擊、靈巧檢定。遊俠、盜賊、武僧的主要屬性。'
+    },
+    { 
+      key: 'constitution', 
+      name: '體質 (CON)', 
+      description: '生命值、耐力',
+      explanation: '影響生命值上限、專注檢定、耐力檢定。對所有職業都很重要，特別是前排角色。'
+    },
+    { 
+      key: 'intelligence', 
+      name: '智力 (INT)', 
+      description: '推理、知識',
+      explanation: '影響法術攻擊（法師）、調查檢定、知識類技能。法師的主要屬性。'
+    },
+    { 
+      key: 'wisdom', 
+      name: '感知 (WIS)', 
+      description: '洞察力、覺察',
+      explanation: '影響法術攻擊（牧師/德魯伊）、察覺檢定、洞察檢定。牧師、德魯伊的主要屬性。'
+    },
+    { 
+      key: 'charisma', 
+      name: '魅力 (CHA)', 
+      description: '個性、影響力',
+      explanation: '影響法術攻擊（術士/吟遊詩人）、說服檢定、表演檢定。術士、吟遊詩人、聖武士的主要屬性。'
+    },
   ]
 
   // Get suggestions based on selected class
@@ -27,8 +57,8 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Assign Ability Scores</h2>
-        <p className="text-gray-600">Standard Array: 15, 14, 13, 12, 10, 8 | Or use Point Buy (27 points)</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">分配屬性值</h2>
+        <p className="text-gray-600">標準陣列：15、14、13、12、10、8 | 或使用點數購買（27點）</p>
       </div>
 
       {/* Suggestions Box */}
@@ -37,11 +67,11 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="font-bold text-gray-800 mb-2">
-                💡 Recommended for {classData.name}
+                💡 {classData.name} 推薦配置
               </h3>
               <p className="text-sm text-gray-700 mb-2">
-                Primary: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
-                Secondary: <span className="font-bold capitalize ml-1">{classData.secondaryAbility}</span>
+                主要屬性：<span className="font-bold capitalize">{classData.primaryAbility}</span> | 
+                次要屬性：<span className="font-bold capitalize ml-1">{classData.secondaryAbility}</span>
               </p>
               <div className="grid grid-cols-6 gap-2 text-xs">
                 {Object.entries(suggestions).map(([key, value]) => (
@@ -56,7 +86,7 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
               onClick={applySuggestions}
               className="btn-secondary text-sm ml-4"
             >
-              Use These
+              使用推薦
             </button>
           </div>
         </div>
@@ -67,61 +97,55 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
         {abilities.map((ability) => {
           const score = character.abilities[ability.key]
           const modifier = getAbilityModifier(score)
-          const isPrimary = classData && classData.primaryAbility === ability.key
-          const isSecondary = classData && classData.secondaryAbility === ability.key
-          
+          const modifierText = modifier >= 0 ? `+${modifier}` : modifier
+
           return (
-            <div 
-              key={ability.key} 
-              className={`flex items-center justify-between p-3 rounded-lg ${
-                isPrimary ? 'bg-blue-100 border-2 border-dnd-blue' : 
-                isSecondary ? 'bg-blue-50 border border-dnd-blue' : ''
-              }`}
-            >
-              <div className="flex-1">
-                <h3 className="font-bold text-gray-800">
-                  {ability.name}
-                  {isPrimary && <span className="ml-2 text-xs bg-dnd-blue text-white px-2 py-1 rounded">PRIMARY</span>}
-                  {isSecondary && <span className="ml-2 text-xs bg-blue-400 text-white px-2 py-1 rounded">SECONDARY</span>}
-                </h3>
-                <p className="text-sm text-gray-600">{ability.description}</p>
-                {suggestions && (
-                  <p className="text-xs text-gray-500 mt-1">
-                    Suggested: {suggestions[ability.key]}
-                  </p>
-                )}
-              </div>
+            <div key={ability.key} className="space-y-2">
               <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <label className="font-semibold text-gray-800">
+                    {ability.name}
+                  </label>
+                  <p className="text-sm text-gray-600">{ability.description}</p>
+                </div>
+
                 <input
                   type="number"
                   min="3"
                   max="20"
                   value={score}
                   onChange={(e) => updateCharacter({
-                    abilities: { ...character.abilities, [ability.key]: parseInt(e.target.value) || 10 }
+                    abilities: {
+                      ...character.abilities,
+                      [ability.key]: parseInt(e.target.value) || 0,
+                    },
                   })}
-                  className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center font-bold"
+                  className="input w-20 text-center text-lg font-bold"
                 />
-                <div className="w-16 text-center">
-                  <div className="text-xs text-gray-500">Modifier</div>
-                  <div className="font-bold text-lg">
-                    {modifier >= 0 ? '+' : ''}{modifier}
-                  </div>
+
+                <div className="text-center w-16">
+                  <div className="text-xs text-gray-600">調整值</div>
+                  <div className="text-xl font-bold text-dnd-blue">{modifierText}</div>
                 </div>
+              </div>
+              
+              {/* Explanation tooltip */}
+              <div className="ml-4 pl-4 border-l-2 border-blue-200 bg-blue-50 p-2 rounded text-sm text-gray-700">
+                ℹ️ {ability.explanation}
               </div>
             </div>
           )
         })}
       </div>
 
-      {/* Point Buy Helper */}
-      <div className="text-center text-sm text-gray-600 max-w-2xl mx-auto">
-        <p>Standard scores range from 8-15 before racial bonuses. Racial bonuses will be applied automatically.</p>
-      </div>
-
+      {/* Navigation */}
       <div className="flex justify-between max-w-2xl mx-auto">
-        <button onClick={previousStep} className="btn-secondary">Previous</button>
-        <button onClick={nextStep} className="btn-primary">Next</button>
+        <button onClick={previousStep} className="btn-secondary">
+          ← 返回
+        </button>
+        <button onClick={nextStep} className="btn-primary">
+          繼續 →
+        </button>
       </div>
     </div>
   )
