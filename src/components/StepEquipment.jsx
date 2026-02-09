@@ -59,11 +59,11 @@ function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
         </label>
         {hoveredItem === item.name && (
           <div className="tooltip-content">
-            {item.description && <p><strong>說明：</strong>{item.description}</p>}
-            {item.damage && <p><strong>傷害：</strong>{item.damage}</p>}
-            {item.properties && <p><strong>屬性：</strong>{item.properties}</p>}
-            {item.armorClass && <p><strong>護甲等級：</strong>{item.armorClass}</p>}
-            {item.useCase && <p><strong>用途：</strong>{item.useCase}</p>}
+            {item.description && <p><strong>Description:</strong> {item.description}</p>}
+            {item.damage && <p><strong>Damage:</strong> {item.damage}</p>}
+            {item.properties && <p><strong>Properties:</strong> {item.properties}</p>}
+            {item.armorClass && <p><strong>Armor Class:</strong> {item.armorClass}</p>}
+            {item.useCase && <p><strong>Use Case:</strong> {item.useCase}</p>}
           </div>
         )}
       </div>
@@ -85,23 +85,19 @@ function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
 
   return (
     <div className="step-equipment">
-      <h2>選擇裝備</h2>
-      <p className="instruction">為你的 {character.class} 選擇起始裝備</p>
+      <h2>Choose Equipment</h2>
+      <p className="instruction">Select starting equipment for your {character.class}</p>
       
       <div className="equipment-categories">
-        {renderCategory('武器 (Weapons)', classEquipment.weapons)}
-        {renderCategory('護甲 (Armor)', classEquipment.armor)}
-        {renderCategory('工具 (Tools)', classEquipment.tools)}
-        {renderCategory('裝備 (Equipment)', classEquipment.equipment)}
+        {renderCategory('Weapons', classEquipment.weapons)}
+        {renderCategory('Armor', classEquipment.armor)}
+        {renderCategory('Tools', classEquipment.tools)}
+        {renderCategory('General Equipment', classEquipment.equipment)}
       </div>
-
+      
       <div className="navigation-buttons">
-        <button onClick={prevStep} className="btn btn-secondary">
-          ← 上一步
-        </button>
-        <button onClick={handleNext} className="btn btn-primary">
-          下一步：檢視 →
-        </button>
+        <button onClick={prevStep} className="prev-button">← Previous</button>
+        <button onClick={handleNext} className="next-button">Next: Background →</button>
       </div>
     </div>
   );
