@@ -11,11 +11,17 @@ export function generateAIPrompt(character, options = {}) {
     style = 'fantasy-art',
     language = 'en',
     includeBackground = true,
-    pose = 'default'
+    pose = 'default',
+    viewType = 'single-view'
   } = options
 
   const classData = CLASSES[character.class]
   if (!classData) return ''
+
+  // For 3D modeling reference, use special format
+  if (viewType === '3d-reference') {
+    return build3DReferencePrompt(character, classData, language, style)
+  }
 
   const parts = []
 
@@ -50,11 +56,63 @@ export function generateAIPrompt(character, options = {}) {
   parts.push(styleDesc)
 
   // 8. Quality Tags
-  const quality = language === 'zh' 
+  const quality = language === 'zh' || language === 'zh-TW'
     ? '高品質, 細緻, 專業藝術作品, 最佳品質'
     : 'high quality, detailed, professional artwork, best quality'
   parts.push(quality)
 
+  return parts.filter(Boolean).join(', ')
+}
+
+function build3DReferencePrompt(character, classData, language, style) {
+  const isZh = language === 'zh' || language === 'zh-TW'
+  
+  const parts = []
+  
+  // Character identity
+  const identity = isZh
+    ? `${character.race || '冒險者'} ${classData.name}`
+    : `${character.race || 'adventurer'} ${classData.nameEn || classData.name}`
+  parts.push(identity)
+  
+  // 3D modeling reference sheet specification
+  const viewSpec = isZh
+    ? '角色設定參考圖，四視圖展示（正面、背面、左側面、右側面），T-pose站立姿勢'
+    : 'character reference sheet, turnaround views (front view, back view, left side view, right side view), T-pose standing'
+  parts.push(viewSpec)
+  
+  // Clean outline style
+  const outlineStyle = isZh
+    ? '乾淨的線條輪廓，清晰的細節，適合3D建模參考'
+    : 'clean outline style, clear line art, detailed for 3D modeling reference'
+  parts.push(outlineStyle)
+  
+  // Equipment description
+  const equipment = buildEquipment(classData, language)
+  parts.push(equipment)
+  
+  // Physical appearance
+  const appearance = buildAppearance(character, classData, language)
+  parts.push(appearance)
+  
+  // White/neutral background for clarity
+  const background = isZh
+    ? '純白背景，無陰影，平面光照'
+    : 'white background, no shadows, flat lighting'
+  parts.push(background)
+  
+  // Style modifier
+  const styleModifier = isZh
+    ? '概念藝術風格，技術性插圖'
+    : 'concept art style, technical illustration'
+  parts.push(styleModifier)
+  
+  // Quality tags
+  const quality = isZh
+    ? '高品質，專業級別，完整細節展示'
+    : 'high quality, professional grade, full detail showcase'
+  parts.push(quality)
+  
   return parts.filter(Boolean).join(', ')
 }
 
