@@ -64,25 +64,25 @@ const CharacterSheet = ({ character }) => {
     charisma: '魅力'
   }
 
-  const skills = [
-    { name: 'Acrobatics', nameChinese: '特技', ability: 'dexterity' },
-    { name: 'Animal Handling', nameChinese: '馴養動物', ability: 'wisdom' },
-    { name: 'Arcana', nameChinese: '奧秘', ability: 'intelligence' },
-    { name: 'Athletics', nameChinese: '運動', ability: 'strength' },
-    { name: 'Deception', nameChinese: '欺瞞', ability: 'charisma' },
-    { name: 'History', nameChinese: '歷史', ability: 'intelligence' },
-    { name: 'Insight', nameChinese: '洞察', ability: 'wisdom' },
-    { name: 'Intimidation', nameChinese: '威嚇', ability: 'charisma' },
-    { name: 'Investigation', nameChinese: '調查', ability: 'intelligence' },
-    { name: 'Medicine', nameChinese: '醫藥', ability: 'wisdom' },
-    { name: 'Nature', nameChinese: '自然', ability: 'intelligence' },
-    { name: 'Perception', nameChinese: '察覺', ability: 'wisdom' },
-    { name: 'Performance', nameChinese: '表演', ability: 'charisma' },
-    { name: 'Persuasion', nameChinese: '說服', ability: 'charisma' },
-    { name: 'Religion', nameChinese: '宗教', ability: 'intelligence' },
-    { name: 'Sleight of Hand', nameChinese: '巧手', ability: 'dexterity' },
-    { name: 'Stealth', nameChinese: '隱匿', ability: 'dexterity' },
-    { name: 'Survival', nameChinese: '生存', ability: 'wisdom' }
+  const skills = [\
+    { name: 'Acrobatics', nameChinese: '特技', ability: 'dexterity' },\
+    { name: 'Animal Handling', nameChinese: '馴養動物', ability: 'wisdom' },\
+    { name: 'Arcana', nameChinese: '奧秘', ability: 'intelligence' },\
+    { name: 'Athletics', nameChinese: '運動', ability: 'strength' },\
+    { name: 'Deception', nameChinese: '欺瞞', ability: 'charisma' },\
+    { name: 'History', nameChinese: '歷史', ability: 'intelligence' },\
+    { name: 'Insight', nameChinese: '洞察', ability: 'wisdom' },\
+    { name: 'Intimidation', nameChinese: '威嚇', ability: 'charisma' },\
+    { name: 'Investigation', nameChinese: '調查', ability: 'intelligence' },\
+    { name: 'Medicine', nameChinese: '醫藥', ability: 'wisdom' },\
+    { name: 'Nature', nameChinese: '自然', ability: 'intelligence' },\
+    { name: 'Perception', nameChinese: '察覺', ability: 'wisdom' },\
+    { name: 'Performance', nameChinese: '表演', ability: 'charisma' },\
+    { name: 'Persuasion', nameChinese: '說服', ability: 'charisma' },\
+    { name: 'Religion', nameChinese: '宗教', ability: 'intelligence' },\
+    { name: 'Sleight of Hand', nameChinese: '巧手', ability: 'dexterity' },\
+    { name: 'Stealth', nameChinese: '隱匿', ability: 'dexterity' },\
+    { name: 'Survival', nameChinese: '生存', ability: 'wisdom' }\
   ]
 
   return (
@@ -92,7 +92,7 @@ const CharacterSheet = ({ character }) => {
         <div className="text-center mb-4">
           <h1 className="text-4xl font-bold">{character.name || '未命名角色'}</h1>
         </div>
-        
+
         <div className="grid grid-cols-4 gap-4 text-sm">
           <div>
             <div className="font-bold uppercase text-xs text-gray-600">職業與等級</div>
@@ -118,7 +118,7 @@ const CharacterSheet = ({ character }) => {
         <div className="space-y-4">
           {/* Ability Scores */}
           <div className="space-y-2">
-            {Object.entries(character.abilityScores || {}).map(([ability, score]) => (
+            {Object.entries(character.abilities || {}).map(([ability, score]) => (
               <div key={ability} className="border-2 border-gray-800 rounded-lg p-3 text-center">
                 <div className="text-xs font-bold uppercase text-gray-600">{abilityNames[ability]}</div>
                 <div className="text-3xl font-bold">{getAbilityModifier(score)}</div>
@@ -141,7 +141,7 @@ const CharacterSheet = ({ character }) => {
                 <input type="checkbox" checked={proficient} readOnly className="mr-2" />
                 <span className="flex-1">{abilityNames[ability]}</span>
                 <span className="font-semibold">
-                  {getAbilityModifier(character.abilityScores?.[ability] || 10)}
+                  {getAbilityModifier(character.abilities?.[ability] || 10)}
                 </span>
               </div>
             ))}
@@ -158,7 +158,7 @@ const CharacterSheet = ({ character }) => {
                   ({abilityNames[skill.ability]})
                 </span>
                 <span className="font-semibold">
-                  {getAbilityModifier(character.abilityScores?.[skill.ability] || 10)}
+                  {getAbilityModifier(character.abilities?.[skill.ability] || 10)}
                 </span>
               </div>
             ))}
@@ -171,7 +171,7 @@ const CharacterSheet = ({ character }) => {
           <div className="border-2 border-gray-800 rounded-lg p-4 text-center">
             <div className="text-xs font-bold uppercase text-gray-600">護甲等級</div>
             <div className="text-4xl font-bold">
-              {10 + Math.floor((character.abilityScores?.dexterity - 10) / 2)}
+              {10 + Math.floor((character.abilities?.dexterity - 10) / 2)}
             </div>
           </div>
 
@@ -179,7 +179,7 @@ const CharacterSheet = ({ character }) => {
           <div className="border-2 border-gray-800 rounded-lg p-4 text-center">
             <div className="text-xs font-bold uppercase text-gray-600">先攻</div>
             <div className="text-4xl font-bold">
-              {getAbilityModifier(character.abilityScores?.dexterity || 10)}
+              {getAbilityModifier(character.abilities?.dexterity || 10)}
             </div>
           </div>
 
@@ -196,8 +196,8 @@ const CharacterSheet = ({ character }) => {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold">
-                {classData 
-                  ? parseInt(classData.hitDie.substring(1)) + Math.floor((character.abilityScores?.constitution - 10) / 2)
+                {classData
+                  ? parseInt(classData.hitDie.substring(1)) + Math.floor((character.abilities?.constitution - 10) / 2)
                   : 10
                 }
               </div>
