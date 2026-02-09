@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { generateAIPrompt, exportPromptForPlatform, getEquipmentOptions, getPoseOptions, getBackgroundOptions } from '../utils/promptGenerator'
-import { getRecommendedEquipment } from '../data/equipmentData'
+import { getRecommendedEquipment, getEquipmentForClass } from '../data/equipmentData'
 import CharacterSheet from './CharacterSheet'
 
 const StepReview = ({ character, previousStep }) => {
@@ -30,6 +30,9 @@ const StepReview = ({ character, previousStep }) => {
     ? getRecommendedEquipment(character.class, character.race)
     : null
 
+  // Get detailed equipment data with descriptions
+  const equipmentDetails = character.class ? getEquipmentForClass(character.class) : null
+
   const generatedPrompt = character.class
     ? generateAIPrompt(character, promptOptions)
     : ''
@@ -40,7 +43,33 @@ const StepReview = ({ character, previousStep }) => {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-    alert('已複製到ŉ�貼簿！')
+    alert('已複製到剪貼簿！')
+  }
+
+  // Helper component for equipment item with tooltip
+  const EquipmentItem = ({ item }) => {
+    const [showTooltip, setShowTooltip] = useState(false)
+
+    return (
+      <li 
+        className="text-gray-700 relative group cursor-help"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <span className="flex items-center gap-1">
+          {item.nameChinese || item.name}
+          <span className="text-blue-500 text-xs">❓</span>
+        </span>
+        
+        {showTooltip && item.description && (
+          <div className="absolute left-0 top-full mt-1 z-10 bg-gray-900 text-white text-sm rounded-lg p-3 shadow-lg w-64">
+            <div className="font-semibold mb-1">{item.nameChinese || item.name}</div>
+            <div className="text-gray-200">{item.description}</div>
+            <div className="absolute -top-2 left-4 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-gray-900"></div>
+          </div>
+        )}
+      </li>
+    )
   }
 
   return (
@@ -80,83 +109,161 @@ const StepReview = ({ character, previousStep }) => {
           <CharacterSheet character={character} />
           
           {/* Recommended Equipment Section */}
-          {recommendedEquipment && (
-            <div className="bg-gray-50 rounded-lg p-6 mt-6">
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">🖡️ 建硒({character.class}曼灦裝</h3>
+          {equipmentDetails && (
+            <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-6 shadow-md mt-6">
+              <h3 className="text-xl font-bold text-amber-900 mb-4 flex items-center gap-2">
+                <span>⚔️</span>
+                推薦裝備（{equipmentDetails.nameChinese}）
+                <span className="text-sm font-normal text-amber-700">（懸停在 ❓ 上查看說明）</span>
+              </h3>
               
-              {/* Weapons */}
-              {recommendedEquipment.weapons && recommendedEquipment.weapons.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="font-medium text-gray-700 mb-2">武器:</h4>
-                  <ul className="list-disc space-y-1 ml-6">
-                    {recommendedEquipment.weapons.map((weapon, idx) => (
-                      <li key={idx} className="text-gray-600">
-                        {weapon.name}
-                        {weapon.damage && <span className="text-sm text-gray-500"> — {�weapon.damage}傷害，{weapon.damageType}伤宰�/span>}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              
-              {/* Armor */}
-              {(recommendedEquipment.armor || recommendedEquipment.shield) && (
-                <div className="mb-4">
-                  <h4 className="font-medium text-gray-700 mb-2">随疐:</h4>
-                  <ul className="list-disc space-y-1 ml-6">
-                    {recommendedEquipment.armor && (
-                      <li className="text-gray-600">
-                        {recommendedEquipment.armor.name}
-                        {recommendedEquipment.armor.ac && <span className="text-sm text-gray-500"> — AC: {recommendedEquipment.armor.ac}</span>}
-                      </li>
-                    )}
-                    {recommendedEquipment.shield && (
-                      <li className="text-gray-600">
-                        {recommendedEquipment.shield.name}
-                        {recommendedEquipment.shield.acBonus && <span className="text-sm text-gray-500"> — +{recommendedEquipment.shield.acBonus} AC</span>}
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              )}
-              
-              {/* Other Items */}
-              {recommendedEquipment.other && recommendedEquipment.other.length > 0 && (
-                <div className="mb-4">
-                  <h4 className="font-medium text-gray-700 mb-2">其他物啫)</h4>
-                  <ul className="list-disc space-y-1 ml-6">
-                    {recommendedEquipment.other.map((item, idx) => (
-                      <li key={idx} className="text-gray-600">{item.name}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              <div className="space-y-4">
+                {/* Weapons */}
+                {equipmentDetails.weapons && equipmentDetails.weapons.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-amber-800 mb-2">🗡️ 武器</h4>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      {equipmentDetails.weapons.map((weapon, index) => (
+                        <EquipmentItem key={index} item={weapon} />
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Armor */}
+                {equipmentDetails.armor && equipmentDetails.armor.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-amber-800 mb-2">🛡️ 護甲</h4>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      {equipmentDetails.armor.map((armor, index) => (
+                        <EquipmentItem key={index} item={armor} />
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Equipment (other items) */}
+                {equipmentDetails.equipment && equipmentDetails.equipment.length > 0 && (
+                  <div>
+                    <h4 className="font-semibold text-amber-800 mb-2">🎒 其他裝備</h4>
+                    <ul className="list-disc list-inside space-y-2 ml-4">
+                      {equipmentDetails.equipment.map((item, index) => (
+                        <EquipmentItem key={index} item={item} />
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
-          {/* Action Buttons */�H]��\�Ә[YOH��^�\M]M�����]ۂ�ې�X��^��ۛ�Y��ӟB��\�Ә[YOH��^LH��Y�X�YH^]�]HKL�M���[�Y[��۝\�[ZX��ݙ\����X�YKM��[��][ۋX��ܜȏ��<'��9."�/"���ӂ�؝]ۏ���]ۂ�ې�X��^��]�[�\��\B��\�Ә[YOH��^LH��Yܘ^KL�^Yܘ^KM�KL�M���[�Y[��۝\�[ZX��ݙ\����Yܘ^KM�[��][ۋX��ܜȏ��<'�&H9f�b,9."�. 9�iB�؝]ۏ���]����]���
-_B���ʈRH��\�[�\�]܈�Y]�
-��B��\����\�X�\��Y]	���\�X�\���\��	��
-�]���]��\�Ә[YOH���Yܘ^KML��[�Y[�M������\�Ә[YOH�^^�۝\�[ZX��^Yܘ^KNX�M��'�RH9g%�`���'��$9fj�ς���ʈ��\�[ۜ�
-��B�]��\�Ә[YOH��X�K^KMX�M�����ʈ�[H
-��B�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'�9g%�`��i���.��X�[���[X���[YO^���\�[ۜ˜�[_B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ��[N�K�\��]��[YHJ_B��\�Ә[YOH��Y�[L��ܙ\��ܙ\�Yܘ^KL���[�Y[����\Θ�ܙ\�Y�X�YH���\Λ�][�K[�ۙH�����[ۈ�[YOH��[�\�KX\���ia�nm�&�z"*����[ۏ���[ۈ�[YOH��X[\�Xȏ�m�n��k�k�..�*�h���[ۏ���[ۈ�[YOH�[�[YH����ze�:,hO��[ۏ���[ۈ�[YOH��\��ۈ��chz`&�h���[ۏ���[ۈ�[YOH�Z[�[�ȏ��l9/cy�)y�jO��[ۏ���[ۈ�[YOH��[[�[���9�(yg��c��  ���[ۏ����[X����]�����ʈ�Y]�\H
-��B�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'宏9���f��b�n���X�[���[X���[YO^���\�[ۜ˝�Y]�\_B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ��Y]�\N�K�\��]��[YHJ_B��\�Ә[YOH��Y�[L��ܙ\��ܙ\�Yܘ^KL���[�Y[����\Θ�ܙ\�Y�X�YH���\Λ�][�K[�ۙH�����[ۈ�[YOH�Y�][��aj:.��`���"9�&y����"O��[ۏ���[ۈ�[YOH�ܝ�Z]�� ��`���":h%�`�9�%�*'�`���"O��[ۏ���[ۈ�[YOH�X�[ۈ��b�y�b��k�yb!�`���"9�,:-���%��.y���"O��[ۏ���[ۈ�[YOH��\�Y�\�[��H��� 9k�/k�.��`���"�9�(yg��)����9g%�c��*&��oyg��(�y�b�#��.��9��/k��c�`c��"O��[ۏ����[X����]�����ʈ��H
-��ۈۛHY��Y]�\H\�	�X�[ۉ�H
-��B����\�[ۜ˝�Y]�\HOOH	�X�[ۉ�	��
-�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'�9g���b��X�[���[X���[YO^���\�[ۜ˜��_B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ���N�K�\��]��[YHJ_B��\�Ә[YOH��Y�[L��ܙ\��ܙ\�Yܘ^KL���[�Y[����\Θ�ܙ\�Y�X�YH���\Λ�][�K[�ۙH������]��S�[ۜ��\�X�\���\��K�X\
-��HO�
-��[ۈ�^O^���K��[Y_H�[YO^���K��[Y_O����K�X�[O��[ۏ��
-J_B���[X����]���
-_B���ʈ�X��ܛ�[�
-��B�]��\�Ә[YOH��X�K^KL����X�[�\�Ә[YOH������۝[YY][H^Yܘ^KM���'�!�: �9�k��.�)�9k���"�X�[��]��\�Ә[YOH��^][\�X�[�\��\L����[�]�\OH��X�؛����X��Y^���\�[ۜ˚[��YP�X��ܛ�[�B�ې�[��O^�JHO��]��\�[ۜ�������\�[ۜ�[��YP�X��ܛ�[��K�\��]��X��YJ_B��\�Ә[YOH��MM��ς��[��\�Ә[YOH�^Yܘ^KM���c!yd*�o�9�k�*+yk���"Y˘Y�k�9�d�$g9�k�9�`�hc�he�h���b{�"O��[����]����]����]�����ʈ�[�\�]Y��\
-��B�]��\�Ә[YOH��X�K^KL�����\�Ә[YOH��۝[YY][H^Yܘ^KM����'��$9�RH9��9�.�	��]��\�Ә[YOH���]�]H�ܙ\��ܙ\�Yܘ^KL���[�Y[�MZ[�ZV�̜�[WHX^ZV͍�[WHݙ\����^KX]]Ȃ��[O^���]T�X�N�	��K]ܘ\	��ܙܘ\�	؜�XZ�]�ܙ	�_O���\�Ә[YOH�^\�H^Yܘ^KM�XY[��\�[^Y�����[�\�]Y��\	�,�����a�� �� �� ��B�����]����]ۂ�ې�X��^�
-HO���U��\��\�
-�[�\�]Y��\
-_B��\�Ә[YOH��Y�[��Y�X�YH^]�]HKL�M���[�Y[��۝\�[ZX��ݙ\����X�YKM��[��][ۋX��ܜ�]L�����<'���:)!�(�y��9�.��":`jy�*9b���"�ZY��\��^yg,9nl��bJ��"B�؝]ۏ���]�����ʈ]�ܛKT�X�Y�X�^ܝ
-��B�]��\�Ә[YOH��X�K^KM]M�M��ܙ\�]�ܙ\�Yܘ^KL�����\�Ә[YOH��۝[YY][H^Yܘ^KM�X�Lȏ�'�H9o!�b,9�빪&ynl�!��)���o#������ʈ]�ܛH�[X�܈
-��B�]��\�Ә[YOH��^�\L�X�M������^N�	�ZY��\��^I�X�[�	�ZY��\��^I�K���^N�	��X�KYY��\�[ۉ�X�[�	��X�HY��\�[ۉ�K���^N�	�[I�X�[�	�S0��l ' },
+          <div className="flex gap-4 mt-6">
+            <button
+              onClick={downloadJSON}
+              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-semibold"
+            >
+              📥 下載角色資料 (JSON)
+            </button>
+            <button
+              onClick={previousStep}
+              className="flex-1 bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors font-semibold"
+            >
+              🔙 返回編輯
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Prompt Generator View */}
+      {!showCharacterSheet && (
+        <div className="space-y-6">
+          <div className="bg-gray-50 rounded-lg p-6">
+            <h3 className="text-2xl font-bold text-gray-800 mb-4">🎨 AI 圖像生成器設置</h3>
+            
+            {/* Style Selection */}
+            <div className="mb-6">
+              <h4 className="font-medium text-gray-700 mb-2">風格選擇：</h4>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                {(
+                  [
+                    { key: 'fantasy-art', label: '美術風格繪畫' },
+                    { key: 'realistic', label: '寫實崇雕像風格' },
+                    { key: 'anime', label: '卡通/漫畫動漫風格' },
+                    { key: 'digital-art', label: '數位圖畫排版' },
+                    { key: 'painting', label: '繪畫風格（油畫）' },
+                    { key: 'simple-color', label: '純色平面浪漫漫畫' }
+                  ]
+                ).map(style => (
+                  <button
+                    key={style.key}
+                    onClick={() => setPromptOptions({ ...promptOptions, style: style.key })}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      promptOptions.style === style.key
+                        ? 'bg-dnd-blue text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {style.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Pose Selection */}
+            <div className="mb-6">
+              <h4 className="font-medium text-gray-700 mb-2">姿勢態度：</h4>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                {getPoseOptions().map(pose => (
+                  <button
+                    key={pose.key}
+                    onClick={() => setPromptOptions({ ...promptOptions, pose: pose.key })}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      promptOptions.pose === pose.key
+                        ? 'bg-dnd-blue text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {pose.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* View Type Selection */}
+            <div className="mb-6">
+              <h4 className="font-medium text-gray-700 mb-2">視角</h4>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                { [
+                  { key: 'default', label: '標準圖像' },
+                  { key: 'full-body', label: '全身像素視角' },
+                  { key: 'portrait', label: '肖像特寫細膩攝影' },
+                  { key: '3d-reference', label: '3D建模參考陣型視角' }
+                ].map(view => (
+                  <button
+                    key={view.key}
+                    onClick={() => setPromptOptions({ ...promptOptions, viewType: view.key })}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      promptOptions.viewType === view.key
+                        ? 'bg-dnd-blue text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {view.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Platform Selection */}
+            <div className="mb-6">
+              <h4 className="font-medium text-gray-700 mb-2">選擇平台：</h4>
+              <div className="flex justify-center gap-3">
+                { [
+                  { key: 'midjourney', label: 'Midjourney' },
+                  { key: 'dalle', label: 'DALL·E-3' },
+                  { key: 'stable-diffusion', label: 'Stable Diffusion' },
                   { key: 'leonardo', label: 'Leonardo.Ai' },
-                  { key: 'comhy', label: 'ComfyUI' }
+                  { key: 'comfy', label: 'ComfyUI' }
                 ].map(platform => (
                   <button
                     key={platform.key}
@@ -164,7 +271,7 @@ _B��\�Ә[YOH��Y�[��Y�X�YH^]�]
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                       selectedPlatform === platform.key
                         ? 'bg-dnd-blue text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bo-gray-300'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
                     {platform.label}
@@ -173,17 +280,17 @@ _B��\�Ә[YOH��Y�[��Y�X�YH^]�]
               </div>
 
               {/* Platform-Specific Prompt */}
-              <div className="bg-white border border-gray-300 rounded-lg p-4 min-h-[16rem] max-h-[48rem] overflow-y-auto"
+              <div className="bg-white border border-gray-300 rounded-lg p-4 min-h-[16rem] max-h-[48rem] overflow-y-auto mt-4"
                    style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
                 <p className="text-sm text-gray-700 leading-relaxed">
-                  {platformExport ? platformExport.prompt : '訋释。。。'}
+                  {platformExport ? platformExport.prompt : '處理中...'}
                 </p>
               </div>
               
               {/* Platform-Specific Parameters */}
               {platformExport && platformExport.parameters && (
                 <div className="mt-4 space-y-2">
-                  <h5 className="font-medium text-gray-700 mb-2">建硒 參數:h5>
+                  <h5 className="font-medium text-gray-700 mb-2">建議 參數：</h5>
                   <div className="bg-gray-50 rounded-lg p-3 text-sm">
                     {Object.entries(platformExport.parameters).map(([key, value]) => (
                       <div key={key} className="text-gray-700 mb-1">
@@ -198,7 +305,7 @@ _B��\�Ә[YOH��Y�[��Y�X�YH^]�]
                 onClick={() => copyToClipboard(platformExport ? platformExport.prompt : '')}
                 className="w-full bg-dnd-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors mt-3"
               >
-                📋 複製弇到目標平至皊觔示（釉遨用隬 {selectedPlatform})
+                📋 複製到剪貼簿（適用於 {selectedPlatform}）
               </button>
             </div>
           </div>
@@ -208,12 +315,12 @@ _B��\�Ә[YOH��Y�[��Y�X�YH^]�]
             <button
               onClick={downloadJSON}
               className="flex-1 bg-dnd-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-               📾 下輢oJSON
+              📥 下載 JSON
             </button>
             <button
               onClick={previousStep}
               className="flex-1 bg-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-400 transition-colors">
-              🔙 回到9.�K���
+              🔙 回到編輯
             </button>
           </div>
         </div>
