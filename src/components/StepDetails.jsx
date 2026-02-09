@@ -78,7 +78,7 @@ const StepDetails = ({ character, updateCharacter, nextStep, previousStep }) => 
 
           <div>
             <label className="block font-bold text-gray-800 mb-2">
-              體重 <span className="text-sm text-gray-500">({weightSuggestion})</span>
+              體重 <span className="text-sm text-gray-500">(例如：{weightSuggestion})</span>
             </label>
             <input
               type="text"
@@ -90,25 +90,38 @@ const StepDetails = ({ character, updateCharacter, nextStep, previousStep }) => 
           </div>
         </div>
 
-        {/* Alignment */}
-        <div>
-          <label className="block font-bold text-gray-800 mb-2">陣營</label>
-          <select
-            value={character.alignment || ''}
-            onChange={(e) => updateCharacter({ alignment: e.target.value })}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-          >
-            <option value="">選擇陣營...</option>
-            <option value="lawful-good">守序善良</option>
-            <option value="neutral-good">中立善良</option>
-            <option value="chaotic-good">混亂善良</option>
-            <option value="lawful-neutral">守序中立</option>
-            <option value="neutral">絕對中立</option>
-            <option value="chaotic-neutral">混亂中立</option>
-            <option value="lawful-evil">守序邪惡</option>
-            <option value="neutral-evil">中立邪惡</option>
-            <option value="chaotic-evil">混亂邪惡</option>
-          </select>
+        {/* Age and Alignment Row */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block font-bold text-gray-800 mb-2">年齡</label>
+            <input
+              type="text"
+              value={character.details.age || ''}
+              onChange={(e) => updateDetails('age', e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+              placeholder="例如: 25"
+            />
+          </div>
+
+          <div>
+            <label className="block font-bold text-gray-800 mb-2">陣營</label>
+            <select
+              value={character.alignment || ''}
+              onChange={(e) => updateCharacter({ alignment: e.target.value })}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+            >
+              <option value="">選擇...</option>
+              <option value="lawful-good">守序善良</option>
+              <option value="neutral-good">中立善良</option>
+              <option value="chaotic-good">混亂善良</option>
+              <option value="lawful-neutral">守序中立</option>
+              <option value="true-neutral">絕對中立</option>
+              <option value="chaotic-neutral">混亂中立</option>
+              <option value="lawful-evil">守序邪惡</option>
+              <option value="neutral-evil">中立邪惡</option>
+              <option value="chaotic-evil">混亂邪惡</option>
+            </select>
+          </div>
         </div>
 
         {/* Appearance */}
@@ -117,21 +130,19 @@ const StepDetails = ({ character, updateCharacter, nextStep, previousStep }) => 
           <textarea
             value={character.details.appearance || ''}
             onChange={(e) => updateDetails('appearance', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            rows={3}
-            placeholder="描述您角色的外貌特徵..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24"
+            placeholder="描述您角色的外貌－髮型、眼睛、捕捉動作、穿著特性 …"
           />
         </div>
 
         {/* Personality */}
         <div>
-          <label className="block font-bold text-gray-800 mb-2">個性</label>
+          <label className="block font-bold text-gray-800 mb-2">性格</label>
           <textarea
             value={character.details.personality || ''}
             onChange={(e) => updateDetails('personality', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            rows={3}
-            placeholder="描述您角色的個性特質..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24"
+            placeholder="描述您角色的性格，信念、價值觀和抱負…"
           />
         </div>
 
@@ -141,27 +152,25 @@ const StepDetails = ({ character, updateCharacter, nextStep, previousStep }) => 
           <textarea
             value={character.details.backstory || ''}
             onChange={(e) => updateDetails('backstory', e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-            rows={5}
-            placeholder="講述您角色的故事..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg h-32"
+            placeholder="分享您角色的過去，如何使他們來到這裡…"
           />
         </div>
       </div>
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between mt-6">
+      {/* Action Buttons */}
+      <div className="flex gap-4">
         <button
           onClick={previousStep}
-          className="btn btn-secondary"
+          className="flex-1 py-3 px-6 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition-colors"
         >
-          返回
+          上一步
         </button>
         <button
           onClick={nextStep}
-          disabled={!character.name}
-          className="btn btn-primary"
+          className="flex-1 py-3 px-6 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors"
         >
-          下一步
+          輸入細節
         </button>
       </div>
     </div>
