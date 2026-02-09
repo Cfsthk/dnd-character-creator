@@ -81,268 +81,228 @@ const StepReview = ({ character, previousStep }) => {
           
           {/* Recommended Equipment Section */}
           {recommendedEquipment && (
-            <div className="card max-w-5xl mx-auto mt-6">
-              <h3 className="text-2xl font-bold text-dnd-blue mb-4">建議裝備</h3>
+            <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-dnd-blue mt-6">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                {recommendedEquipment.icon} 建議裝備
+              </h3>
+              <p className="text-gray-600 mb-4">{recommendedEquipment.description}</p>
               
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Class Equipment */}
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                    {recommendedEquipment.classEquipment.nameChinese} 職業裝備
-                  </h4>
-                  
-                  {/* Weapons */}
-                  {recommendedEquipment.classEquipment.weapons && (
-                    <div className="mb-4">
-                      <p className="text-sm font-medium text-gray-600 mb-2">武器：</p>
-                      <ul className="space-y-2">
-                        {recommendedEquipment.classEquipment.weapons.map((weapon, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span className="text-dnd-blue mr-2">⚔️</span>
-                            <div>
-                              <span className="font-semibold">{weapon.nameChinese}</span>
-                              <span className="text-xs text-gray-500 ml-2">({weapon.name})</span>
-                              <p className="text-sm text-gray-600">{weapon.description}</p>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
+              {/* Starting Items */}
+              <div className="mb-6">
+                <h4 className="text-lg font-semibold text-gray-700 mb-2">起始裝備</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {recommendedEquipment.startingItems.map((item, index) => (
+                    <div key={index} className="bg-gray-50 p-3 rounded border">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-gray-800">{item.name}</span>
+                        {item.quantity && (
+                          <span className="text-sm text-gray-500">x{item.quantity}</span>
+                        )}
+                      </div>
+                      {item.description && (
+                        <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                      )}
+                      {item.stats && (
+                        <p className="text-xs text-gray-500 mt-1">{item.stats}</p>
+                      )}
                     </div>
-                  )}
-
-                  {/* Armor */}
-                  {recommendedEquipment.classEquipment.armor && (
-                    <div className="mb-4">
-                      <p className="text-sm font-medium text-gray-600 mb-2">護甲：</p>
-                      <ul className="space-y-2">
-                        {recommendedEquipment.classEquipment.armor.map((armor, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span className="text-dnd-blue mr-2">🛡️</span>
-                            <div>
-                              <span className="font-semibold">{armor.nameChinese}</span>
-                              <span className="text-xs text-gray-500 ml-2">({armor.name})</span>
-                              <p className="text-sm text-gray-600">{armor.description}</p>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Equipment */}
-                  {recommendedEquipment.classEquipment.equipment && (
-                    <div>
-                      <p className="text-sm font-medium text-gray-600 mb-2">裝備：</p>
-                      <ul className="space-y-2">
-                        {recommendedEquipment.classEquipment.equipment.map((item, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <span className="text-dnd-blue mr-2">🎒</span>
-                            <div>
-                              <span className="font-semibold">{item.nameChinese}</span>
-                              <span className="text-xs text-gray-500 ml-2">({item.name})</span>
-                              <p className="text-sm text-gray-600">{item.description}</p>
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  ))}
                 </div>
-
-                {/* Race Bonus Equipment */}
-                {recommendedEquipment.raceBonus.length > 0 && (
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-3">種族額外裝備</h4>
-                    <ul className="space-y-2">
-                      {recommendedEquipment.raceBonus.map((item, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="text-dnd-blue mr-2">✨</span>
-                          <div>
-                            <span className="font-semibold">{item.nameChinese}</span>
-                            <span className="text-xs text-gray-500 ml-2">({item.name})</span>
-                            <p className="text-sm text-gray-600">{item.description}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
+
+              {/* Recommended Upgrades */}
+              {recommendedEquipment.recommendedUpgrades && (
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-700 mb-2">推薦升級</h4>
+                  <div className="space-y-2">
+                    {recommendedEquipment.recommendedUpgrades.map((upgrade, index) => (
+                      <div key={index} className="bg-blue-50 p-3 rounded border border-blue-200">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium text-gray-800">{upgrade.name}</span>
+                          <span className="text-sm text-blue-600">等級 {upgrade.level}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-1">{upgrade.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
+
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <button
+              onClick={previousStep}
+              className="px-6 py-2 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors"
+            >
+              ← 返回修改
+            </button>
+            <button
+              onClick={downloadJSON}
+              className="px-6 py-2 rounded-lg bg-dnd-gold text-white font-semibold hover:bg-gray-600 transition-colors"
+            >
+              💾 下載角色 JSON
+            </button>
+          </div>
         </div>
       )}
 
       {/* AI Image Generator View */}
       {!showCharacterSheet && (
-        <div className="space-y-6">
-          <div className="card max-w-2xl mx-auto space-y-4">
-            <div className="border-b pb-4">
-              <h3 className="text-2xl font-bold text-dnd-blue">{character.name || '未命名角色'}</h3>
-              <p className="text-gray-600 mt-1">
-                {character.race} {character.subrace} {character.class}
-              </p>
-            </div>
+        <div className="bg-white p-6 rounded-lg shadow-lg border-2 border-dnd-blue">
+          <h3 className="text-2xl font-bold text-gray-800 mb-4">🎨 AI 圖像生成器</h3>
+          <p className="text-gray-600 mb-6">
+            根據您的角色資料生成 AI 繪圖提示詞，可用於 Midjourney、Stable Diffusion 等平台
+          </p>
 
-            {/* Prompt Options */}
+          {!character.class && (
+            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
+              <p className="text-yellow-800">⚠️ 請先完成角色創建（包括職業選擇）才能生成 AI 圖像提示詞</p>
+            </div>
+          )}
+
+          {/* Platform Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              選擇平台
+            </label>
+            <select
+              value={selectedPlatform}
+              onChange={(e) => setSelectedPlatform(e.target.value)}
+              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
+            >
+              <option value="midjourney">Midjourney</option>
+              <option value="stable-diffusion">Stable Diffusion</option>
+              <option value="dalle">DALL-E</option>
+              <option value="leonardo">Leonardo.ai</option>
+            </select>
+          </div>
+
+          {/* Style Options */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              藝術風格
+            </label>
+            <select
+              value={promptOptions.style}
+              onChange={(e) => setPromptOptions({...promptOptions, style: e.target.value})}
+              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
+            >
+              <option value="fantasy-art">奇幻藝術</option>
+              <option value="anime">動漫風格</option>
+              <option value="realistic">寫實風格</option>
+              <option value="oil-painting">油畫風格</option>
+              <option value="watercolor">水彩風格</option>
+              <option value="comic-book">漫畫風格</option>
+            </select>
+          </div>
+
+          {/* Pose Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              角色姿勢
+            </label>
+            <select
+              value={promptOptions.pose}
+              onChange={(e) => setPromptOptions({...promptOptions, pose: e.target.value})}
+              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
+            >
+              {getPoseOptions(character.class).map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* View Type Selection */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              視角類型
+            </label>
+            <select
+              value={promptOptions.viewType}
+              onChange={(e) => setPromptOptions({...promptOptions, viewType: e.target.value})}
+              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
+            >
+              <option value="portrait">肖像 (Portrait)</option>
+              <option value="full-body">全身 (Full Body)</option>
+              <option value="action-shot">動作場景 (Action Shot)</option>
+              <option value="3d-reference">3D 參考 (多視角)</option>
+            </select>
+          </div>
+
+          {/* Background Toggle */}
+          <div className="mb-6">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={promptOptions.includeBackground}
+                onChange={(e) => setPromptOptions({...promptOptions, includeBackground: e.target.checked})}
+                className="w-5 h-5 text-dnd-blue rounded focus:ring-2 focus:ring-dnd-blue"
+              />
+              <span className="text-sm font-semibold text-gray-700">包含場景背景</span>
+            </label>
+          </div>
+
+          {/* Generated Prompt Display */}
+          {platformExport && character.class && (
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  藝術風格
-                </label>
-                <select
-                  value={promptOptions.style}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, style: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-                >
-                  <option value="fantasy-art">奇幻藝術</option>
-                  <option value="anime">動漫風格</option>
-                  <option value="realistic">寫實風格</option>
-                  <option value="concept-art">概念藝術</option>
-                  <option value="comic-book">漫畫風格</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  圖像類型
-                </label>
-                <select
-                  value={promptOptions.viewType}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, viewType: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-                >
-                  <option value="single-view">單一視角</option>
-                  <option value="3d-reference">3D建模參考（前/後/左/右視圖）</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  角色姿勢
-                </label>
-                <select
-                  value={promptOptions.pose}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, pose: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-dnd-blue focus:border-transparent"
-                >
-                  {getPoseOptions().map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.labelChinese || option.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="includeBackground"
-                  checked={promptOptions.includeBackground}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, includeBackground: e.target.checked })}
-                  className="w-4 h-4 text-dnd-blue border-gray-300 rounded focus:ring-dnd-blue"
-                />
-                <label htmlFor="includeBackground" className="ml-2 text-sm text-gray-700">
-                  包含背景設定
-                </label>
-              </div>
-            </div>
-
-            {/* Generated Prompt */}
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  生成的提示詞
-                </label>
-                <button
-                  onClick={() => copyToClipboard(generatedPrompt)}
-                  className="text-sm text-dnd-blue hover:text-dnd-blue-dark font-medium"
-                >
-                  📋 複製
-                </button>
-              </div>
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
-                {generatedPrompt || '完成角色創建以生成提示詞'}
-              </div>
-            </div>
-
-            {/* Platform-Specific Export */}
-            <div className="border-t pt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                平台專用格式
-              </label>
-              <div className="flex gap-2 mb-3">
-                {['midjourney', 'dalle', 'stable-diffusion'].map(platform => (
+              <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-300">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-semibold text-gray-700">生成的提示詞</h4>
                   <button
-                    key={platform}
-                    onClick={() => setSelectedPlatform(platform)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                      selectedPlatform === platform
-                        ? 'bg-dnd-blue text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
+                    onClick={() => copyToClipboard(platformExport.prompt)}
+                    className="px-3 py-1 bg-dnd-blue text-white text-sm rounded hover:bg-blue-700 transition-colors"
                   >
-                    {platform === 'midjourney' && '🎨 Midjourney'}
-                    {platform === 'dalle' && '🤖 DALL-E'}
-                    {platform === 'stable-diffusion' && '🎯 Stable Diffusion'}
+                    📋 複製提示詞
                   </button>
-                ))}
+                </div>
+                <p className="text-sm text-gray-800 whitespace-pre-wrap font-mono">
+                  {platformExport.prompt}
+                </p>
               </div>
-              {platformExport && (
-                <div>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-gray-600">
-                      已針對 {selectedPlatform} 優化
-                    </span>
-                    <button
-                      onClick={() => copyToClipboard(platformExport.prompt)}
-                      className="text-sm text-dnd-blue hover:text-dnd-blue-dark font-medium"
-                    >
-                      📋 複製
-                    </button>
+
+              {/* Platform-specific Parameters */}
+              {platformExport.parameters && (
+                <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+                  <h4 className="font-semibold text-gray-700 mb-2">平台參數</h4>
+                  <div className="space-y-1">
+                    {Object.entries(platformExport.parameters).map(([key, value]) => (
+                      <div key={key} className="flex justify-between text-sm">
+                        <span className="font-medium text-gray-600">{key}:</span>
+                        <span className="text-gray-800">{value}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-sm">
-                    {platformExport.prompt}
-                  </div>
-                  {platformExport.parameters && (
-                    <div className="mt-2 text-xs text-gray-500">
-                      <strong>建議參數：</strong> {platformExport.parameters}
-                    </div>
-                  )}
                 </div>
               )}
-            </div>
-          </div>
 
-          {/* Tips Section */}
-          <div className="card max-w-2xl mx-auto bg-blue-50 border-blue-200">
-            <h4 className="font-semibold text-dnd-blue mb-2">💡 獲得更好結果的提示</h4>
-            <ul className="text-sm text-gray-700 space-y-1">
-              <li>• 調整藝術風格以符合您偏好的美學</li>
-              <li>• 選擇「3D建模參考」可生成前後左右四視圖，適合建模使用</li>
-              <li>• 嘗試不同姿勢以展現不同的角色形象</li>
-              <li>• 使用平台專用格式以獲得最佳效果</li>
-              <li>• 實驗背景設定以增加情境感</li>
-            </ul>
-          </div>
+              {/* Usage Tips */}
+              {platformExport.tips && (
+                <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-200">
+                  <h4 className="font-semibold text-gray-700 mb-2">💡 使用提示</h4>
+                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                    {platformExport.tips.map((tip, index) => (
+                      <li key={index}>{tip}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Back Button */}
+              <div className="flex justify-start mt-6">
+                <button
+                  onClick={() => setShowCharacterSheet(true)}
+                  className="px-6 py-2 rounded-lg bg-gray-300 text-gray-700 font-semibold hover:bg-gray-400 transition-colors"
+                >
+                  ← 返回角色卡
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
-
-      {/* Action Buttons */}
-      <div className="flex justify-between pt-6 border-t">
-        <button
-          onClick={previousStep}
-          className="btn-secondary"
-        >
-          ← 返回
-        </button>
-        <button
-          onClick={downloadJSON}
-          className="btn-primary"
-        >
-          💾 下載角色 JSON
-        </button>
-      </div>
     </div>
   )
 }
