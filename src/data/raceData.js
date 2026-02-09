@@ -85,112 +85,112 @@ export const races = {
 
 export const subRaceDetails = {
   // Elf subraces
-  'High Elf': { 
+  'High Elf': {
     abilityBonus: { intelligence: 1 },
     nameChinese: '高等精靈',
     description: '高等精靈精通魔法藝術，擁有額外的法術能力和武器訓練。'
   },
-  'Wood Elf': { 
+  'Wood Elf': {
     abilityBonus: { wisdom: 1 },
     nameChinese: '森林精靈',
     description: '森林精靈與大自然緊密相連，移動速度更快，擅長隱匿於野外。'
   },
-  'Dark Elf (Drow)': { 
+  'Dark Elf (Drow)': {
     abilityBonus: { charisma: 1 },
     nameChinese: '黑暗精靈（卓爾）',
     description: '黑暗精靈來自地底世界，擁有優越的黑暗視覺和天生的魔法能力。'
   },
-  'Eladrin': { 
+  'Eladrin': {
     abilityBonus: { charisma: 1 },
     nameChinese: '妖精',
     description: '妖精是精靈的妖精位面分支，能夠轉換季節形態，擁有傳送能力。'
   },
-  'Sea Elf': { 
+  'Sea Elf': {
     abilityBonus: { constitution: 1 },
     nameChinese: '海精靈',
     description: '海精靈適應水下生活，能夠在水中呼吸並擁有游泳速度。'
   },
-  'Shadar-kai': { 
+  'Shadar-kai': {
     abilityBonus: { constitution: 1 },
     nameChinese: '影精靈',
     description: '影精靈與影界相連，擁有抗性和短距離傳送能力。'
   },
-  
+
   // Dwarf subraces
-  'Hill Dwarf': { 
+  'Hill Dwarf': {
     abilityBonus: { wisdom: 1 },
     nameChinese: '丘陵矮人',
     description: '丘陵矮人額外堅韌，每級獲得更多生命值，擁有敏銳的感知力。'
   },
-  'Mountain Dwarf': { 
+  'Mountain Dwarf': {
     abilityBonus: { strength: 2 },
     nameChinese: '山地矮人',
     description: '山地矮人強壯有力，精通輕型和中型護甲的使用。'
   },
-  'Duergar': { 
+  'Duergar': {
     abilityBonus: { strength: 1 },
     nameChinese: '灰矮人',
     description: '灰矮人來自幽暗地域，擁有高等黑暗視覺和天生的魔法抗性。'
   },
-  
+
   // Halfling subraces
-  'Lightfoot Halfling': { 
+  'Lightfoot Halfling': {
     abilityBonus: { charisma: 1 },
     nameChinese: '輕足半身人',
     description: '輕足半身人特別擅長隱匿，能夠躲藏在較大生物後方。'
   },
-  'Stout Halfling': { 
+  'Stout Halfling': {
     abilityBonus: { constitution: 1 },
     nameChinese: '強壯半身人',
     description: '強壯半身人擁有矮人血統，對毒素有抗性並更加堅韌。'
   },
-  'Ghostwise Halfling': { 
+  'Ghostwise Halfling': {
     abilityBonus: { wisdom: 1 },
     nameChinese: '幽影半身人',
     description: '幽影半身人擁有心靈感應能力，能夠無聲地與他人交流。'
   },
-  
+
   // Gnome subraces
-  'Forest Gnome': { 
+  'Forest Gnome': {
     abilityBonus: { dexterity: 1 },
     nameChinese: '森林侏儒',
     description: '森林侏儒擁有天生的幻術魔法和與小動物交流的能力。'
   },
-  'Rock Gnome': { 
+  'Rock Gnome': {
     abilityBonus: { constitution: 1 },
     nameChinese: '岩石侏儒',
     description: '岩石侏儒是天生的發明家，擁有製作機械裝置的天賦。'
   },
-  'Deep Gnome (Svirfneblin)': { 
+  'Deep Gnome (Svirfneblin)': {
     abilityBonus: { dexterity: 1 },
     nameChinese: '深地侏儒',
     description: '深地侏儒居住在地底深處，擁有高等隱匿能力和石頭知識。'
   },
-  
+
   // Half-Elf subraces
-  'Standard': { 
+  'Standard': {
     abilityBonus: {},
     nameChinese: '標準',
     description: '標準半精靈可以從各種技能中選擇兩項熟練，展現其多才多藝。'
   },
-  'Aquatic': { 
+  'Aquatic': {
     abilityBonus: {},
     nameChinese: '水棲',
     description: '水棲半精靈擁有游泳速度和水下呼吸能力。'
   },
-  'Drow': { 
+  'Drow': {
     abilityBonus: {},
     nameChinese: '卓爾',
     description: '卓爾半精靈擁有黑暗精靈的法術能力和優越的黑暗視覺。'
   },
-  
+
   // Human subraces
-  'Standard Human': { 
+  'Standard Human': {
     abilityBonus: { all: 1 },
     nameChinese: '標準人類',
     description: '標準人類所有屬性各獲得+1，展現其全面的適應能力。'
   },
-  'Variant Human': { 
+  'Variant Human': {
     abilityBonus: {},
     nameChinese: '變體人類',
     description: '變體人類可選擇兩項屬性各+1，並獲得一個額外專長和技能。'
