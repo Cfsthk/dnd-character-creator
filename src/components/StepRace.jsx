@@ -35,7 +35,8 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
   }
 
   const currentRaceData = selectedRace ? races[selectedRace] : null
-  const subraces = currentRaceData ? currentRaceData.subraces : []
+  const subraceNames = currentRaceData ? currentRaceData.subraces : []
+  const subraceDetails = currentRaceData ? currentRaceData.subraceDetails : {}
 
   return (
     <div className="space-y-6">
@@ -69,33 +70,38 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
       </div>
 
       {/* Subrace Selection */}
-      {selectedRace && subraces.length > 0 && (
+      {selectedRace && subraceNames.length > 0 && (
         <div className="card max-w-3xl mx-auto p-6">
           <h3 className="text-xl font-bold text-gray-800 mb-3">
             選擇 {races[selectedRace].nameChinese} 亞種
           </h3>
           <div className="space-y-3">
-            {subraces.map((subrace, index) => (
-              <button
-                key={index}
-                onClick={() => handleSubraceSelect(subrace.name)}
-                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                  selectedSubrace === subrace.name
-                    ? 'border-dnd-blue bg-blue-50'
-                    : 'border-gray-300 hover:border-dnd-blue'
-                }`}
-              >
-                <h4 className="font-bold text-gray-800 mb-2">{subrace.nameChinese}</h4>
-                <p className="text-gray-600 text-sm">{subrace.descriptionChinese}</p>
-                <div className="mt-2">
-                  <p className="text-xs text-gray-500">
-                    能力加值: {Object.entries(subrace.abilityBonuses).map(([key, value]) => 
-                      `${key} +${value}`
-                    ).join(', ')}
-                  </p>
-                </div>
-              </button>
-            ))}
+            {subraceNames.map((subraceName, index) => {
+              const subraceData = subraceDetails[subraceName]
+              if (!subraceData) return null
+              
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleSubraceSelect(subraceName)}
+                  className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                    selectedSubrace === subraceName
+                      ? 'border-dnd-blue bg-blue-50'
+                      : 'border-gray-300 hover:border-dnd-blue'
+                  }`}
+                >
+                  <h4 className="font-bold text-gray-800 mb-2">{subraceData.nameChinese}</h4>
+                  <p className="text-gray-600 text-sm">{subraceData.descriptionChinese}</p>
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-500">
+                      能力加值: {Object.entries(subraceData.abilityBonuses).map(([key, value]) => 
+                        `${key} +${value}`
+                      ).join(', ')}
+                    </p>
+                  </div>
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
