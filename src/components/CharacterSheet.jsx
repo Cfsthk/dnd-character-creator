@@ -47,771 +47,338 @@ const CharacterSheet = ({ character }) => {
     shortsword: "Martial melee weapon. Light, finesse. A short blade ideal for quick strikes.",
     longsword: "Martial melee weapon. Versatile (1d8/1d10). The classic knight's blade.",
     greatsword: "Martial melee weapon. Two-handed, heavy. A massive blade wielded with both hands.",
-    battleaxe: "Martial melee weapon. Versatile (1d8/1d10). A single-bladed axe for chopping.",
-    greataxe: "Martial melee weapon. Two-handed, heavy. A huge axe that deals devastating damage.",
-    warhammer: "Martial melee weapon. Versatile (1d8/1d10). A heavy hammer for crushing blows.",
-    mace: "Simple melee weapon. A flanged or spiked metal club.",
-    rapier: "Martial melee weapon. Finesse. A thin, elegant blade for precise thrusts.",
-    shortbow: "Simple ranged weapon. Two-handed. Range 80/320 ft. A short bow for quick shots.",
-    longbow: "Martial ranged weapon. Two-handed, heavy. Range 150/600 ft. A powerful war bow.",
-    crossbow: "Simple ranged weapon. Loading, two-handed. Range 80/320 ft. A mechanical bow.",
-    handaxe: "Simple melee weapon. Light, thrown (20/60 ft). A small hatchet.",
-    spear: "Simple melee weapon. Thrown (20/60 ft), versatile (1d6/1d8). A thrusting pole weapon.",
-    quarterstaff: "Simple melee weapon. Versatile (1d6/1d8). A wooden staff.",
+    battleaxe: "Martial melee weapon. Versatile (1d8/1d10). A sturdy axe for chopping foes.",
+    handaxe: "Simple melee weapon. Light, thrown (20/60 ft). A small axe that can be thrown.",
+    mace: "Simple melee weapon. A heavy club with a metal head.",
+    quarterstaff: "Simple melee weapon. Versatile (1d6/1d8). A simple wooden staff.",
+    spear: "Simple melee weapon. Thrown (20/60 ft), versatile (1d6/1d8). A pointed weapon on a shaft.",
+    lightCrossbow: "Simple ranged weapon. Ammunition (80/320 ft), loading, two-handed. A small crossbow.",
+    shortbow: "Simple ranged weapon. Ammunition (80/320 ft), two-handed. A compact bow.",
+    longbow: "Martial ranged weapon. Ammunition (150/600 ft), heavy, two-handed. A powerful war bow.",
+    
     // Armor
-    leather: "Light armor. AC 11 + Dex modifier. Boiled leather pieces covering vital areas.",
-    studded: "Light armor. AC 12 + Dex modifier. Leather reinforced with metal studs.",
-    chainmail: "Heavy armor. AC 16. Interlocking metal rings. Disadvantage on Stealth.",
-    platemail: "Heavy armor. AC 18. Shaped metal plates covering the body. Disadvantage on Stealth.",
-    scalemail: "Medium armor. AC 14 + Dex (max 2). Overlapping metal scales. Disadvantage on Stealth.",
-    shield: "+2 AC. A portable barrier held in one hand.",
-    // Common items
-    rope: "50 feet of hempen rope. Can support 1,500 pounds.",
-    torch: "Burns for 1 hour, providing bright light in 20-foot radius.",
-    backpack: "Holds 1 cubic foot or 30 pounds of gear.",
-    bedroll: "Cloth sheets and padding for sleeping on the ground.",
-    rations: "Dried foods suitable for extended travel. One day's sustenance.",
-    waterskin: "A leather container that holds 4 pints of liquid.",
-    healingpotion: "Potion of Healing. Restores 2d4+2 hit points when consumed."
+    leather: "Light armor. AC 11 + Dex modifier. Flexible and quiet, made from boiled leather.",
+    studdedLeather: "Light armor. AC 12 + Dex modifier. Reinforced with metal studs for extra protection.",
+    chainShirt: "Medium armor. AC 13 + Dex modifier (max 2). Interlocking metal rings worn under clothing.",
+    scaleMail: "Medium armor. AC 14 + Dex modifier (max 2). Overlapping metal scales on a leather backing. Disadvantage on Stealth.",
+    breastplate: "Medium armor. AC 14 + Dex modifier (max 2). Metal chest piece worn over leather.",
+    halfPlate: "Medium armor. AC 15 + Dex modifier (max 2). Partial plate armor protecting vital areas. Disadvantage on Stealth.",
+    ringMail: "Heavy armor. AC 14. Leather with heavy rings sewn in. Disadvantage on Stealth.",
+    chainMail: "Heavy armor. AC 16. Interlocking metal rings covering the body. Str 13 required. Disadvantage on Stealth.",
+    splint: "Heavy armor. AC 17. Metal strips on a leather backing. Str 15 required. Disadvantage on Stealth.",
+    plate: "Heavy armor. AC 18. Full suit of interlocking metal plates. Str 15 required. Disadvantage on Stealth.",
+    shield: "Shield. +2 AC. Wooden or metal shield strapped to your arm.",
+    
+    // Adventuring gear
+    backpack: "A leather pack for carrying supplies (1 cubic foot / 30 pounds).",
+    bedroll: "A warm blanket and padding for sleeping on the ground.",
+    rope: "50 feet of hempen rope. Useful for climbing, binding, or makeshift solutions.",
+    torches: "10 wooden sticks with oil-soaked wrappings. Each burns for 1 hour, providing bright light in 20-foot radius.",
+    rations: "10 days of dried food (meat, fruit, hardtack). Each day's ration weighs 2 pounds.",
+    waterskin: "A leather container holding 4 pints of liquid.",
+    tinderbox: "Flint, fire steel, and tinder for starting fires.",
+    healersKit: "10 uses. Bandages, salves, and splints for stabilizing dying creatures.",
+    componentsPouch: "A belt pouch with compartments for holding spell components.",
+    arcane Focus: "A special item (orb, staff, wand, etc.) used to channel magical energy.",
+    holySymbol: "A sacred representation of your deity used as a spellcasting focus.",
+    spellbook: "A leather-bound tome with 100 blank pages for recording wizard spells.",
+    thievesTools: "Lockpicks, small files, and other tools for disabling traps and picking locks.",
+    musicalInstrument: "An instrument you're proficient with for performances.",
+    
+    // Other common items
+    potion: "A magical liquid that produces an effect when consumed.",
+    goldPieces: "The standard currency in most D&D worlds. 1 gp = 10 silver pieces = 100 copper pieces."
   }
 
-  // Calculate Maximum HP (Hit Die + Constitution Modifier)
-  const calculateMaxHP = () => {
-    if (!classData) return 0
-    const conMod = getAbilityModifierNum(character.abilities?.constitution || 10)
+  // Render ability scores section
+  const renderAbilityScores = () => {
+    const abilities = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
     
-    // For level 1: max hit die value + CON modifier
-    const hitDieValue = parseInt(classData.hitDie.replace('d', ''))
-    return hitDieValue + conMod
-  }
-
-  // Calculate Spell Save DC
-  const calculateSpellDC = () => {
-    if (!classData) return 0
-    
-    let spellcastingAbility = 0
-    const className = classData.nameEn?.toLowerCase()
-    
-    if (['cleric', 'druid', 'ranger'].includes(className)) {
-      spellcastingAbility = getAbilityModifierNum(character.abilities?.wisdom || 10)
-    } else if (['wizard'].includes(className)) {
-      spellcastingAbility = getAbilityModifierNum(character.abilities?.intelligence || 10)
-    } else if (['bard', 'sorcerer', 'warlock', 'paladin'].includes(className)) {
-      spellcastingAbility = getAbilityModifierNum(character.abilities?.charisma || 10)
-    }
-    
-    return 8 + getProficiencyBonus() + spellcastingAbility
-  }
-
-  // Calculate Spell Attack Bonus
-  const calculateSpellAttack = () => {
-    if (!classData) return 0
-    
-    let spellcastingAbility = 0
-    const className = classData.nameEn?.toLowerCase()
-    
-    if (['cleric', 'druid', 'ranger'].includes(className)) {
-      spellcastingAbility = getAbilityModifierNum(character.abilities?.wisdom || 10)
-    } else if (['wizard'].includes(className)) {
-      spellcastingAbility = getAbilityModifierNum(character.abilities?.intelligence || 10)
-    } else if (['bard', 'sorcerer', 'warlock', 'paladin'].includes(className)) {
-      spellcastingAbility = getAbilityModifierNum(character.abilities?.charisma || 10)
-    }
-    
-    return getProficiencyBonus() + spellcastingAbility
-  }
-
-  // Calculate weapon attack bonus
-  const getWeaponAttackBonus = (weapon) => {
-    if (!weapon) return 0
-    
-    // Finesse or ranged weapons can use DEX, melee uses STR
-    const weaponName = weapon.name?.toLowerCase() || ''
-    const isFinesse = ['dagger', 'shortsword', 'rapier'].includes(weaponName)
-    const isRanged = ['shortbow', 'longbow', 'crossbow'].includes(weaponName)
-    
-    const strMod = getAbilityModifierNum(character.abilities?.strength || 10)
-    const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
-    
-    let abilityMod = strMod
-    if (isFinesse) {
-      abilityMod = Math.max(strMod, dexMod)
-    } else if (isRanged) {
-      abilityMod = dexMod
-    }
-    
-    return getProficiencyBonus() + abilityMod
-  }
-
-  // Print function
-  const handlePrint = () => {
-    window.print()
-  }
-
-  // Get skill modifier
-  const getSkillModifier = (skill, abilityScore) => {
-    const abilityMod = getAbilityModifierNum(abilityScore)
-    const isProficient = character.skills?.[skill] || false
-    const profBonus = isProficient ? getProficiencyBonus() : 0
-    const total = abilityMod + profBonus
-    return total >= 0 ? `+${total}` : `${total}`
-  }
-
-  // Get equipment description
-  const getEquipmentDescription = (itemName) => {
-    const key = itemName?.toLowerCase().replace(/\s+/g, '') || ''
-    return EQUIPMENT_DESCRIPTIONS[key] || "Standard adventuring equipment."
-  }
-
-  // Get skill description
-  const getSkillDescription = (skillName) => {
-    return SKILL_DESCRIPTIONS[skillName] || ""
-  }
-
-  return (
-    <div style={{
-      maxWidth: '850px',
-      margin: '0 auto',
-      fontFamily: "'Modesto Condensed', 'Crimson Text', Georgia, serif",
-      background: 'linear-gradient(to bottom, #f4e8d0 0%, #e8dcc0 100%)',
-      padding: '30px',
-      boxShadow: '0 0 30px rgba(0,0,0,0.3)',
-      position: 'relative'
-    }}>
-      {/* Print Button */}
-      <button 
-        onClick={handlePrint}
-        style={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
-          padding: '10px 20px',
-          backgroundColor: '#8b4513',
-          color: '#f4e8d0',
-          border: '2px solid #654321',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          fontSize: '14px',
-          boxShadow: '0 2px 5px rgba(0,0,0,0.3)',
-          zIndex: 1000
-        }}
-        className="no-print"
-      >
-        🖨️ Print Sheet
-      </button>
-
-      {/* Header */}
-      <div style={{
-        textAlign: 'center',
-        borderBottom: '3px solid #8b4513',
-        marginBottom: '20px',
-        paddingBottom: '15px'
-      }}>
-        <h1 style={{
-          margin: '0',
-          fontSize: '36px',
-          color: '#2c1810',
-          textTransform: 'uppercase',
-          letterSpacing: '3px'
-        }}>
-          {character.name || 'Character Name'}
-        </h1>
-        <div style={{
-          fontSize: '18px',
-          color: '#654321',
-          marginTop: '8px'
-        }}>
-          Level {character.level || 1} {raceData?.nameEn || character.race} {classData?.nameEn || character.class}
-        </div>
+    return (
+      <div className="ability-scores-grid">
+        {abilities.map((ability) => {
+          const score = character.abilities?.[ability] || 10
+          const modifier = getAbilityModifier(score)
+          
+          return (
+            <div key={ability} className="ability-score-box">
+              <div className="ability-name">{ability.toUpperCase().substring(0, 3)}</div>
+              <div className="ability-modifier">{modifier}</div>
+              <div className="ability-score">{score}</div>
+            </div>
+          )
+        })}
       </div>
+    )
+  }
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '20px' }}>
-        {/* Left Column */}
-        <div>
-          {/* Ability Scores */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px'
-          }}>
-            <h3 style={{
-              margin: '0 0 15px 0',
-              fontSize: '18px',
-              color: '#8b4513',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #8b4513',
-              paddingBottom: '5px'
-            }}>Ability Scores</h3>
-            
-            {['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].map(ability => (
-              <div key={ability} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '10px',
-                padding: '8px',
-                backgroundColor: 'rgba(139, 69, 19, 0.1)',
-                borderRadius: '5px'
-              }}>
-                <span style={{
-                  fontWeight: 'bold',
-                  color: '#654321',
-                  textTransform: 'capitalize',
-                  fontSize: '14px'
-                }}>{ability}</span>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <span style={{
-                    fontSize: '20px',
-                    fontWeight: 'bold',
-                    color: '#2c1810'
-                  }}>{character.abilities?.[ability] || 10}</span>
-                  <div style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    border: '2px solid #8b4513',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: '#f4e8d0',
-                    fontSize: '16px',
-                    fontWeight: 'bold',
-                    color: '#8b4513'
-                  }}>
-                    {getAbilityModifier(character.abilities?.[ability] || 10)}
+  // Render skills section
+  const renderSkills = () => {
+    const skillAbilityMap = {
+      acrobatics: 'dexterity',
+      animalHandling: 'wisdom',
+      arcana: 'intelligence',
+      athletics: 'strength',
+      deception: 'charisma',
+      history: 'intelligence',
+      insight: 'wisdom',
+      intimidation: 'charisma',
+      investigation: 'intelligence',
+      medicine: 'wisdom',
+      nature: 'intelligence',
+      perception: 'wisdom',
+      performance: 'charisma',
+      persuasion: 'charisma',
+      religion: 'intelligence',
+      sleightOfHand: 'dexterity',
+      stealth: 'dexterity',
+      survival: 'wisdom'
+    }
+
+    return (
+      <div className="skills-list">
+        {Object.keys(skillAbilityMap).map((skill) => {
+          const ability = skillAbilityMap[skill]
+          const abilityScore = character.abilities?.[ability] || 10
+          const abilityMod = getAbilityModifierNum(abilityScore)
+          const isProficient = character.skills?.includes(skill)
+          const profBonus = isProficient ? getProficiencyBonus() : 0
+          const totalBonus = abilityMod + profBonus
+          const bonusStr = totalBonus >= 0 ? `+${totalBonus}` : `${totalBonus}`
+
+          const skillName = skill.replace(/([A-Z])/g, ' $1').trim()
+          const capitalizedSkillName = skillName.charAt(0).toUpperCase() + skillName.slice(1)
+          const description = SKILL_DESCRIPTIONS[skill] || ""
+
+          return (
+            <div 
+              key={skill} 
+              className={`skill-item ${isProficient ? 'proficient' : ''}`}
+              title={description}
+            >
+              <div className="skill-checkbox">
+                {isProficient && <span className="proficiency-dot">●</span>}
+              </div>
+              <div className="skill-bonus">{bonusStr}</div>
+              <div className="skill-name">
+                {capitalizedSkillName}
+                <span className="skill-ability"> ({ability.substring(0, 3)})</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Render saving throws section
+  const renderSavingThrows = () => {
+    const abilities = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
+    
+    return (
+      <div className="saving-throws-list">
+        {abilities.map((ability) => {
+          const score = character.abilities?.[ability] || 10
+          const abilityMod = getAbilityModifierNum(score)
+          const isProficient = classData?.savingThrows?.includes(ability)
+          const profBonus = isProficient ? getProficiencyBonus() : 0
+          const totalBonus = abilityMod + profBonus
+          const bonusStr = totalBonus >= 0 ? `+${totalBonus}` : `${totalBonus}`
+
+          return (
+            <div key={ability} className={`saving-throw-item ${isProficient ? 'proficient' : ''}`}>
+              <div className="saving-throw-checkbox">
+                {isProficient && <span className="proficiency-dot">●</span>}
+              </div>
+              <div className="saving-throw-bonus">{bonusStr}</div>
+              <div className="saving-throw-name">{ability.charAt(0).toUpperCase() + ability.slice(1)}</div>
+            </div>
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Render features and traits
+  const renderFeaturesAndTraits = () => {
+    return (
+      <div className="features-traits-section">
+        {/* Race traits */}
+        {raceData?.traits && (
+          <div className="trait-category">
+            <h4>Racial Traits</h4>
+            {Array.isArray(raceData.traits) 
+              ? raceData.traits.map((trait, index) => (
+                  <div key={index} className="trait-item">
+                    <strong>{trait.name}:</strong> {trait.description}
                   </div>
-                </div>
+                ))
+              : <div className="trait-item">{raceData.traits}</div>
+            }
+          </div>
+        )}
+
+        {/* Class features */}
+        {classData?.features && (
+          <div className="trait-category">
+            <h4>Class Features (Level 1)</h4>
+            {classData.features.map((feature, index) => (
+              <div key={index} className="trait-item">
+                <strong>{feature.name}:</strong> {feature.description}
               </div>
             ))}
           </div>
+        )}
+      </div>
+    )
+  }
 
-          {/* Proficiency Bonus */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '12px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{
-              fontSize: '14px',
-              color: '#654321',
-              marginBottom: '5px',
-              textTransform: 'uppercase',
-              fontWeight: 'bold'
-            }}>Proficiency Bonus</div>
-            <div style={{
-              fontSize: '24px',
-              fontWeight: 'bold',
-              color: '#8b4513'
-            }}>+{getProficiencyBonus()}</div>
-          </div>
+  // Render equipment section
+  const renderEquipment = () => {
+    if (!character.equipment || character.equipment.length === 0) {
+      return <p className="no-equipment">No equipment selected</p>
+    }
 
-          {/* Saving Throws */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px'
-          }}>
-            <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '18px',
-              color: '#8b4513',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #8b4513',
-              paddingBottom: '5px'
-            }}>Saving Throws</h3>
-            
-            {['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].map(ability => {
-              const isProficient = classData?.savingThrows?.includes(ability)
-              const abilityMod = getAbilityModifierNum(character.abilities?.[ability] || 10)
-              const profBonus = isProficient ? getProficiencyBonus() : 0
-              const total = abilityMod + profBonus
-              
-              return (
-                <div key={ability} style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  marginBottom: '8px',
-                  padding: '5px'
-                }}>
-                  <span style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
-                  }}>
-                    <span style={{
-                      width: '16px',
-                      height: '16px',
-                      border: '2px solid #8b4513',
-                      borderRadius: '50%',
-                      display: 'inline-block',
-                      backgroundColor: isProficient ? '#8b4513' : 'transparent'
-                    }}></span>
-                    <span style={{
-                      textTransform: 'capitalize',
-                      fontSize: '14px',
-                      color: '#654321'
-                    }}>{ability.slice(0, 3).toUpperCase()}</span>
-                  </span>
-                  <span style={{
-                    fontWeight: 'bold',
-                    color: '#2c1810',
-                    fontSize: '14px'
-                  }}>{total >= 0 ? `+${total}` : total}</span>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Race Traits */}
-          {raceData && (
-            <div style={{
-              border: '2px solid #8b4513',
-              padding: '15px',
-              marginBottom: '15px',
-              backgroundColor: 'rgba(255,255,255,0.3)',
-              borderRadius: '8px'
-            }}>
-              <h3 style={{
-                margin: '0 0 12px 0',
-                fontSize: '18px',
-                color: '#8b4513',
-                textTransform: 'uppercase',
-                borderBottom: '2px solid #8b4513',
-                paddingBottom: '5px'
-              }}>Race Traits</h3>
-              
-              <div style={{ fontSize: '13px', lineHeight: '1.6', color: '#2c1810' }}>
-                {raceData.traits?.map((trait, index) => (
-                  <div key={index} style={{ marginBottom: '12px' }}>
-                    <div style={{ fontWeight: 'bold', color: '#8b4513', marginBottom: '4px' }}>
-                      {trait.name}
-                    </div>
-                    <div style={{ paddingLeft: '10px', color: '#654321' }}>
-                      {trait.description}
-                    </div>
-                  </div>
-                ))}
-              </div>
+    return (
+      <div className="equipment-list">
+        {character.equipment.map((item, index) => {
+          // Convert display name to key (e.g., "Leather Armor" -> "leather")
+          const itemKey = item.toLowerCase().replace(/[^a-z]/g, '')
+          const description = EQUIPMENT_DESCRIPTIONS[itemKey] || "Standard adventuring equipment."
+          
+          return (
+            <div key={index} className="equipment-item" title={description}>
+              <span className="equipment-bullet">•</span>
+              <span className="equipment-name">{item}</span>
             </div>
-          )}
+          )
+        })}
+      </div>
+    )
+  }
+
+  // Calculate AC
+  const calculateAC = () => {
+    let baseAC = 10
+    const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
+    
+    // Check for armor
+    const hasLeather = character.equipment?.some(item => item.toLowerCase().includes('leather') && !item.toLowerCase().includes('studded'))
+    const hasStuddedLeather = character.equipment?.some(item => item.toLowerCase().includes('studded leather'))
+    const hasChainShirt = character.equipment?.some(item => item.toLowerCase().includes('chain shirt'))
+    const hasScaleMail = character.equipment?.some(item => item.toLowerCase().includes('scale mail'))
+    const hasBreastplate = character.equipment?.some(item => item.toLowerCase().includes('breastplate'))
+    const hasHalfPlate = character.equipment?.some(item => item.toLowerCase().includes('half plate'))
+    const hasRingMail = character.equipment?.some(item => item.toLowerCase().includes('ring mail'))
+    const hasChainMail = character.equipment?.some(item => item.toLowerCase().includes('chain mail'))
+    const hasSplint = character.equipment?.some(item => item.toLowerCase().includes('splint'))
+    const hasPlate = character.equipment?.some(item => item.toLowerCase().includes('plate') && !item.toLowerCase().includes('half'))
+    const hasShield = character.equipment?.some(item => item.toLowerCase().includes('shield'))
+    
+    if (hasPlate) baseAC = 18
+    else if (hasSplint) baseAC = 17
+    else if (hasChainMail) baseAC = 16
+    else if (hasHalfPlate) baseAC = 15 + Math.min(dexMod, 2)
+    else if (hasBreastplate) baseAC = 14 + Math.min(dexMod, 2)
+    else if (hasScaleMail) baseAC = 14 + Math.min(dexMod, 2)
+    else if (hasRingMail) baseAC = 14
+    else if (hasChainShirt) baseAC = 13 + Math.min(dexMod, 2)
+    else if (hasStuddedLeather) baseAC = 12 + dexMod
+    else if (hasLeather) baseAC = 11 + dexMod
+    else baseAC = 10 + dexMod // No armor
+    
+    if (hasShield) baseAC += 2
+    
+    return baseAC
+  }
+
+  // Calculate HP
+  const calculateHP = () => {
+    if (!classData) return 0
+    const conMod = getAbilityModifierNum(character.abilities?.constitution || 10)
+    return classData.hitDie + conMod
+  }
+
+  return (
+    <div className="character-sheet">
+      {/* Header Section */}
+      <div className="sheet-header">
+        <div className="character-name-section">
+          <h1 className="character-name">{character.name || 'Unnamed Character'}</h1>
+          <div className="character-details">
+            <span className="detail-item">{character.race || 'Unknown Race'}</span>
+            <span className="detail-separator">•</span>
+            <span className="detail-item">{character.class || 'Unknown Class'}</span>
+            <span className="detail-separator">•</span>
+            <span className="detail-item">Level 1</span>
+          </div>
         </div>
-
-        {/* Right Column */}
-        <div>
-          {/* Combat Stats */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '10px',
-            marginBottom: '15px'
-          }}>
-            {/* Armor Class */}
-            <div style={{
-              border: '2px solid #8b4513',
-              padding: '15px',
-              textAlign: 'center',
-              backgroundColor: 'rgba(255,255,255,0.3)',
-              borderRadius: '8px'
-            }}>
-              <div style={{
-                fontSize: '12px',
-                color: '#654321',
-                marginBottom: '5px',
-                textTransform: 'uppercase',
-                fontWeight: 'bold'
-              }}>Armor Class</div>
-              <div style={{
-                fontSize: '28px',
-                fontWeight: 'bold',
-                color: '#8b4513'
-              }}>{character.armorClass || 10}</div>
-            </div>
-
-            {/* Initiative */}
-            <div style={{
-              border: '2px solid #8b4513',
-              padding: '15px',
-              textAlign: 'center',
-              backgroundColor: 'rgba(255,255,255,0.3)',
-              borderRadius: '8px'
-            }}>
-              <div style={{
-                fontSize: '12px',
-                color: '#654321',
-                marginBottom: '5px',
-                textTransform: 'uppercase',
-                fontWeight: 'bold'
-              }}>Initiative</div>
-              <div style={{
-                fontSize: '28px',
-                fontWeight: 'bold',
-                color: '#8b4513'
-              }}>{getAbilityModifier(character.abilities?.dexterity || 10)}</div>
-            </div>
-
-            {/* Speed */}
-            <div style={{
-              border: '2px solid #8b4513',
-              padding: '15px',
-              textAlign: 'center',
-              backgroundColor: 'rgba(255,255,255,0.3)',
-              borderRadius: '8px'
-            }}>
-              <div style={{
-                fontSize: '12px',
-                color: '#654321',
-                marginBottom: '5px',
-                textTransform: 'uppercase',
-                fontWeight: 'bold'
-              }}>Speed</div>
-              <div style={{
-                fontSize: '28px',
-                fontWeight: 'bold',
-                color: '#8b4513'
-              }}>{raceData?.speed || 30} ft</div>
-            </div>
+        
+        {character.background && (
+          <div className="background-section">
+            <span className="background-label">Background:</span> {character.background}
           </div>
+        )}
+      </div>
 
-          {/* Hit Points */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px'
-          }}>
-            <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '18px',
-              color: '#8b4513',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #8b4513',
-              paddingBottom: '5px'
-            }}>Hit Points</h3>
-            
-            <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontSize: '12px', color: '#654321', marginBottom: '5px' }}>Maximum HP</div>
-                <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#8b4513' }}>
-                  {calculateMaxHP()}
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: '#654321', marginBottom: '5px' }}>Current HP</div>
-                <div style={{
-                  fontSize: '24px',
-                  fontWeight: 'bold',
-                  color: '#2c1810',
-                  border: '2px solid #8b4513',
-                  padding: '8px 15px',
-                  borderRadius: '5px',
-                  backgroundColor: '#fff',
-                  minWidth: '60px',
-                  textAlign: 'center'
-                }}>
-                  {character.currentHP || calculateMaxHP()}
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '12px', color: '#654321', marginBottom: '5px' }}>Hit Dice</div>
-                <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#8b4513' }}>
-                  {classData?.hitDie || 'd8'}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Attacks & Spellcasting */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px'
-          }}>
-            <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '18px',
-              color: '#8b4513',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #8b4513',
-              paddingBottom: '5px'
-            }}>Attacks & Spellcasting</h3>
-            
-            {/* Weapons */}
-            {character.equipment?.weapons?.length > 0 && character.equipment.weapons.map((weapon, index) => {
-              if (!weapon || !weapon.equipped) return null
-              
-              const attackBonus = getWeaponAttackBonus(weapon)
-              const description = getEquipmentDescription(weapon.name)
-              
-              return (
-                <div key={index} style={{
-                  marginBottom: '15px',
-                  padding: '12px',
-                  backgroundColor: 'rgba(139, 69, 19, 0.1)',
-                  borderRadius: '5px',
-                  borderLeft: '4px solid #8b4513'
-                }}>
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginBottom: '6px'
-                  }}>
-                    <span style={{ fontWeight: 'bold', color: '#8b4513', fontSize: '15px' }}>
-                      {weapon.name}
-                    </span>
-                    <span style={{ fontWeight: 'bold', color: '#2c1810' }}>
-                      +{attackBonus} | {weapon.damage}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#654321', fontStyle: 'italic' }}>
-                    {description}
-                  </div>
-                </div>
-              )
-            })}
-
-            {/* Spell Stats for spellcasters */}
-            {classData && ['Wizard', 'Cleric', 'Druid', 'Sorcerer', 'Bard', 'Warlock', 'Paladin', 'Ranger'].includes(classData.nameEn) && (
-              <div style={{
-                display: 'flex',
-                gap: '15px',
-                marginTop: '15px',
-                padding: '12px',
-                backgroundColor: 'rgba(139, 69, 19, 0.1)',
-                borderRadius: '5px'
-              }}>
-                <div>
-                  <div style={{ fontSize: '12px', color: '#654321', marginBottom: '3px' }}>Spell Save DC</div>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#8b4513' }}>
-                    {calculateSpellDC()}
-                  </div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '12px', color: '#654321', marginBottom: '3px' }}>Spell Attack</div>
-                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#8b4513' }}>
-                    +{calculateSpellAttack()}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Skills */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px'
-          }}>
-            <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '18px',
-              color: '#8b4513',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #8b4513',
-              paddingBottom: '5px'
-            }}>Skills</h3>
-            
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-              {[
-                { name: 'acrobatics', ability: 'dexterity' },
-                { name: 'animalHandling', ability: 'wisdom' },
-                { name: 'arcana', ability: 'intelligence' },
-                { name: 'athletics', ability: 'strength' },
-                { name: 'deception', ability: 'charisma' },
-                { name: 'history', ability: 'intelligence' },
-                { name: 'insight', ability: 'wisdom' },
-                { name: 'intimidation', ability: 'charisma' },
-                { name: 'investigation', ability: 'intelligence' },
-                { name: 'medicine', ability: 'wisdom' },
-                { name: 'nature', ability: 'intelligence' },
-                { name: 'perception', ability: 'wisdom' },
-                { name: 'performance', ability: 'charisma' },
-                { name: 'persuasion', ability: 'charisma' },
-                { name: 'religion', ability: 'intelligence' },
-                { name: 'sleightOfHand', ability: 'dexterity' },
-                { name: 'stealth', ability: 'dexterity' },
-                { name: 'survival', ability: 'wisdom' }
-              ].map(skill => {
-                const isProficient = character.skills?.[skill.name] || false
-                const modifier = getSkillModifier(skill.name, character.abilities?.[skill.ability] || 10)
-                const description = getSkillDescription(skill.name)
-                
-                return (
-                  <div key={skill.name} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    padding: '6px',
-                    backgroundColor: isProficient ? 'rgba(139, 69, 19, 0.15)' : 'transparent',
-                    borderRadius: '3px'
-                  }} title={description}>
-                    <span style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      fontSize: '13px'
-                    }}>
-                      <span style={{
-                        width: '14px',
-                        height: '14px',
-                        border: '2px solid #8b4513',
-                        borderRadius: '50%',
-                        display: 'inline-block',
-                        backgroundColor: isProficient ? '#8b4513' : 'transparent'
-                      }}></span>
-                      <span style={{ color: '#654321' }}>
-                        {skill.name.replace(/([A-Z])/g, ' $1').trim()}
-                      </span>
-                    </span>
-                    <span style={{
-                      fontWeight: 'bold',
-                      color: '#2c1810',
-                      fontSize: '13px'
-                    }}>{modifier}</span>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Equipment */}
-          <div style={{
-            border: '2px solid #8b4513',
-            padding: '15px',
-            marginBottom: '15px',
-            backgroundColor: 'rgba(255,255,255,0.3)',
-            borderRadius: '8px'
-          }}>
-            <h3 style={{
-              margin: '0 0 12px 0',
-              fontSize: '18px',
-              color: '#8b4513',
-              textTransform: 'uppercase',
-              borderBottom: '2px solid #8b4513',
-              paddingBottom: '5px'
-            }}>Equipment</h3>
-            
-            <div style={{ fontSize: '13px', lineHeight: '1.8', color: '#2c1810' }}>
-              {/* Armor */}
-              {character.equipment?.armor && (
-                <div style={{ marginBottom: '10px' }}>
-                  <span style={{ fontWeight: 'bold', color: '#8b4513' }}>Armor: </span>
-                  <span>{character.equipment.armor.name}</span>
-                  <div style={{ 
-                    fontSize: '12px', 
-                    color: '#654321', 
-                    fontStyle: 'italic',
-                    marginLeft: '10px',
-                    marginTop: '3px'
-                  }}>
-                    {getEquipmentDescription(character.equipment.armor.name)}
-                  </div>
-                </div>
-              )}
-              
-              {/* Other Equipment */}
-              {character.equipment?.other?.length > 0 && (
-                <div>
-                  <div style={{ fontWeight: 'bold', color: '#8b4513', marginBottom: '6px' }}>Other Items:</div>
-                  {character.equipment.other.map((item, index) => (
-                    <div key={index} style={{ marginLeft: '10px', marginBottom: '8px' }}>
-                      <div>• {item.name} {item.quantity > 1 ? `(×${item.quantity})` : ''}</div>
-                      <div style={{ 
-                        fontSize: '12px', 
-                        color: '#654321', 
-                        fontStyle: 'italic',
-                        marginLeft: '15px',
-                        marginTop: '2px'
-                      }}>
-                        {getEquipmentDescription(item.name)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Class Features */}
-          {classData?.features && (
-            <div style={{
-              border: '2px solid #8b4513',
-              padding: '15px',
-              marginBottom: '15px',
-              backgroundColor: 'rgba(255,255,255,0.3)',
-              borderRadius: '8px'
-            }}>
-              <h3 style={{
-                margin: '0 0 12px 0',
-                fontSize: '18px',
-                color: '#8b4513',
-                textTransform: 'uppercase',
-                borderBottom: '2px solid #8b4513',
-                paddingBottom: '5px'
-              }}>Class Features</h3>
-              
-              <div style={{ fontSize: '13px', lineHeight: '1.6', color: '#2c1810' }}>
-                {classData.features.map((feature, index) => (
-                  <div key={index} style={{ marginBottom: '10px' }}>
-                    <span style={{ fontWeight: 'bold', color: '#8b4513' }}>• {feature.name}: </span>
-                    <span>{feature.description}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Languages */}
-          {character.languages?.length > 0 && (
-            <div style={{
-              border: '2px solid #8b4513',
-              padding: '15px',
-              backgroundColor: 'rgba(255,255,255,0.3)',
-              borderRadius: '8px'
-            }}>
-              <h3 style={{
-                margin: '0 0 10px 0',
-                fontSize: '18px',
-                color: '#8b4513',
-                textTransform: 'uppercase',
-                borderBottom: '2px solid #8b4513',
-                paddingBottom: '5px'
-              }}>Languages</h3>
-              <div style={{ fontSize: '14px', color: '#2c1810' }}>
-                {character.languages.join(', ')}
-              </div>
-            </div>
-          )}
+      {/* Main Stats Row */}
+      <div className="main-stats-row">
+        <div className="stat-box">
+          <div className="stat-value">{calculateAC()}</div>
+          <div className="stat-label">Armor Class</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-value">{calculateHP()}</div>
+          <div className="stat-label">Hit Points</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-value">30 ft</div>
+          <div className="stat-label">Speed</div>
+        </div>
+        <div className="stat-box">
+          <div className="stat-value">+{getProficiencyBonus()}</div>
+          <div className="stat-label">Proficiency</div>
         </div>
       </div>
 
-      {/* Print Styles */}
-      <style>{`
-        @media print {
-          .no-print {
-            display: none !important;
-          }
-          body {
-            margin: 0;
-            padding: 0;
-          }
-          @page {
-            size: A4;
-            margin: 0.5cm;
-          }
-        }
-      `}</style>
+      {/* Two Column Layout */}
+      <div className="sheet-columns">
+        {/* Left Column */}
+        <div className="left-column">
+          {/* Ability Scores */}
+          <div className="sheet-section">
+            <h3 className="section-title">Ability Scores</h3>
+            {renderAbilityScores()}
+          </div>
+
+          {/* Saving Throws */}
+          <div className="sheet-section">
+            <h3 className="section-title">Saving Throws</h3>
+            {renderSavingThrows()}
+          </div>
+
+          {/* Skills */}
+          <div className="sheet-section">
+            <h3 className="section-title">Skills</h3>
+            {renderSkills()}
+          </div>
+        </div>
+
+        {/* Right Column */}
+        <div className="right-column">
+          {/* Equipment */}
+          <div className="sheet-section">
+            <h3 className="section-title">Equipment</h3>
+            {renderEquipment()}
+          </div>
+
+          {/* Features and Traits */}
+          <div className="sheet-section">
+            <h3 className="section-title">Features & Traits</h3>
+            {renderFeaturesAndTraits()}
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
