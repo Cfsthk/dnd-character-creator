@@ -50,72 +50,30 @@ const CharacterSheet = ({ character }) => {
     return 2 // Level 3 proficiency bonus
   }
 
-  const getCharacterLevel = () => {
-    return 3 // Level 3 character
-  }
-
-  // Calculate AC based on armor and dexterity
-  const calculateAC = () => {
-    let baseAC = 10
-    let dexMod = getAbilityModifierNum(character.abilities.dexterity)
-    
-    // Check if character has armor in equipment
-    if (character.equipment && Array.isArray(character.equipment)) {
-      const armor = character.equipment.find(item => 
-        typeof item === 'object' && item.type === 'armor'
-      )
-      
-      if (armor && armor.ac) {
-        // Use armor AC
-        baseAC = armor.ac
-        // Some armors limit dex bonus (e.g., heavy armor = 0, medium armor = max 2)
-        if (armor.dexModCap !== undefined) {
-          dexMod = Math.min(dexMod, armor.dexModCap)
-        }
-      }
-    }
-    
-    return baseAC + dexMod
-  }
-
-  // Calculate max HP for the character
-  const calculateMaxHP = () => {
-    if (!classData) return 0
-    
-    const level = getCharacterLevel()
-    const conMod = getAbilityModifierNum(character.abilities.constitution)
-    
-    // Level 1: Max hit die + CON modifier
-    // Levels 2+: Average of hit die (rounded up) + CON modifier per level
-    // For simplicity with level 3: use proper calculation
-    const firstLevelHP = classData.hitDice + conMod
-    const additionalLevels = level - 1
-    const avgHitDie = Math.floor(classData.hitDice / 2) + 1 // Average roll
-    const additionalHP = additionalLevels * (avgHitDie + conMod)
-    
-    return firstLevelHP + additionalHP
-  }
-
-  // Extract weapons from equipment
-  const getWeapons = () => {
-    if (!character.equipment || !Array.isArray(character.equipment)) {
-      return []
-    }
-    
-    return character.equipment.filter(item => 
-      typeof item === 'object' && item.type === 'weapon'
-    )
-  }
-
-  // Get hit dice based on class
-  const getHitDice = () => {
-    if (!classData) return 'd8' // Default
-    return `d${classData.hitDice}`
-  }
-
-  // Get class data
-  const classData = character.characterClass ? CLASSES[character.characterClass] : null
+  const classData = character.class ? CLASSES[character.class] : null
   const raceData = character.race ? races[character.race] : null
+
+  // Skill descriptions in Traditional Chinese
+  const SKILL_DESCRIPTIONS = {
+    acrobatics: "平衡、翻滾、空中特技和在困難地形上保持直立。",
+    animalHandling: "安撫、訓練動物或察覺動物意圖。解讀駭訛詐訊和行為。",
+    arcana: "回憶關於法術、法陣、法陣、魔物、異能虛假和魔法傳統的知識。",
+    athletics: "攀爬、跳躍、游泳和其他需要高度體力活動。",
+    deception: "透過誤導、隱瞞性質擺真相的詐欺。",
+    history: "回憶歷史事件、傳奇人物、古代王國、過去的文明。",
+    insight: "判斷生物的真實意圖、解讀肢體語言和察覺詐欺。",
+    intimidation: "透過威脅、敵意行為和暴力嚇阻他人。",
+    investigation: "尋找線索、推理邏輯和解讀謎團或奇事件。",
+    medicine: "穩定瀕死的傷患、診斷疾病和治療傷口。",
+    nature: "回憶關於地形、植物、動物、天氣和自然循環的知識。",
+    perception: "使用感官發現、聽到或察覺某物的存在。",
+    performance: "透過音樂、舞蹈、表演、詐唬故事或其他娛樂侖取悅觀眾。",
+    persuasion: "透過機敏、社交禮儀或善良性侖影響他人。",
+    religion: "回憶關於神祇、儀式、祈禱、宗教隸屬和神聖傳統的知識。",
+    sleightOfHand: "扒竊、隱匿小物、靈巧或埋藏需要手指靈活度的行為。",
+    stealth: "隱藏自己或在不被他人注意的情況下移動。",
+    survival: "追蹤、狩獵、引導、預測天氣和避免自然危險。"
+  }
 
   const SKILLS = [
     { name: '特技', key: 'acrobatics', ability: 'dexterity' },
@@ -149,6 +107,44 @@ const CharacterSheet = ({ character }) => {
     return num >= 0 ? `+${num}` : `${num}`
   }
 
+  // Extract weapons from equipment
+  const getWeapons = () => {
+    if (!character.equipment || !Array.isArray(character.equipment)) {
+      return []
+    }
+    
+    return character.equipment.filter(item => 
+      typeof item === 'object' && item !== null && item.damage
+    )
+  }
+
+  // Calculate attack bonus for a weapon
+  const getWeaponAttackBonus = (weapon) => {
+    // Determine if weapon uses STR or DEX based on properties
+    const usesFinesse = weapon.properties && typeof weapon.properties === 'string' && 
+                       weapon.properties.includes('靈巧')
+    const isRanged = weapon.properties && typeof weapon.properties === 'string' && 
+                    (weapon.properties.includes('投擲') || weapon.properties.includes('彈藥'))
+    
+    // For finesse weapons, use the higher of STR or DEX
+    // For ranged weapons, use DEX
+    // For other weapons, use STR
+    let abilityMod
+    if (usesFinesse) {
+      const strMod = getAbilityModifierNum(character.abilities.strength)
+      const dexMod = getAbilityModifierNum(character.abilities.dexterity)
+      abilityMod = Math.max(strMod, dexMod)
+    } else if (isRanged) {
+      abilityMod = getAbilityModifierNum(character.abilities.dexterity)
+    } else {
+      abilityMod = getAbilityModifierNum(character.abilities.strength)
+    }
+    
+    // Add proficiency bonus (assuming proficiency with selected weapons)
+    const totalBonus = abilityMod + getProficiencyBonus()
+    return { bonus: totalBonus, abilityMod }
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-[#f4e4c1] min-h-screen" ref={sheetRef}>
       {/* Export Button */}
@@ -173,7 +169,7 @@ const CharacterSheet = ({ character }) => {
           <div>
             <label className="text-xs text-gray-600">職業與等級</label>
             <div className="text-xl border-b-2 border-[#8b4513]">
-              {classData?.name_zh || character.characterClass} 3級
+              {classData?.name_zh || character.class} 3級
             </div>
           </div>
           <div>
@@ -284,15 +280,18 @@ const CharacterSheet = ({ character }) => {
                 const isProficient = character.skills?.[skill.key] || false
                 const modifier = calculateSkillModifier(skill)
                 return (
-                  <div key={skill.key} className="flex items-center text-sm">
+                  <div key={skill.key} className="flex items-center text-xs">
                     <input
                       type="checkbox"
                       checked={isProficient}
                       readOnly
                       className="mr-2"
                     />
-                    <span className="w-10">{formatModifier(modifier)}</span>
-                    <span>{skill.name}</span>
+                    <span className="w-8 font-semibold">{formatModifier(modifier)}</span>
+                    <span className="font-semibold">{skill.name}</span>
+                    <span className="text-gray-600 ml-2">
+                      {SKILL_DESCRIPTIONS[skill.key]}
+                    </span>
                   </div>
                 )
               })}
@@ -306,7 +305,7 @@ const CharacterSheet = ({ character }) => {
         <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 text-center">
           <div className="text-xs text-gray-600 mb-1">護甲等級</div>
           <div className="text-4xl font-bold">
-            {calculateAC()}
+            {10 + getAbilityModifierNum(character.abilities.dexterity)}
           </div>
         </div>
         <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 text-center">
@@ -327,7 +326,7 @@ const CharacterSheet = ({ character }) => {
           <div className="text-center">
             <div className="text-xs text-gray-600 mb-1">生命值上限</div>
             <div className="text-3xl font-bold">
-              {calculateMaxHP()}
+              {classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
           <div className="text-center">
@@ -335,7 +334,7 @@ const CharacterSheet = ({ character }) => {
             <input
               type="number"
               className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
-              defaultValue={calculateMaxHP()}
+              defaultValue={classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             />
           </div>
           <div className="text-center">
@@ -349,7 +348,7 @@ const CharacterSheet = ({ character }) => {
         </div>
         <div className="mt-4 text-center">
           <div className="text-xs text-gray-600 mb-1">生命骰</div>
-          <div className="text-xl">{getCharacterLevel()}{getHitDice()}</div>
+          <div className="text-xl">3d{classData?.hitDice || 8}</div>
         </div>
       </div>
 
@@ -367,25 +366,25 @@ const CharacterSheet = ({ character }) => {
           <tbody>
             {getWeapons().length > 0 ? (
               getWeapons().map((weapon, index) => {
-                const attackAbility = weapon.finesse ? 
-                  Math.max(character.abilities.strength, character.abilities.dexterity) :
-                  (weapon.ranged ? character.abilities.dexterity : character.abilities.strength)
-                const attackMod = getAbilityModifierNum(attackAbility)
-                const isProficient = true // Assume proficiency for equipped weapons
-                
+                const { bonus, abilityMod } = getWeaponAttackBonus(weapon)
                 return (
                   <tr key={index} className="border-b border-[#8b4513]">
                     <td className="p-2">{weapon.name}</td>
                     <td className="text-center">
-                      {formatModifier(attackMod + (isProficient ? getProficiencyBonus() : 0))}
+                      {formatModifier(bonus)}
                     </td>
-                    <td>{weapon.damage} + {attackMod} {weapon.damageType}</td>
+                    <td>
+                      {weapon.damage}
+                      {abilityMod !== 0 && ` + ${Math.abs(abilityMod)}`}
+                    </td>
                   </tr>
                 )
               })
             ) : (
               <tr>
-                <td colSpan="3" className="text-center text-gray-500 p-2">無武器</td>
+                <td colSpan="3" className="p-2 text-center text-gray-500">
+                  無武器
+                </td>
               </tr>
             )}
           </tbody>
@@ -417,7 +416,7 @@ const CharacterSheet = ({ character }) => {
           {character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0 ? (
             character.equipment.map((item, index) => (
               <div key={index} className="border-b border-[#8b4513] pb-1">
-                • {typeof item === 'object' ? item.name : item}
+                • {item}
               </div>
             ))
           ) : (
