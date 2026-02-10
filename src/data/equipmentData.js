@@ -734,4 +734,30 @@ export const equipmentByClass = {
   }
 };
 
+// Helper function to get equipment for a specific class
+export const getEquipmentForClass = (className) => {
+  if (!className) return null;
+  const classKey = className.toLowerCase();
+  return equipmentByClass[classKey] || null;
+};
+
+// Helper function to get recommended equipment based on class and race
+export const getRecommendedEquipment = (className, raceName) => {
+  if (!className) return null;
+  const classKey = className.toLowerCase();
+  const classEquipment = equipmentByClass[classKey];
+  
+  if (!classEquipment) return null;
+  
+  // Return basic recommended set
+  const recommended = {
+    weapons: classEquipment.weapons.slice(0, 2), // First 2 weapons
+    armor: classEquipment.armor.slice(0, 1), // First armor
+    tools: classEquipment.tools.slice(0, 1), // First tool if any
+    equipment: classEquipment.equipment.slice(0, 2) // First 2 equipment items
+  };
+  
+  return recommended;
+};
+
 export default equipmentByClass;
