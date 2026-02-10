@@ -76,25 +76,25 @@ const CharacterSheet = ({ character }) => {
     survival: "追蹤、狩獵、引導、預測天氣和避免自然危險。"
   }
 
-  const SKILLS = [\
-    { name: '特技', key: 'acrobatics', ability: 'dexterity' },\
-    { name: '馴獸', key: 'animalHandling', ability: 'wisdom' },\
-    { name: '奧秘', key: 'arcana', ability: 'intelligence' },\
-    { name: '運動', key: 'athletics', ability: 'strength' },\
-    { name: '欺瞞', key: 'deception', ability: 'charisma' },\
-    { name: '歷史', key: 'history', ability: 'intelligence' },\
-    { name: '洞察', key: 'insight', ability: 'wisdom' },\
-    { name: '威嚇', key: 'intimidation', ability: 'charisma' },\
-    { name: '調查', key: 'investigation', ability: 'intelligence' },\
-    { name: '醫藥', key: 'medicine', ability: 'wisdom' },\
-    { name: '自然', key: 'nature', ability: 'intelligence' },\
-    { name: '察覺', key: 'perception', ability: 'wisdom' },\
-    { name: '表演', key: 'performance', ability: 'charisma' },\
-    { name: '說服', key: 'persuasion', ability: 'charisma' },\
-    { name: '宗教', key: 'religion', ability: 'intelligence' },\
-    { name: '巧手', key: 'sleightOfHand', ability: 'dexterity' },\
-    { name: '隱匿', key: 'stealth', ability: 'dexterity' },\
-    { name: '求生', key: 'survival', ability: 'wisdom' }\
+  const SKILLS = [
+    { name: '特技', key: 'acrobatics', ability: 'dexterity' },
+    { name: '馴獸', key: 'animalHandling', ability: 'wisdom' },
+    { name: '奧秘', key: 'arcana', ability: 'intelligence' },
+    { name: '運動', key: 'athletics', ability: 'strength' },
+    { name: '欺瞞', key: 'deception', ability: 'charisma' },
+    { name: '歷史', key: 'history', ability: 'intelligence' },
+    { name: '洞察', key: 'insight', ability: 'wisdom' },
+    { name: '威嚇', key: 'intimidation', ability: 'charisma' },
+    { name: '調查', key: 'investigation', ability: 'intelligence' },
+    { name: '醫藥', key: 'medicine', ability: 'wisdom' },
+    { name: '自然', key: 'nature', ability: 'intelligence' },
+    { name: '察覺', key: 'perception', ability: 'wisdom' },
+    { name: '表演', key: 'performance', ability: 'charisma' },
+    { name: '說服', key: 'persuasion', ability: 'charisma' },
+    { name: '宗教', key: 'religion', ability: 'intelligence' },
+    { name: '巧手', key: 'sleightOfHand', ability: 'dexterity' },
+    { name: '隱匿', key: 'stealth', ability: 'dexterity' },
+    { name: '求生', key: 'survival', ability: 'wisdom' }
   ]
 
   const calculateSkillModifier = (skill) => {
