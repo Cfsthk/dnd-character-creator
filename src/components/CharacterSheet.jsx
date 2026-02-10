@@ -1,5 +1,5 @@
-import { races } from '../data/raceData'
-import { classes } from '../data/classData'
+import { CLASSES } from '../data/classes'
+import { RACES } from '../data/races'
 
 const CharacterSheet = ({ character }) => {
   const getAbilityModifier = (score) => {
@@ -11,17 +11,67 @@ const CharacterSheet = ({ character }) => {
     return Math.floor((score - 10) / 2)
   }
 
-  const getProficiencyBonus = () => 2 // Level 1 default
+  const getProficiencyBonus = () => {
+    return 2 // Level 1 default, can be expanded: Math.ceil(level / 4) + 1
+  }
 
-  const raceData = character.race ? races[character.race] : null
-  const classData = character.class ? classes[character.class] : null
+  const classData = character.class ? CLASSES[character.class] : null
+  const raceData = character.race ? RACES[character.race] : null
+
+  // Calculate Maximum HP (Hit Die + Constitution Modifier)
+  const calculateMaxHP = () => {
+    if (!classData) return 0
+    const conMod = getAbilityModifierNum(character.abilities?.constitution || 10)
+    
+    // For level 1: max hit die value + CON modifier
+    // E.g., d12 = 12 + CON mod, d10 = 10 + CON mod
+    const hitDieValue = parseInt(classData.hitDie.replace('d', ''))
+    return hitDieValue + conMod
+  }
+
+  // Calculate Spell Save DC (8 + proficiency + spellcasting ability modifier)
+  const calculateSpellDC = () => {
+    if (!classData) return 0
+    
+    // Determine spellcasting ability based on class
+    let spellcastingAbility = 0
+    const className = classData.nameEn?.toLowerCase()
+    
+    if (['cleric', 'druid', 'ranger'].includes(className)) {
+      spellcastingAbility = getAbilityModifierNum(character.abilities?.wisdom || 10)
+    } else if (['wizard'].includes(className)) {
+      spellcastingAbility = getAbilityModifierNum(character.abilities?.intelligence || 10)
+    } else if (['bard', 'sorcerer', 'warlock', 'paladin'].includes(className)) {
+      spellcastingAbility = getAbilityModifierNum(character.abilities?.charisma || 10)
+    }
+    
+    return 8 + getProficiencyBonus() + spellcastingAbility
+  }
+
+  // Calculate Spell Attack Bonus (proficiency + spellcasting ability modifier)
+  const calculateSpellAttackBonus = () => {
+    if (!classData) return 0
+    
+    let spellcastingAbility = 0
+    const className = classData.nameEn?.toLowerCase()
+    
+    if (['cleric', 'druid', 'ranger'].includes(className)) {
+      spellcastingAbility = getAbilityModifierNum(character.abilities?.wisdom || 10)
+    } else if (['wizard'].includes(className)) {
+      spellcastingAbility = getAbilityModifierNum(character.abilities?.intelligence || 10)
+    } else if (['bard', 'sorcerer', 'warlock', 'paladin'].includes(className)) {
+      spellcastingAbility = getAbilityModifierNum(character.abilities?.charisma || 10)
+    }
+    
+    const bonus = getProficiencyBonus() + spellcastingAbility
+    return bonus >= 0 ? `+${bonus}` : `${bonus}`
+  }
 
   // Calculate Armor Class (AC)
   const calculateAC = () => {
     const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
     const equipment = character.equipment || []
 
-    // Check for armor
     const hasLightArmor = equipment.some(e => e.includes('皮甲') || e.includes('Leather'))
     const hasChainShirt = equipment.some(e => e.includes('鎖甲衫') || e.includes('Chain Shirt'))
     const hasChainMail = equipment.some(e => e.includes('鎖子甲') || e.includes('Chain Mail'))
@@ -29,7 +79,7 @@ const CharacterSheet = ({ character }) => {
     const hasPlate = equipment.some(e => e.includes('板甲') || e.includes('Plate'))
     const hasShield = equipment.some(e => e.includes('盾牌') || e.includes('Shield'))
 
-    let baseAC = 10 + dexMod // Unarmored
+    let baseAC = 10 + dexMod
 
     if (hasPlate) baseAC = 18
     else if (hasSplint) baseAC = 17
@@ -37,704 +87,381 @@ const CharacterSheet = ({ character }) => {
     else if (hasChainShirt) baseAC = 13 + Math.min(dexMod, 2)
     else if (hasLightArmor) baseAC = 11 + dexMod
 
-    // Monk unarmored defense
-    if (character.class === 'monk' && !hasLightArmor && !hasChainShirt && !hasChainMail && !hasSplint && !hasPlate) {
-      const wisMod = getAbilityModifierNum(character.abilities?.wisdom || 10)
-      baseAC = 10 + dexMod + wisMod
-    }
-
-    // Barbarian unarmored defense
-    if (character.class === 'barbarian' && !hasLightArmor && !hasChainShirt && !hasChainMail && !hasSplint && !hasPlate) {
-      const conMod = getAbilityModifierNum(character.abilities?.constitution || 10)
-      baseAC = 10 + dexMod + conMod
-    }
-
-    // Add shield bonus
     if (hasShield) baseAC += 2
 
     return baseAC
   }
 
-  // Calculate Spell Save DC
-  const calculateSpellDC = () => {
-    if (!classData) return null
-
-    let spellcastingAbility = null
-    switch (character.class) {
-      case 'wizard':
-        spellcastingAbility = 'intelligence'
-        break
-      case 'cleric':
-      case 'druid':
-      case 'ranger':
-        spellcastingAbility = 'wisdom'
-        break
-      case 'bard':
-      case 'paladin':
-      case 'sorcerer':
-      case 'warlock':
-        spellcastingAbility = 'charisma'
-        break
-      default:
-        return null
-    }
-
-    if (!spellcastingAbility) return null
-
-    const abilityMod = getAbilityModifierNum(character.abilities?.[spellcastingAbility] || 10)
-    const profBonus = getProficiencyBonus()
-    return 8 + profBonus + abilityMod
+  // Parse weapons from equipment
+  const getWeapons = () => {
+    const equipment = character.equipment || []
+    const weaponKeywords = [
+      'sword', '劍', 'axe', '斧', 'mace', '錘', 'bow', '弓',
+      'dagger', '匕首', 'spear', '矛', 'staff', '杖', 'crossbow', '弩'
+    ]
+    
+    return equipment.filter(item => 
+      weaponKeywords.some(keyword => item.toLowerCase().includes(keyword.toLowerCase()))
+    )
   }
 
-  // Calculate weapon damage
-  const calculateWeaponDamage = (weaponName) => {
+  // Calculate weapon attack bonus and damage
+  const getWeaponStats = (weaponName) => {
     const strMod = getAbilityModifierNum(character.abilities?.strength || 10)
     const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
     const profBonus = getProficiencyBonus()
 
-    // Weapon damage dice mapping
-    const weaponData = {
-      '長劍': { damage: '1d8', finesse: false, versatile: '1d10' },
-      'Longsword': { damage: '1d8', finesse: false, versatile: '1d10' },
-      '短劍': { damage: '1d6', finesse: true },
-      'Shortsword': { damage: '1d6', finesse: true },
-      '匕首': { damage: '1d4', finesse: true },
-      'Dagger': { damage: '1d4', finesse: true },
-      '長弓': { damage: '1d8', finesse: false, ranged: true },
-      'Longbow': { damage: '1d8', finesse: false, ranged: true },
-      '短弓': { damage: '1d6', finesse: false, ranged: true },
-      'Shortbow': { damage: '1d6', finesse: false, ranged: true },
-      '戰斧': { damage: '1d8', finesse: false, versatile: '1d10' },
-      'Battleaxe': { damage: '1d8', finesse: false, versatile: '1d10' },
-      '巨劍': { damage: '2d6', finesse: false, twohanded: true },
-      'Greatsword': { damage: '2d6', finesse: false, twohanded: true },
-      '巨斧': { damage: '1d12', finesse: false, twohanded: true },
-      'Greataxe': { damage: '1d12', finesse: false, twohanded: true },
-      '長槍': { damage: '1d6', finesse: false, versatile: '1d8' },
-      'Spear': { damage: '1d6', finesse: false, versatile: '1d8' },
-      '輕弩': { damage: '1d8', finesse: false, ranged: true },
-      'Light Crossbow': { damage: '1d8', finesse: false, ranged: true },
-      '重弩': { damage: '1d10', finesse: false, ranged: true },
-      'Heavy Crossbow': { damage: '1d10', finesse: false, ranged: true },
-      '戰錘': { damage: '1d8', finesse: false, versatile: '1d10' },
-      'Warhammer': { damage: '1d8', finesse: false, versatile: '1d10' },
-      '木棒': { damage: '1d4', finesse: false },
-      'Club': { damage: '1d4', finesse: false },
-      '法杖': { damage: '1d6', finesse: false, versatile: '1d8' },
-      'Quarterstaff': { damage: '1d6', finesse: false, versatile: '1d8' }
-    }
+    // Determine if weapon uses STR or DEX
+    const isFinesseOrRanged = weaponName.match(/(bow|弓|crossbow|弩|dagger|匕首|rapier|細劍|短劍)/i)
+    const attackMod = isFinesseOrRanged ? dexMod : strMod
+    const attackBonus = profBonus + attackMod
 
-    const weapon = weaponData[weaponName]
-    if (!weapon) return null
-
-    const useDex = weapon.finesse || weapon.ranged
-    const abilityMod = useDex ? Math.max(strMod, dexMod) : (weapon.ranged ? dexMod : strMod)
-    const attackBonus = abilityMod + profBonus
-    const attackBonusStr = attackBonus >= 0 ? `+${attackBonus}` : `${attackBonus}`
-    const damageMod = abilityMod >= 0 ? `+${abilityMod}` : `${abilityMod}`
+    // Determine damage die based on weapon name
+    let damageDie = '1d8'
+    if (weaponName.match(/(greatsword|大劍|greataxe|巨斧)/i)) damageDie = '2d6'
+    else if (weaponName.match(/(longsword|長劍|battleaxe|戰斧)/i)) damageDie = '1d8'
+    else if (weaponName.match(/(shortsword|短劍|mace|錘)/i)) damageDie = '1d6'
+    else if (weaponName.match(/(dagger|匕首)/i)) damageDie = '1d4'
+    else if (weaponName.match(/(longbow|長弓)/i)) damageDie = '1d8'
+    else if (weaponName.match(/(shortbow|短弓|crossbow|弩)/i)) damageDie = '1d6'
 
     return {
-      attack: attackBonusStr,
-      damage: `${weapon.damage}${damageMod}`,
-      versatile: weapon.versatile ? `${weapon.versatile}${damageMod}` : null
+      attackBonus: attackBonus >= 0 ? `+${attackBonus}` : `${attackBonus}`,
+      damage: `${damageDie}+${attackMod >= 0 ? attackMod : attackMod}`
     }
   }
 
-  // Get spell damage by level
-  const getSpellDamage = () => {
-    if (!classData) return []
-
-    const spells = {
-      wizard: [
-        { name: '火焰箭 (Fire Bolt)', damage: '1d10', type: '火焰' },
-        { name: '光芒閃爍 (Ray of Frost)', damage: '1d8', type: '寒冷' },
-        { name: '魔法飛彈 (Magic Missile)', damage: '3 × (1d4+1)', type: '力場' },
-        { name: '燃燒之手 (Burning Hands)', damage: '3d6', type: '火焰', save: true }
-      ],
-      cleric: [
-        { name: '聖焰 (Sacred Flame)', damage: '1d8', type: '光耀', save: true },
-        { name: '導引箭矢 (Guiding Bolt)', damage: '4d6', type: '光耀' },
-        { name: '造成傷口 (Inflict Wounds)', damage: '3d10', type: '黯蝕' }
-      ],
-      druid: [
-        { name: '荊棘鞭 (Thorn Whip)', damage: '1d6', type: '穿刺' },
-        { name: '雷鳴波 (Thunderwave)', damage: '2d8', type: '雷鳴', save: true },
-        { name: '導引箭矢 (Guiding Bolt)', damage: '4d6', type: '光耀' }
-      ],
-      sorcerer: [
-        { name: '火焰箭 (Fire Bolt)', damage: '1d10', type: '火焰' },
-        { name: '魔法飛彈 (Magic Missile)', damage: '3 × (1d4+1)', type: '力場' },
-        { name: '燃燒之手 (Burning Hands)', damage: '3d6', type: '火焰', save: true }
-      ],
-      warlock: [
-        { name: '魔能爆 (Eldritch Blast)', damage: '1d10', type: '力場' },
-        { name: '魔焰劍 (Hellish Rebuke)', damage: '2d10', type: '火焰', save: true },
-        { name: '妖火 (Hex)', damage: '+1d6', type: '黯蝕' }
-      ],
-      bard: [
-        { name: '惡意嘲諷 (Vicious Mockery)', damage: '1d4', type: '心靈', save: true },
-        { name: '雷鳴波 (Thunderwave)', damage: '2d8', type: '雷鳴', save: true },
-        { name: '失心狂笑 (Tasha\'s Hideous Laughter)', damage: '無', type: '控制' }
-      ],
-      paladin: [
-        { name: '制裁邪惡 (Divine Smite)', damage: '+2d8', type: '光耀', note: '近戰時額外傷害' }
-      ],
-      ranger: [
-        { name: '獵人印記 (Hunter\'s Mark)', damage: '+1d6', type: '額外', note: '標記目標' }
-      ]
-    }
-
-    return spells[character.class] || []
-  }
-
-  const savingThrows = {
-    strength: false,
-    dexterity: false,
-    constitution: false,
-    intelligence: false,
-    wisdom: false,
-    charisma: false
-  }
-
-  // Set proficiency based on class
-  if (classData) {
-    switch (character.class) {
-      case 'barbarian':
-      case 'fighter':
-        savingThrows.strength = true
-        savingThrows.constitution = true
-        break
-      case 'monk':
-      case 'ranger':
-      case 'rogue':
-        savingThrows.strength = true
-        savingThrows.dexterity = true
-        break
-      case 'wizard':
-        savingThrows.intelligence = true
-        savingThrows.wisdom = true
-        break
-      case 'cleric':
-      case 'druid':
-        savingThrows.wisdom = true
-        savingThrows.charisma = true
-        break
-      case 'bard':
-      case 'paladin':
-      case 'sorcerer':
-      case 'warlock':
-        savingThrows.dexterity = true
-        savingThrows.charisma = true
-        break
-    }
-  }
-
-  // Ability names in Traditional Chinese
-  const abilityNames = {
-    strength: '力量',
-    dexterity: '敏捷',
-    constitution: '體質',
-    intelligence: '智力',
-    wisdom: '睿智',
-    charisma: '魅力'
-  }
-
-  const skills = [
-    { name: 'Acrobatics', nameChinese: '特技', ability: 'dexterity' },
-    { name: 'Animal Handling', nameChinese: '馴獸', ability: 'wisdom' },
-    { name: 'Arcana', nameChinese: '奧秘', ability: 'intelligence' },
-    { name: 'Athletics', nameChinese: '運動', ability: 'strength' },
-    { name: 'Deception', nameChinese: '欺瞞', ability: 'charisma' },
-    { name: 'History', nameChinese: '歷史', ability: 'intelligence' },
-    { name: 'Insight', nameChinese: '洞察', ability: 'wisdom' },
-    { name: 'Intimidation', nameChinese: '威嚇', ability: 'charisma' },
-    { name: 'Investigation', nameChinese: '調查', ability: 'intelligence' },
-    { name: 'Medicine', nameChinese: '醫術', ability: 'wisdom' },
-    { name: 'Nature', nameChinese: '自然', ability: 'intelligence' },
-    { name: 'Perception', nameChinese: '察覺', ability: 'wisdom' },
-    { name: 'Performance', nameChinese: '表演', ability: 'charisma' },
-    { name: 'Persuasion', nameChinese: '說服', ability: 'charisma' },
-    { name: 'Religion', nameChinese: '宗教', ability: 'intelligence' },
-    { name: 'Sleight of Hand', nameChinese: '巧手', ability: 'dexterity' },
-    { name: 'Stealth', nameChinese: '隱匿', ability: 'dexterity' },
-    { name: 'Survival', nameChinese: '生存', ability: 'wisdom' }
-  ]
-
-  const getSkillModifier = (ability) => {
-    const score = character.abilities?.[ability] || 10
-    const mod = Math.floor((score - 10) / 2)
-    return mod >= 0 ? `+${mod}` : `${mod}`
-  }
-
-  const getSavingThrowModifier = (ability) => {
-    const score = character.abilities?.[ability] || 10
-    const mod = Math.floor((score - 10) / 2)
-    const profBonus = savingThrows[ability] ? 2 : 0
-    const total = mod + profBonus
-    return total >= 0 ? `+${total}` : `${total}`
-  }
-
-  const ac = calculateAC()
+  const maxHP = calculateMaxHP()
   const spellDC = calculateSpellDC()
-  const spellDamageList = getSpellDamage()
+  const spellAttackBonus = calculateSpellAttackBonus()
+  const weapons = getWeapons()
 
   return (
-    <div className="character-sheet">
-      <div className="sheet-header">
-        <h1>{character.name || '未命名角色'}</h1>
-        <div className="character-info">
-          <p>種族: {raceData?.name || '未選擇'}</p>
-          <p>職業: {classData?.name || '未選擇'}</p>
-          <p>背景: {character.background || '未選擇'}</p>
-          <p>等級: 1</p>
+    <div className="max-w-4xl mx-auto p-6 bg-[#f5e6d3] border-4 border-[#8b4513] rounded-lg shadow-2xl font-serif">
+      {/* Header with D&D Logo */}
+      <div className="text-center mb-6 pb-4 border-b-4 border-[#8b4513]">
+        <div className="text-5xl font-bold text-[#8b0000] mb-2">
+          DUNGEONS & DRAGONS
         </div>
+        <div className="text-xl text-gray-700">角色卡 CHARACTER SHEET</div>
       </div>
 
-      {/* Combat Stats Section */}
-      <div className="combat-stats-section">
-        <h2>戰鬥數據</h2>
-        <div className="combat-stats-grid">
-          <div className="stat-box">
-            <div className="stat-label">護甲等級 (AC)</div>
-            <div className="stat-value large">{ac}</div>
+      {/* Character Basic Info */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="col-span-1">
+          <label className="text-sm text-gray-600">角色名字 Character Name</label>
+          <div className="text-2xl font-bold border-b-2 border-gray-600 pb-1">
+            {character.name || '未命名'}
           </div>
-          {spellDC && (
-            <div className="stat-box">
-              <div className="stat-label">法術豁免DC</div>
-              <div className="stat-value large">{spellDC}</div>
-            </div>
-          )}
-          <div className="stat-box">
-            <div className="stat-label">生命值 (HP)</div>
-            <div className="stat-value large">
-              {classData?.hitDie ? classData.hitDie + getAbilityModifierNum(character.abilities?.constitution || 10) : '---'}
-            </div>
+        </div>
+        <div>
+          <label className="text-sm text-gray-600">職業 Class</label>
+          <div className="text-xl font-bold border-b-2 border-gray-600 pb-1">
+            {classData?.name || character.class}
           </div>
-          <div className="stat-box">
-            <div className="stat-label">先攻加值</div>
-            <div className="stat-value large">
-              {getAbilityModifier(character.abilities?.dexterity || 10)}
-            </div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">熟練加值</div>
-            <div className="stat-value large">+{getProficiencyBonus()}</div>
-          </div>
-          <div className="stat-box">
-            <div className="stat-label">速度</div>
-            <div className="stat-value large">{raceData?.speed || 30} 呎</div>
+        </div>
+        <div>
+          <label className="text-sm text-gray-600">種族 Race</label>
+          <div className="text-xl font-bold border-b-2 border-gray-600 pb-1">
+            {raceData?.name || character.race}
           </div>
         </div>
       </div>
 
-      {/* Weapons Section */}
-      {character.equipment && character.equipment.length > 0 && (
-        <div className="weapons-section">
-          <h2>武器與攻擊</h2>
-          <div className="weapons-list">
-            {character.equipment.filter(e => {
-              const weaponKeywords = ['劍', '弓', '斧', '槍', '錘', '弩', '棒', '杖', 'sword', 'bow', 'axe', 'spear', 'hammer', 'crossbow', 'club', 'staff']
-              return weaponKeywords.some(keyword => e.toLowerCase().includes(keyword.toLowerCase()))
-            }).map((weapon, index) => {
-              const damageData = calculateWeaponDamage(weapon)
-              if (!damageData) return null
-              return (
-                <div key={index} className="weapon-item">
-                  <div className="weapon-name">{weapon}</div>
-                  <div className="weapon-stats">
-                    <span className="attack-bonus">命中: {damageData.attack}</span>
-                    <span className="damage">傷害: {damageData.damage}</span>
-                    {damageData.versatile && (
-                      <span className="versatile">雙手: {damageData.versatile}</span>
-                    )}
+      <div className="grid grid-cols-4 gap-4 mb-6">
+        <div>
+          <label className="text-sm text-gray-600">等級 Level</label>
+          <div className="text-xl font-bold border-b-2 border-gray-600 pb-1">1</div>
+        </div>
+        <div>
+          <label className="text-sm text-gray-600">背景 Background</label>
+          <div className="text-lg border-b-2 border-gray-600 pb-1">
+            {character.background || '-'}
+          </div>
+        </div>
+        <div>
+          <label className="text-sm text-gray-600">陣營 Alignment</label>
+          <div className="text-lg border-b-2 border-gray-600 pb-1">
+            {character.alignment || '-'}
+          </div>
+        </div>
+        <div>
+          <label className="text-sm text-gray-600">經驗值 XP</label>
+          <div className="text-lg border-b-2 border-gray-600 pb-1">0</div>
+        </div>
+      </div>
+
+      {/* Main Stats Section */}
+      <div className="grid grid-cols-3 gap-6 mb-6">
+        {/* Left Column: Ability Scores */}
+        <div className="col-span-1 space-y-3">
+          <h3 className="text-lg font-bold text-center bg-[#8b4513] text-white py-1 rounded">
+            屬性值 ABILITY SCORES
+          </h3>
+          {[
+            { key: 'strength', label: '力量 STR', labelEn: 'Strength' },
+            { key: 'dexterity', label: '敏捷 DEX', labelEn: 'Dexterity' },
+            { key: 'constitution', label: '體質 CON', labelEn: 'Constitution' },
+            { key: 'intelligence', label: '智力 INT', labelEn: 'Intelligence' },
+            { key: 'wisdom', label: '感知 WIS', labelEn: 'Wisdom' },
+            { key: 'charisma', label: '魅力 CHA', labelEn: 'Charisma' }
+          ].map(({ key, label, labelEn }) => {
+            const score = character.abilities?.[key] || 10
+            const modifier = getAbilityModifier(score)
+            return (
+              <div key={key} className="flex items-center justify-between bg-white p-2 rounded border-2 border-gray-400">
+                <div className="flex-1">
+                  <div className="text-xs text-gray-600">{label}</div>
+                  <div className="text-sm font-bold">{labelEn}</div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-12 h-12 rounded-full border-3 border-gray-600 flex items-center justify-center bg-gray-100">
+                    <span className="text-2xl font-bold">{modifier}</span>
+                  </div>
+                  <div className="w-10 h-10 border-2 border-gray-400 flex items-center justify-center bg-white rounded">
+                    <span className="text-lg">{score}</span>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* Spells Section */}
-      {spellDamageList.length > 0 && (
-        <div className="spells-section">
-          <h2>法術與傷害</h2>
-          <div className="spells-list">
-            {spellDamageList.map((spell, index) => (
-              <div key={index} className="spell-item">
-                <div className="spell-name">{spell.name}</div>
-                <div className="spell-stats">
-                  <span className="spell-damage">傷害: {spell.damage}</span>
-                  <span className="damage-type">類型: {spell.type}</span>
-                  {spell.save && <span className="spell-save">DC {spellDC} 豁免</span>}
-                  {spell.note && <span className="spell-note">{spell.note}</span>}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Abilities Section */}
-      <div className="abilities-section">
-        <h2>屬性值</h2>
-        <div className="abilities-grid">
-          {Object.entries(abilityNames).map(([key, name]) => (
-            <div key={key} className="ability-box">
-              <div className="ability-name">{name}</div>
-              <div className="ability-score">{character.abilities?.[key] || 10}</div>
-              <div className="ability-modifier">{getAbilityModifier(character.abilities?.[key] || 10)}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Saving Throws Section */}
-      <div className="saves-section">
-        <h2>豁免擲骰</h2>
-        <div className="saves-list">
-          {Object.entries(abilityNames).map(([key, name]) => (
-            <div key={key} className="save-item">
-              <input
-                type="checkbox"
-                checked={savingThrows[key]}
-                readOnly
-              />
-              <span className="save-modifier">{getSavingThrowModifier(key)}</span>
-              <span className="save-name">{name}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Skills Section */}
-      <div className="skills-section">
-        <h2>技能</h2>
-        <div className="skills-list">
-          {skills.map((skill, index) => {
-            const isProficient = character.skills?.includes(skill.name)
-            const abilityScore = character.abilities?.[skill.ability] || 10
-            const abilityMod = Math.floor((abilityScore - 10) / 2)
-            const profBonus = isProficient ? 2 : 0
-            const total = abilityMod + profBonus
-            const modifier = total >= 0 ? `+${total}` : `${total}`
-
-            return (
-              <div key={index} className="skill-item">
-                <input
-                  type="checkbox"
-                  checked={isProficient}
-                  readOnly
-                />
-                <span className="skill-modifier">{modifier}</span>
-                <span className="skill-name">{skill.nameChinese}</span>
-                <span className="skill-ability">({abilityNames[skill.ability]})</span>
               </div>
             )
           })}
+
+          {/* Proficiency Bonus */}
+          <div className="bg-white p-3 rounded border-2 border-gray-400 text-center">
+            <div className="text-sm text-gray-600 mb-1">熟練加值</div>
+            <div className="text-sm font-bold mb-1">PROFICIENCY BONUS</div>
+            <div className="text-3xl font-bold text-[#8b0000]">
+              +{getProficiencyBonus()}
+            </div>
+          </div>
+        </div>
+
+        {/* Middle Column: Combat Stats */}
+        <div className="col-span-1 space-y-4">
+          {/* AC, HP, Speed */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-white p-3 rounded border-2 border-gray-400 text-center">
+              <div className="text-2xl font-bold">{calculateAC()}</div>
+              <div className="text-xs text-gray-600">護甲等級</div>
+              <div className="text-xs font-bold">Armor Class</div>
+            </div>
+            <div className="bg-white p-3 rounded border-2 border-gray-400 text-center">
+              <div className="text-2xl font-bold">{maxHP}</div>
+              <div className="text-xs text-gray-600">最大生命值</div>
+              <div className="text-xs font-bold">Hit Point Max</div>
+            </div>
+            <div className="bg-white p-3 rounded border-2 border-gray-400 text-center">
+              <div className="text-2xl font-bold">30</div>
+              <div className="text-xs text-gray-600">速度</div>
+              <div className="text-xs font-bold">Speed</div>
+            </div>
+          </div>
+
+          {/* Hit Dice */}
+          <div className="bg-white p-3 rounded border-2 border-gray-400">
+            <div className="text-sm text-gray-600 mb-1">生命骰 Hit Dice</div>
+            <div className="text-2xl font-bold text-center">
+              1{classData?.hitDie || 'd8'}
+            </div>
+            <div className="text-xs text-center text-gray-500 mt-1">
+              總數 Total: 1 | 剩餘 Remaining: 1
+            </div>
+          </div>
+
+          {/* Death Saves */}
+          <div className="bg-white p-3 rounded border-2 border-gray-400">
+            <div className="text-sm font-bold mb-2">死亡豁免 DEATH SAVES</div>
+            <div className="flex justify-between text-xs">
+              <div>
+                <div className="font-bold mb-1">成功 Successes</div>
+                <div className="flex gap-1">
+                  <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                  <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                  <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                </div>
+              </div>
+              <div>
+                <div className="font-bold mb-1">失敗 Failures</div>
+                <div className="flex gap-1">
+                  <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                  <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                  <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Spell DC (if spellcaster) */}
+          {['cleric', 'wizard', 'sorcerer', 'bard', 'druid', 'warlock', 'paladin', 'ranger'].includes(classData?.nameEn?.toLowerCase()) && (
+            <div className="bg-white p-3 rounded border-2 border-gray-400">
+              <div className="text-sm font-bold mb-2 text-center">施法能力 SPELLCASTING</div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#8b0000]">{spellDC}</div>
+                  <div className="text-xs text-gray-600">法術豁免DC</div>
+                  <div className="text-xs font-bold">Spell Save DC</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-[#8b0000]">{spellAttackBonus}</div>
+                  <div className="text-xs text-gray-600">法術攻擊加值</div>
+                  <div className="text-xs font-bold">Spell Attack</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Skills */}
+        <div className="col-span-1">
+          <div className="bg-white p-3 rounded border-2 border-gray-400 h-full">
+            <h3 className="text-sm font-bold mb-2 text-center bg-[#8b4513] text-white py-1 rounded">
+              技能 SKILLS
+            </h3>
+            <div className="space-y-1 text-xs">
+              {[
+                { name: '特技 Acrobatics', ability: 'dexterity' },
+                { name: '動物馴養 Animal Handling', ability: 'wisdom' },
+                { name: '奧秘 Arcana', ability: 'intelligence' },
+                { name: '運動 Athletics', ability: 'strength' },
+                { name: '欺瞞 Deception', ability: 'charisma' },
+                { name: '歷史 History', ability: 'intelligence' },
+                { name: '洞察 Insight', ability: 'wisdom' },
+                { name: '威嚇 Intimidation', ability: 'charisma' },
+                { name: '調查 Investigation', ability: 'intelligence' },
+                { name: '醫藥 Medicine', ability: 'wisdom' },
+                { name: '自然 Nature', ability: 'intelligence' },
+                { name: '察覺 Perception', ability: 'wisdom' },
+                { name: '表演 Performance', ability: 'charisma' },
+                { name: '說服 Persuasion', ability: 'charisma' },
+                { name: '宗教 Religion', ability: 'intelligence' },
+                { name: '巧手 Sleight of Hand', ability: 'dexterity' },
+                { name: '隱匿 Stealth', ability: 'dexterity' },
+                { name: '生存 Survival', ability: 'wisdom' }
+              ].map((skill, index) => {
+                const abilityScore = character.abilities?.[skill.ability] || 10
+                const modifier = getAbilityModifierNum(abilityScore)
+                const isProficient = character.skills?.includes(skill.name.split(' ')[1]) || 
+                                    character.skills?.includes(skill.name.split(' ')[0])
+                const totalModifier = isProficient ? modifier + getProficiencyBonus() : modifier
+                const displayMod = totalModifier >= 0 ? `+${totalModifier}` : `${totalModifier}`
+                
+                return (
+                  <div key={index} className="flex items-center gap-2">
+                    <div className={`w-3 h-3 border-2 rounded-full ${isProficient ? 'bg-gray-800' : 'border-gray-400'}`}></div>
+                    <div className="w-8 text-right font-bold">{displayMod}</div>
+                    <div className="flex-1">{skill.name}</div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Equipment Section */}
-      {character.equipment && character.equipment.length > 0 && (
-        <div className="equipment-section">
-          <h2>裝備</h2>
-          <ul className="equipment-list">
-            {character.equipment.map((item, index) => (
-              <li key={index}>{item}</li>
+      {/* Attacks & Weapons */}
+      <div className="mb-6 bg-white p-4 rounded border-2 border-gray-400">
+        <h3 className="text-lg font-bold mb-3 bg-[#8b4513] text-white py-1 px-2 rounded">
+          攻擊 & 武器 ATTACKS & SPELLCASTING
+        </h3>
+        <div className="grid grid-cols-12 gap-2 text-sm font-bold mb-2 text-center">
+          <div className="col-span-5">名稱 NAME</div>
+          <div className="col-span-3">攻擊加值 ATK BONUS</div>
+          <div className="col-span-4">傷害/類型 DAMAGE/TYPE</div>
+        </div>
+        {weapons.length > 0 ? (
+          weapons.map((weapon, index) => {
+            const stats = getWeaponStats(weapon)
+            return (
+              <div key={index} className="grid grid-cols-12 gap-2 text-sm py-2 border-b border-gray-300">
+                <div className="col-span-5 font-bold">{weapon}</div>
+                <div className="col-span-3 text-center">{stats.attackBonus}</div>
+                <div className="col-span-4 text-center">{stats.damage}</div>
+              </div>
+            )
+          })
+        ) : (
+          <div className="text-center text-gray-500 py-4">未裝備武器 No weapons equipped</div>
+        )}
+      </div>
+
+      {/* Features & Traits */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        {/* Class Features */}
+        <div className="bg-white p-4 rounded border-2 border-gray-400">
+          <h3 className="text-lg font-bold mb-3 bg-[#8b4513] text-white py-1 px-2 rounded">
+            職業能力 CLASS FEATURES
+          </h3>
+          <div className="space-y-2 text-sm">
+            {classData?.keyFeatures && Array.isArray(classData.keyFeatures) && classData.keyFeatures.length > 0 ? (
+              classData.keyFeatures.map((feature, index) => (
+                <div key={index} className="pb-2 border-b border-gray-200">
+                  <div className="font-bold">{feature.split(' - ')[0] || feature.split('(')[0]}</div>
+                  <div className="text-gray-600 text-xs">
+                    {feature.split(' - ')[1] || feature.split(')')[1] || ''}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-gray-500 text-center py-2">無職業能力資料</div>
+            )}
+          </div>
+        </div>
+
+        {/* Race Traits */}
+        <div className="bg-white p-4 rounded border-2 border-gray-400">
+          <h3 className="text-lg font-bold mb-3 bg-[#8b4513] text-white py-1 px-2 rounded">
+            種族特性 RACE TRAITS
+          </h3>
+          <div className="space-y-2 text-sm">
+            {raceData?.traits && Array.isArray(raceData.traits) && raceData.traits.length > 0 ? (
+              raceData.traits.map((trait, index) => (
+                <div key={index} className="pb-2 border-b border-gray-200">
+                  <div className="font-bold">{trait.name || trait}</div>
+                  <div className="text-gray-600 text-xs">
+                    {trait.description || ''}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-gray-500 text-center py-2">無種族特性資料</div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Equipment */}
+      <div className="bg-white p-4 rounded border-2 border-gray-400 mb-6">
+        <h3 className="text-lg font-bold mb-3 bg-[#8b4513] text-white py-1 px-2 rounded">
+          裝備 EQUIPMENT
+        </h3>
+        <div className="grid grid-cols-3 gap-2">
+          {character.equipment && character.equipment.length > 0 ? (
+            character.equipment.map((item, index) => (
+              <div key={index} className="text-sm py-1 px-2 bg-gray-50 rounded border border-gray-300">
+                {item}
+              </div>
+            ))
+          ) : (
+            <div className="col-span-3 text-center text-gray-500 py-4">無裝備 No equipment</div>
+          )}
+        </div>
+      </div>
+
+      {/* Languages */}
+      {character.languages && character.languages.length > 0 && (
+        <div className="bg-white p-4 rounded border-2 border-gray-400">
+          <h3 className="text-lg font-bold mb-3 bg-[#8b4513] text-white py-1 px-2 rounded">
+            語言 LANGUAGES
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {character.languages.map((lang, index) => (
+              <div key={index} className="px-3 py-1 bg-gray-100 rounded border border-gray-300 text-sm">
+                {lang}
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
-
-      {/* Features Section */}
-      <div className="features-section">
-        <h2>特性與能力</h2>
-        <div className="features-list">
-          {raceData?.traits && Array.isArray(raceData.traits) && raceData.traits.length > 0 && (
-            <div className="feature-group">
-              <h3>種族特性</h3>
-              <ul>
-                {raceData.traits.map((trait, index) => (
-                  <li key={index}>{trait}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {classData?.features && Array.isArray(classData.features) && classData.features.length > 0 && (
-            <div className="feature-group">
-              <h3>職業特性</h3>
-              <ul>
-                {classData.features.map((feature, index) => (
-                  <li key={index}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <style jsx>{`
-        .character-sheet {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 20px;
-          font-family: 'Arial', sans-serif;
-        }
-
-        .sheet-header {
-          text-align: center;
-          margin-bottom: 30px;
-          padding-bottom: 20px;
-          border-bottom: 3px solid #8b4513;
-        }
-
-        .sheet-header h1 {
-          font-size: 2.5em;
-          margin: 0 0 10px 0;
-          color: #2c1810;
-        }
-
-        .character-info {
-          display: flex;
-          justify-content: center;
-          gap: 30px;
-          font-size: 1.1em;
-        }
-
-        .combat-stats-section {
-          margin: 30px 0;
-          padding: 20px;
-          background: #f5f5dc;
-          border-radius: 8px;
-          border: 2px solid #8b4513;
-        }
-
-        .combat-stats-section h2 {
-          text-align: center;
-          color: #8b4513;
-          margin-top: 0;
-        }
-
-        .combat-stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 15px;
-          margin-top: 15px;
-        }
-
-        .stat-box {
-          background: white;
-          padding: 15px;
-          border-radius: 8px;
-          text-align: center;
-          border: 2px solid #d2691e;
-        }
-
-        .stat-label {
-          font-size: 0.9em;
-          color: #666;
-          margin-bottom: 8px;
-        }
-
-        .stat-value {
-          font-size: 1.5em;
-          font-weight: bold;
-          color: #2c1810;
-        }
-
-        .stat-value.large {
-          font-size: 2em;
-        }
-
-        .weapons-section,
-        .spells-section {
-          margin: 30px 0;
-          padding: 20px;
-          background: #fff9e6;
-          border-radius: 8px;
-          border: 2px solid #8b4513;
-        }
-
-        .weapons-section h2,
-        .spells-section h2 {
-          color: #8b4513;
-          margin-top: 0;
-        }
-
-        .weapons-list,
-        .spells-list {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .weapon-item,
-        .spell-item {
-          background: white;
-          padding: 12px 15px;
-          border-radius: 6px;
-          border-left: 4px solid #d2691e;
-        }
-
-        .weapon-name,
-        .spell-name {
-          font-weight: bold;
-          font-size: 1.1em;
-          color: #2c1810;
-          margin-bottom: 5px;
-        }
-
-        .weapon-stats,
-        .spell-stats {
-          display: flex;
-          gap: 15px;
-          font-size: 0.95em;
-          color: #555;
-        }
-
-        .attack-bonus,
-        .damage,
-        .versatile,
-        .spell-damage,
-        .damage-type,
-        .spell-save,
-        .spell-note {
-          padding: 3px 8px;
-          background: #f0f0f0;
-          border-radius: 4px;
-        }
-
-        .abilities-section {
-          margin: 30px 0;
-        }
-
-        .abilities-section h2 {
-          text-align: center;
-          color: #8b4513;
-        }
-
-        .abilities-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-          gap: 15px;
-          margin: 20px 0;
-        }
-
-        .ability-box {
-          background: #f5f5dc;
-          border: 2px solid #8b4513;
-          border-radius: 8px;
-          padding: 15px;
-          text-align: center;
-        }
-
-        .ability-name {
-          font-weight: bold;
-          color: #8b4513;
-          margin-bottom: 5px;
-        }
-
-        .ability-score {
-          font-size: 2em;
-          font-weight: bold;
-          color: #2c1810;
-        }
-
-        .ability-modifier {
-          font-size: 1.2em;
-          color: #666;
-          margin-top: 5px;
-        }
-
-        .saves-section,
-        .skills-section {
-          margin: 30px 0;
-        }
-
-        .saves-section h2,
-        .skills-section h2 {
-          color: #8b4513;
-        }
-
-        .saves-list,
-        .skills-list {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-          gap: 8px;
-        }
-
-        .save-item,
-        .skill-item {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 8px;
-          background: #f9f9f9;
-          border-radius: 4px;
-        }
-
-        .save-modifier,
-        .skill-modifier {
-          min-width: 40px;
-          text-align: center;
-          font-weight: bold;
-          color: #2c1810;
-        }
-
-        .equipment-section {
-          margin: 30px 0;
-        }
-
-        .equipment-section h2 {
-          color: #8b4513;
-        }
-
-        .equipment-list {
-          list-style-type: none;
-          padding: 0;
-        }
-
-        .equipment-list li {
-          padding: 8px 12px;
-          margin: 5px 0;
-          background: #f9f9f9;
-          border-left: 3px solid #d2691e;
-          border-radius: 4px;
-        }
-
-        .features-section {
-          margin: 30px 0;
-        }
-
-        .features-section h2 {
-          color: #8b4513;
-        }
-
-        .feature-group {
-          margin: 20px 0;
-        }
-
-        .feature-group h3 {
-          color: #2c1810;
-        }
-
-        .feature-group ul {
-          list-style-type: disc;
-          padding-left: 25px;
-        }
-
-        .feature-group li {
-          margin: 8px 0;
-          line-height: 1.6;
-        }
-
-        @media print {
-          .character-sheet {
-            max-width: 100%;
-          }
-        }
-      `}</style>
     </div>
   )
 }
