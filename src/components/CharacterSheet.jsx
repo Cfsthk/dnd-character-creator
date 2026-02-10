@@ -174,13 +174,13 @@ const CharacterSheet = ({ character }) => {
       bard: [
         { name: '惡意嘲諷 (Vicious Mockery)', damage: '1d4', type: '心靈', save: true },
         { name: '雷鳴波 (Thunderwave)', damage: '2d8', type: '雷鳴', save: true },
-        { name: "失心狂笑 (Tasha's Hideous Laughter)", damage: '無', type: '控制' }
+        { name: '失心狂笑 (Tasha\'s Hideous Laughter)', damage: '無', type: '控制' }
       ],
       paladin: [
         { name: '制裁邪惡 (Divine Smite)', damage: '+2d8', type: '光耀', note: '近戰時額外傷害' }
       ],
       ranger: [
-        { name: "獵人印記 (Hunter's Mark)", damage: '+1d6', type: '額外', note: '標記目標' }
+        { name: '獵人印記 (Hunter\'s Mark)', damage: '+1d6', type: '額外', note: '標記目標' }
       ]
     }
 
@@ -451,7 +451,7 @@ const CharacterSheet = ({ character }) => {
       <div className="features-section">
         <h2>特性與能力</h2>
         <div className="features-list">
-          {raceData?.traits && (
+          {raceData?.traits && Array.isArray(raceData.traits) && raceData.traits.length > 0 && (
             <div className="feature-group">
               <h3>種族特性</h3>
               <ul>
@@ -461,7 +461,7 @@ const CharacterSheet = ({ character }) => {
               </ul>
             </div>
           )}
-          {classData?.features && (
+          {classData?.features && Array.isArray(classData.features) && classData.features.length > 0 && (
             <div className="feature-group">
               <h3>職業特性</h3>
               <ul>
