@@ -46,7 +46,10 @@ const StepReview = ({ character, previousStep }) => {
 
   const exportForPlatform = () => {
     try {
-      return exportPromptForPlatform(character, selectedPlatform, promptOptions)
+      const result = exportPromptForPlatform(character, selectedPlatform, promptOptions)
+      // exportPromptForPlatform returns {prompt, instructions}
+      // Extract just the prompt string for display
+      return typeof result === 'object' && result.prompt ? result.prompt : result
     } catch (error) {
       console.error('Error exporting prompt:', error)
       return '無法匯出提示詞。'
