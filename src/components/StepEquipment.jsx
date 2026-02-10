@@ -1,1 +1,196 @@
-aW1wb3J0IFJlYWN0LCB7IHVzZVN0YXRlIH0gZnJvbSAncmVhY3QnOwppbXBvcnQgeyBlcXVpcG1lbnRCeUNsYXNzIH0gZnJvbSAnLi4vZGF0YS9lcXVpcG1lbnREYXRhJzsKCmZ1bmN0aW9uIFN0ZXBFcXVpcG1lbnQoeyBjaGFyYWN0ZXIsIHVwZGF0ZUNoYXJhY3RlciwgbmV4dFN0ZXAsIHByZXZTdGVwIH0pIHsKICBjb25zdCBbc2VsZWN0ZWRFcXVpcG1lbnQsIHNldFNlbGVjdGVkRXF1aXBtZW50XSA9IHVzZVN0YXRlKGNoYXJhY3Rlci5lcXVpcG1lbnQgfHwgW10pOwogIGNvbnN0IFtob3ZlcmVkSXRlbSwgc2V0SG92ZXJlZEl0ZW1dID0gdXNlU3RhdGUobnVsbCk7CgogIC8vIEZpbHRlciBlcXVpcG1lbnQgYnkgY2hhcmFjdGVyIGNsYXNzCiAgY29uc3QgZ2V0Q2xhc3NFcXVpcG1lbnQgPSAoKSA9PiB7CiAgICBjb25zdCBjbGFzc0tleSA9IGNoYXJhY3Rlci5jbGFzcz8udG9Mb3dlckNhc2UoKTsKICAgIGlmICghY2xhc3NLZXkgfHwgIWVxdWlwbWVudEJ5Q2xhc3NbY2xhc3NLZXldKSB7CiAgICAgIHJldHVybiB7CiAgICAgICAgd2VhcG9uczogW10sCiAgICAgICAgYXJtb3I6IFtdLAogICAgICAgIHRvb2xzOiBbXSwKICAgICAgICBlcXVpcG1lbnQ6IFtdCiAgICAgIH07CiAgICB9CiAgICByZXR1cm4gZXF1aXBtZW50QnlDbGFzc1tjbGFzc0tleV07CiAgfTsKCiAgY29uc3QgY2xhc3NFcXVpcG1lbnQgPSBnZXRDbGFzc0VxdWlwbWVudCgpOwoKICBjb25zdCB0b2dnbGVFcXVpcG1lbnQgPSAoaXRlbSkgPT4gewogICAgY29uc3QgaXRlbU5hbWUgPSBpdGVtLm5hbWU7CiAgICBpZiAoc2VsZWN0ZWRFcXVpcG1lbnQuaW5jbHVkZXMoaXRlbU5hbWUpKSB7CiAgICAgIHNldFNlbGVjdGVkRXF1aXBtZW50KHNlbGVjdGVkRXF1aXBtZW50LmZpbHRlcihlcSA9PiBlcSAhPT0gaXRlbU5hbWUpKTsKICAgIH0gZWxzZSB7CiAgICAgIHNldFNlbGVjdGVkRXF1aXBtZW50KFsuLi5zZWxlY3RlZEVxdWlwbWVudCwgaXRlbU5hbWVdKTsKICAgIH0KICB9OwoKICBjb25zdCBoYW5kbGVOZXh0ID0gKCkgPT4gewogICAgdXBkYXRlQ2hhcmFjdGVyKHsgZXF1aXBtZW50OiBzZWxlY3RlZEVxdWlwbWVudCB9KTsKICAgIG5leHRTdGVwKCk7CiAgfTsKCiAgY29uc3QgcmVuZGVyRXF1aXBtZW50SXRlbSA9IChpdGVtKSA9PiB7CiAgICBjb25zdCBpc1NlbGVjdGVkID0gc2VsZWN0ZWRFcXVpcG1lbnQuaW5jbHVkZXMoaXRlbS5uYW1lKTsKCiAgICByZXR1cm4gKAogICAgICA8ZGl2IAogICAgICAgIGtleT17aXRlbS5uYW1lfSAKICAgICAgICBjbGFzc05hbWU9e2ByZWxhdGl2ZSBiZy13aGl0ZSByb3VuZGVkLWxnIHAtNCBib3JkZXItMiB0cmFuc2l0aW9uLWFsbCBkdXJhdGlvbi0yMDAgJHsKICAgICAgICAgIGlzU2VsZWN0ZWQgCiAgICAgICAgICAgID8gJ2JvcmRlci1kbmQtYmx1ZSBzaGFkb3ctbWQgYmctYmx1ZS01MCcgCiAgICAgICAgICAgIDogJ2JvcmRlci1ncmF5LTIwMCBob3Zlcjpib3JkZXItZG5kLWdvbGQgaG92ZXI6c2hhZG93LW1kJwogICAgICAgIH1gfQogICAgICA+CiAgICAgICAgPGxhYmVsIGNsYXNzTmFtZT0iZmxleCBpdGVtcy1jZW50ZXIgZ2FwLTMgY3Vyc29yLXBvaW50ZXIiPgogICAgICAgICAgPGlucHV0CiAgICAgICAgICAgIHR5cGU9ImNoZWNrYm94IgogICAgICAgICAgICBjaGVja2VkPXtpc1NlbGVjdGVkfQogICAgICAgICAgICBvbkNoYW5nZT17KCkgPT4gdG9nZ2xlRXF1aXBtZW50KGl0ZW0pfQogICAgICAgICAgICBjbGFzc05hbWU9InctNSBoLTUgdGV4dC1kbmQtYmx1ZSBib3JkZXItZ3JheS0zMDAgcm91bmRlZCBmb2N1czpyaW5nLWRuZC1ibHVlIGN1cnNvci1wb2ludGVyIgogICAgICAgICAgLz4KICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4LTEiPgogICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT17YGZvbnQtc2VtaWJvbGQgJHtpc1NlbGVjdGVkID8gJ3RleHQtZG5kLWJsdWUnIDogJ3RleHQtZ3JheS04MDAnfWB9PgogICAgICAgICAgICAgIHtpdGVtLm5hbWV9CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNTAwIG10LTEiPgogICAgICAgICAgICAgIHtpdGVtLm5hbWVDaGluZXNlfQogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgIDwvZGl2PgogICAgICAgICAgPGJ1dHRvbgogICAgICAgICAgICB0eXBlPSJidXR0b24iCiAgICAgICAgICAgIGNsYXNzTmFtZT0idGV4dC0yeGwgaG92ZXI6c2NhbGUtMTEwIHRyYW5zaXRpb24tdHJhbnNmb3JtIgogICAgICAgICAgICBvbk1vdXNlRW50ZXI9eygpID0+IHNldEhvdmVyZWRJdGVtKGl0ZW0ubmFtZSl9CiAgICAgICAgICAgIG9uTW91c2VMZWF2ZT17KCkgPT4gc2V0SG92ZXJlZEl0ZW0obnVsbCl9CiAgICAgICAgICAgIGFyaWEtbGFiZWw9Ik1vcmUgaW5mb3JtYXRpb24iCiAgICAgICAgICA+CiAgICAgICAgICAgIOKEue+4jwogICAgICAgICAgPC9idXR0b24+CiAgICAgICAgPC9sYWJlbD4KICAgICAgICAKICAgICAgICB7aG92ZXJlZEl0ZW0gPT09IGl0ZW0ubmFtZSAmJiAoCiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iYWJzb2x1dGUgei0xMCBtdC0yIHAtNCBiZy13aGl0ZSBib3JkZXItMiBib3JkZXItZG5kLWdvbGQgcm91bmRlZC1sZyBzaGFkb3cteGwgbWF4LXctc20gbGVmdC0wIHJpZ2h0LTAiPgogICAgICAgICAgICB7aXRlbS5kZXNjcmlwdGlvbiAmJiAoCiAgICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9Im1iLTMiPgogICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LXNtIHRleHQtZ3JheS03MDAgbWItMSI+CiAgICAgICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPSJ0ZXh0LWRuZC1ibHVlIj5EZXNjcmlwdGlvbjo8L3N0cm9uZz4ge2l0ZW0uZGVzY3JpcHRpb259CiAgICAgICAgICAgICAgICA8L3A+CiAgICAgICAgICAgICAgICB7aXRlbS5kZXNjcmlwdGlvbkNoaW5lc2UgJiYgKAogICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gdGV4dC1ncmF5LTYwMCBpdGFsaWMiPgogICAgICAgICAgICAgICAgICAgIHtpdGVtLmRlc2NyaXB0aW9uQ2hpbmVzZX0KICAgICAgICAgICAgICAgICAgPC9wPgogICAgICAgICAgICAgICAgKX0KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgKX0KICAgICAgICAgICAge2l0ZW0uZGFtYWdlICYmICgKICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gdGV4dC1ncmF5LTcwMCBtYi0yIj4KICAgICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPSJ0ZXh0LXJlZC02MDAiPuWCt+WusyBEYW1hZ2U6PC9zdHJvbmc+IHtpdGVtLmRhbWFnZX0KICAgICAgICAgICAgICA8L3A+CiAgICAgICAgICAgICl9CiAgICAgICAgICAgIHtpdGVtLnByb3BlcnRpZXMgJiYgKAogICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJtYi0yIj4KICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNzAwIj4KICAgICAgICAgICAgICAgICAgPHN0cm9uZyBjbGFzc05hbWU9InRleHQtcHVycGxlLTYwMCI+5bGs5oCnIFByb3BlcnRpZXM6PC9zdHJvbmc+IHtpdGVtLnByb3BlcnRpZXN9CiAgICAgICAgICAgICAgICA8L3A+CiAgICAgICAgICAgICAgICB7aXRlbS5wcm9wZXJ0aWVzQ2hpbmVzZSAmJiAoCiAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNjAwIGl0YWxpYyI+CiAgICAgICAgICAgICAgICAgICAge2l0ZW0ucHJvcGVydGllc0NoaW5lc2V9CiAgICAgICAgICAgICAgICAgIDwvcD4KICAgICAgICAgICAgICAgICl9CiAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICl9CiAgICAgICAgICAgIHtpdGVtLmFybW9yQ2xhc3MgJiYgKAogICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNzAwIG1iLTIiPgogICAgICAgICAgICAgICAgPHN0cm9uZyBjbGFzc05hbWU9InRleHQtZ3JlZW4tNjAwIj7orbfnlLLnrYnntJogQXJtb3IgQ2xhc3M6PC9zdHJvbmc+IHtpdGVtLmFybW9yQ2xhc3N9CiAgICAgICAgICAgICAgPC9wPgogICAgICAgICAgICApfQogICAgICAgICAgICB7aXRlbS51c2VDYXNlICYmICgKICAgICAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0ibWItMiI+CiAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gdGV4dC1ncmF5LTcwMCI+CiAgICAgICAgICAgICAgICAgIDxzdHJvbmcgY2xhc3NOYW1lPSJ0ZXh0LWdyYXktNjAwIj5Vc2UgQ2FzZTo8L3N0cm9uZz4ge2l0ZW0udXNlQ2FzZX0KICAgICAgICAgICAgICAgIDwvcD4KICAgICAgICAgICAgICAgIHtpdGVtLnVzZUNhc2VDaGluZXNlICYmICgKICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LXNtIHRleHQtZ3JheS02MDAgaXRhbGljIj4KICAgICAgICAgICAgICAgICAgICB7aXRlbS51c2VDYXNlQ2hpbmVzZX0KICAgICAgICAgICAgICAgICAgPC9wPgogICAgICAgICAgICAgICAgKX0KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgKX0KICAgICAgICAgIDwvZGl2PgogICAgICAgICl9CiAgICAgIDwvZGl2PgogICAgKTsKICB9OwoKICBjb25zdCByZW5kZXJDYXRlZ29yeSA9IChjYXRlZ29yeU5hbWUsIGNhdGVnb3J5TmFtZUNoaW5lc2UsIGl0ZW1zLCBpY29uKSA9PiB7CiAgICBpZiAoIWl0ZW1zIHx8IGl0ZW1zLmxlbmd0aCA9PT0gMCkgcmV0dXJuIG51bGw7CgogICAgcmV0dXJuICgKICAgICAgPGRpdiBjbGFzc05hbWU9InNwYWNlLXktMyI+CiAgICAgICAgPGgzIGNsYXNzTmFtZT0idGV4dC14bCBmb250LWJvbGQgdGV4dC1ncmF5LTgwMCBmbGV4IGl0ZW1zLWNlbnRlciBnYXAtMiBwYi0yIGJvcmRlci1iLTIgYm9yZGVyLWRuZC1nb2xkIj4KICAgICAgICAgIDxzcGFuPntpY29ufTwvc3Bhbj4KICAgICAgICAgIDxzcGFuPntjYXRlZ29yeU5hbWVDaGluZXNlfSB7Y2F0ZWdvcnlOYW1lfTwvc3Bhbj4KICAgICAgICA8L2gzPgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJncmlkIGdyaWQtY29scy0xIG1kOmdyaWQtY29scy0yIGdhcC0zIj4KICAgICAgICAgIHtpdGVtcy5tYXAoaXRlbSA9PiByZW5kZXJFcXVpcG1lbnRJdGVtKGl0ZW0pKX0KICAgICAgICA8L2Rpdj4KICAgICAgPC9kaXY+CiAgICApOwogIH07CgogIHJldHVybiAoCiAgICA8ZGl2IGNsYXNzTmFtZT0ic3BhY2UteS02Ij4KICAgICAgey8qIEhlYWRlciAqL30KICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQtY2VudGVyIj4KICAgICAgICA8aDIgY2xhc3NOYW1lPSJ0ZXh0LTN4bCBmb250LWJvbGQgdGV4dC1ncmF5LTgwMCBtYi0yIj7pgbjmk4foo53lgpkgQ2hvb3NlIEVxdWlwbWVudDwvaDI+CiAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LWdyYXktNjAwIj7ngrrkvaDnmoQge2NoYXJhY3Rlci5jbGFzc30g6YG45pOH5Yid5aeL6KOd5YKZPC9wPgogICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNTAwIj5TZWxlY3Qgc3RhcnRpbmcgZXF1aXBtZW50IGZvciB5b3VyIHtjaGFyYWN0ZXIuY2xhc3N9PC9wPgogICAgICA8L2Rpdj4KCiAgICAgIHsvKiBFcXVpcG1lbnQgQ2F0ZWdvcmllcyAqL30KICAgICAgPGRpdiBjbGFzc05hbWU9InNwYWNlLXktNiI+CiAgICAgICAge3JlbmRlckNhdGVnb3J5KCdXZWFwb25zJywgJ+atpuWZqCcsIGNsYXNzRXF1aXBtZW50LndlYXBvbnMsICfimpTvuI8nKX0KICAgICAgICB7cmVuZGVyQ2F0ZWdvcnkoJ0FybW9yJywgJ+itt+eUsicsIGNsYXNzRXF1aXBtZW50LmFybW9yLCAn8J+boe+4jycpfQogICAgICAgIHtyZW5kZXJDYXRlZ29yeSgnVG9vbHMnLCAn5bel5YW3JywgY2xhc3NFcXVpcG1lbnQudG9vbHMsICfwn5SnJyl9CiAgICAgICAge3JlbmRlckNhdGVnb3J5KCdHZW5lcmFsIEVxdWlwbWVudCcsICfkuIDoiKzoo53lgpknLCBjbGFzc0VxdWlwbWVudC5lcXVpcG1lbnQsICfwn46SJyl9CiAgICAgIDwvZGl2PgoKICAgICAgey8qIFNlbGVjdGVkIEVxdWlwbWVudCBTdW1tYXJ5ICovfQogICAgICB7c2VsZWN0ZWRFcXVpcG1lbnQubGVuZ3RoID4gMCAmJiAoCiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImJnLWJsdWUtNTAgYm9yZGVyLTIgYm9yZGVyLWRuZC1ibHVlIHJvdW5kZWQtbGcgcC00Ij4KICAgICAgICAgIDxoNCBjbGFzc05hbWU9ImZvbnQtYm9sZCB0ZXh0LWRuZC1ibHVlIG1iLTIiPuW3sumBuOijneWCmSBTZWxlY3RlZCBFcXVpcG1lbnQgKHtzZWxlY3RlZEVxdWlwbWVudC5sZW5ndGh9KTwvaDQ+CiAgICAgICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleCBmbGV4LXdyYXAgZ2FwLTIiPgogICAgICAgICAgICB7c2VsZWN0ZWRFcXVpcG1lbnQubWFwKGl0ZW0gPT4gKAogICAgICAgICAgICAgIDxzcGFuIGtleT17aXRlbX0gY2xhc3NOYW1lPSJiZy13aGl0ZSBweC0zIHB5LTEgcm91bmRlZC1mdWxsIHRleHQtc20gYm9yZGVyIGJvcmRlci1kbmQtYmx1ZSB0ZXh0LWdyYXktNzAwIj4KICAgICAgICAgICAgICAgIHtpdGVtfQogICAgICAgICAgICAgIDwvc3Bhbj4KICAgICAgICAgICAgKSl9CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KICAgICAgKX0KCiAgICAgIHsvKiBOYXZpZ2F0aW9uIEJ1dHRvbnMgKi99CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGp1c3RpZnktYmV0d2VlbiBwdC00Ij4KICAgICAgICA8YnV0dG9uIAogICAgICAgICAgb25DbGljaz17cHJldlN0ZXB9IAogICAgICAgICAgY2xhc3NOYW1lPSJiZy1ncmF5LTIwMCBob3ZlcjpiZy1ncmF5LTMwMCB0ZXh0LWdyYXktODAwIGZvbnQtc2VtaWJvbGQgcHktMiBweC02IHJvdW5kZWQtbGcgc2hhZG93LW1kIHRyYW5zaXRpb24tY29sb3JzIGR1cmF0aW9uLTIwMCIKICAgICAgICA+CiAgICAgICAgICDihpAg5LiK5LiA5q2lIFByZXZpb3VzCiAgICAgICAgPC9idXR0b24+CiAgICAgICAgPGJ1dHRvbiAKICAgICAgICAgIG9uQ2xpY2s9e2hhbmRsZU5leHR9IAogICAgICAgICAgY2xhc3NOYW1lPSJiZy1kbmQtYmx1ZSBob3ZlcjpiZy1ibHVlLTcwMCB0ZXh0LXdoaXRlIGZvbnQtc2VtaWJvbGQgcHktMiBweC02IHJvdW5kZWQtbGcgc2hhZG93LW1kIHRyYW5zaXRpb24tY29sb3JzIGR1cmF0aW9uLTIwMCIKICAgICAgICA+CiAgICAgICAgICDkuIvkuIDmraUgTmV4dDogQmFja2dyb3VuZCDihpIKICAgICAgICA8L2J1dHRvbj4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICApOwp9CgpleHBvcnQgZGVmYXVsdCBTdGVwRXF1aXBtZW50Owo=
+import React, { useState } from 'react';
+import { equipmentByClass } from '../data/equipmentData';
+
+function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
+  const [selectedEquipment, setSelectedEquipment] = useState(character.equipment || []);
+  const [hoveredItem, setHoveredItem] = useState(null);
+
+  // Filter equipment by character class
+  const getClassEquipment = () => {
+    const classKey = character.class?.toLowerCase();
+    if (!classKey || !equipmentByClass[classKey]) {
+      return {
+        weapons: [],
+        armor: [],
+        tools: [],
+        equipment: []
+      };
+    }
+    return equipmentByClass[classKey];
+  };
+
+  const classEquipment = getClassEquipment();
+
+  const toggleEquipment = (item) => {
+    const itemName = item.name;
+    if (selectedEquipment.includes(itemName)) {
+      setSelectedEquipment(selectedEquipment.filter(eq => eq !== itemName));
+    } else {
+      setSelectedEquipment([...selectedEquipment, itemName]);
+    }
+  };
+
+  const handleNext = () => {
+    updateCharacter({ equipment: selectedEquipment });
+    nextStep();
+  };
+
+  const renderEquipmentItem = (item) => {
+    const isSelected = selectedEquipment.includes(item.name);
+
+    return (
+      <div 
+        key={item.name} 
+        className={`relative bg-white rounded-lg p-4 border-2 transition-all duration-200 ${
+          isSelected 
+            ? 'border-dnd-blue shadow-md bg-blue-50' 
+            : 'border-gray-200 hover:border-dnd-gold hover:shadow-md'
+        }`}
+      >
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => toggleEquipment(item)}
+            className="w-5 h-5 text-dnd-blue border-gray-300 rounded focus:ring-dnd-blue cursor-pointer"
+          />
+          <div className="flex-1">
+            <div className={`font-semibold ${isSelected ? 'text-dnd-blue' : 'text-gray-800'}`}>
+              {item.name}
+            </div>
+            <div className="text-sm text-gray-500 mt-1">
+              {item.nameChinese}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="text-2xl hover:scale-110 transition-transform"
+            onMouseEnter={() => setHoveredItem(item.name)}
+            onMouseLeave={() => setHoveredItem(null)}
+            aria-label="More information"
+          >
+            ℹ️
+          </button>
+        </label>
+        
+        {hoveredItem === item.name && (
+          <div className="absolute z-10 mt-2 p-4 bg-white border-2 border-dnd-gold rounded-lg shadow-xl max-w-sm left-0 right-0">
+            {item.description && (
+              <div className="mb-3">
+                <p className="text-sm text-gray-700 mb-1">
+                  <strong className="text-dnd-blue">Description:</strong> {item.description}
+                </p>
+                {item.descriptionChinese && (
+                  <p className="text-sm text-gray-600 italic">
+                    {item.descriptionChinese}
+                  </p>
+                )}
+              </div>
+            )}
+            {item.damage && (
+              <p className="text-sm text-gray-700 mb-2">
+                <strong className="text-red-600">傷害 Damage:</strong> {item.damage}
+              </p>
+            )}
+            {item.properties && (
+              <div className="mb-2">
+                <p className="text-sm text-gray-700">
+                  <strong className="text-purple-600">屬性 Properties:</strong> {item.properties}
+                </p>
+                {item.propertiesChinese && (
+                  <p className="text-sm text-gray-600 italic">
+                    {item.propertiesChinese}
+                  </p>
+                )}
+              </div>
+            )}
+            {item.armorClass && (
+              <p className="text-sm text-gray-700 mb-2">
+                <strong className="text-green-600">護甲等級 Armor Class:</strong> {item.armorClass}
+              </p>
+            )}
+            {item.useCase && (
+              <div className="mb-2">
+                <p className="text-sm text-gray-700">
+                  <strong className="text-gray-600">Use Case:</strong> {item.useCase}
+                </p>
+                {item.useCaseChinese && (
+                  <p className="text-sm text-gray-600 italic">
+                    {item.useCaseChinese}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderCategory = (categoryName, categoryNameChinese, items, icon) => {
+    if (!items || items.length === 0) return null;
+
+    return (
+      <div className="space-y-3">
+        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 pb-2 border-b-2 border-dnd-gold">
+          <span>{icon}</span>
+          <span>{categoryNameChinese} {categoryName}</span>
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {items.map(item => renderEquipmentItem(item))}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">選擇裝備 Choose Equipment</h2>
+        <p className="text-gray-600">為你的 {character.class} 選擇初始裝備</p>
+        <p className="text-sm text-gray-500">Select starting equipment for your {character.class}</p>
+      </div>
+
+      {/* Equipment Categories */}
+      <div className="space-y-6">
+        {renderCategory('Weapons', '武器', classEquipment.weapons, '⚔️')}
+        {renderCategory('Armor', '護甲', classEquipment.armor, '🛡️')}
+        {renderCategory('Tools', '工具', classEquipment.tools, '🔧')}
+        {renderCategory('General Equipment', '一般裝備', classEquipment.equipment, '🎒')}
+      </div>
+
+      {/* Selected Equipment Summary */}
+      {selectedEquipment.length > 0 && (
+        <div className="bg-blue-50 border-2 border-dnd-blue rounded-lg p-4">
+          <h4 className="font-bold text-dnd-blue mb-2">已選裝備 Selected Equipment ({selectedEquipment.length})</h4>
+          <div className="flex flex-wrap gap-2">
+            {selectedEquipment.map(item => (
+              <span key={item} className="bg-white px-3 py-1 rounded-full text-sm border border-dnd-blue text-gray-700">
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between pt-4">
+        <button 
+          onClick={prevStep} 
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200"
+        >
+          ← 上一步 Previous
+        </button>
+        <button 
+          onClick={handleNext} 
+          className="bg-dnd-blue hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200"
+        >
+          下一步 Next: Background →
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default StepEquipment;
