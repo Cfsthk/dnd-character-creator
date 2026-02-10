@@ -2,41 +2,41 @@ import { classes } from '../data/classData'
 
 const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) => {
   const abilities = [
-    { 
-      key: 'strength', 
-      name: 'Strength (STR)', 
-      description: 'Physical power, melee attacks',
-      explanation: 'Affects melee weapon damage, athletics checks, strength checks. Primary for Fighters, Barbarians, and Paladins.'
+    {
+      key: 'strength',
+      name: '力量 (STR)',
+      description: '體力、近戰攻擊',
+      explanation: '影響近戰武器傷害、運動檢定、力量檢定。戰士、野蠻人和聖武士的主要屬性。'
     },
-    { 
-      key: 'dexterity', 
-      name: 'Dexterity (DEX)', 
-      description: 'Agility, reflexes, ranged attacks',
-      explanation: 'Affects initiative, AC (armor class), ranged weapon attacks, stealth checks. Primary for Rogues, Rangers, and Monks.'
+    {
+      key: 'dexterity',
+      name: '敏捷 (DEX)',
+      description: '靈活、反應、遠程攻擊',
+      explanation: '影響先攻、護甲等級(AC)、遠程武器攻擊、隱匿檢定。盜賊、遊俠和武僧的主要屬性。'
     },
-    { 
-      key: 'constitution', 
-      name: 'Constitution (CON)', 
-      description: 'Health, stamina',
-      explanation: 'Affects hit point maximum, concentration checks, endurance checks. Important for all classes, especially front-line fighters.'
+    {
+      key: 'constitution',
+      name: '體質 (CON)',
+      description: '健康、耐力',
+      explanation: '影響生命值上限、專注檢定、耐力檢定。對所有職業都很重要，尤其是前線戰士。'
     },
-    { 
-      key: 'intelligence', 
-      name: 'Intelligence (INT)', 
-      description: 'Reasoning, memory',
-      explanation: 'Affects spell attacks (Wizards), investigation checks, knowledge skills. Primary for Wizards.'
+    {
+      key: 'intelligence',
+      name: '智力 (INT)',
+      description: '推理、記憶',
+      explanation: '影響法術攻擊(法師)、調查檢定、知識技能。法師的主要屬性。'
     },
-    { 
-      key: 'wisdom', 
-      name: 'Wisdom (WIS)', 
-      description: 'Awareness, intuition',
-      explanation: 'Affects spell attacks (Clerics/Druids), perception checks, insight checks. Primary for Clerics and Druids.'
+    {
+      key: 'wisdom',
+      name: '感知 (WIS)',
+      description: '覺察、直覺',
+      explanation: '影響法術攻擊(牧師/德魯伊)、察覺檢定、洞察檢定。牧師和德魯伊的主要屬性。'
     },
-    { 
-      key: 'charisma', 
-      name: 'Charisma (CHA)', 
-      description: 'Force of personality, leadership',
-      explanation: 'Affects spell attacks (Sorcerers/Bards), persuasion checks, performance checks. Primary for Sorcerers, Bards, and Paladins.'
+    {
+      key: 'charisma',
+      name: '魅力 (CHA)',
+      description: '人格魅力、領導力',
+      explanation: '影響法術攻擊(術士/吟遊詩人)、說服檢定、表演檢定。術士、吟遊詩人和聖武士的主要屬性。'
     },
   ]
 
@@ -57,8 +57,8 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Assign Ability Scores</h2>
-        <p className="text-gray-600">Standard Array: 15, 14, 13, 12, 10, 8 | Or use point buy (27 points)</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">分配屬性值</h2>
+        <p className="text-gray-600">標準陣列: 15, 14, 13, 12, 10, 8 | 或使用點數購買 (27點)</p>
       </div>
 
       {/* Suggestions Box */}
@@ -67,18 +67,18 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h3 className="font-bold text-gray-800 mb-2">
-                💡 {classData.name} Recommended Setup
+                💡 {classData.nameChinese} 推薦設定
               </h3>
               <p className="text-sm text-gray-700 mb-2">
-                Primary: <span className="font-bold capitalize">{classData.primaryAbility}</span> | 
-                Secondary: <span className="font-bold capitalize">{classData.secondaryAbility}</span>
+                主要屬性: <span className="font-bold capitalize">{classData.primaryAbility}</span> |
+                次要屬性: <span className="font-bold capitalize">{classData.secondaryAbility}</span>
               </p>
             </div>
             <button
               className="px-3 py-1 bg-white text-sm rounded border border-gray-300 hover:bg-gray-50 text-dnd-blue"
               onClick={applySuggestions}
             >
-              Apply
+              套用
             </button>
           </div>
           <div className="mt-2 grid grid-cols-3 gap-2">
@@ -103,7 +103,7 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
           const value = character.abilities?.[ability.key] || 10
           const modifier = getAbilityModifier(value)
           return (
-            <div key={ability.key} className="p.4 border border-gray-300 rounded-lg">
+            <div key={ability.key} className="p-4 border border-gray-300 rounded-lg">
               <div className="flex justify-between items-center mb-2">
                 <div>
                   <h4 className="font-bold text-gray-800">{ability.name}</h4>
@@ -126,7 +126,7 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
                     max="18"
                   />
                   <p className="text-sm text-gray-600 mt-1">
-                    Mod: {modifier >= 0 ? '+' : ''}{modifier}
+                    調整值: {modifier >= 0 ? '+' : ''}{modifier}
                   </p>
                 </div>
               </div>
@@ -139,10 +139,10 @@ const StepAbilities = ({ character, updateCharacter, nextStep, previousStep }) =
       {/* Navigation */}
       <div className="flex justify-between mt-8">
         <button className="btn-secondary" onClick={previousStep}>
-          ← Back to Class
+          ← 返回職業選擇
         </button>
         <button className="btn-primary" onClick={nextStep}>
-          Next: Choose Skills →
+          下一步：選擇技能 →
         </button>
       </div>
     </div>
