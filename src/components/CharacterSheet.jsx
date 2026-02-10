@@ -1,5 +1,5 @@
 import { CLASSES } from '../data/classes'
-import { RACES } from '../data/races'
+import { races } from '../data/raceData'
 
 const CharacterSheet = ({ character }) => {
   const getAbilityModifier = (score) => {
@@ -16,7 +16,7 @@ const CharacterSheet = ({ character }) => {
   }
 
   const classData = character.class ? CLASSES[character.class] : null
-  const raceData = character.race ? RACES[character.race] : null
+  const raceData = character.race ? races[character.race] : null
 
   // Calculate Maximum HP (Hit Die + Constitution Modifier)
   const calculateMaxHP = () => {
