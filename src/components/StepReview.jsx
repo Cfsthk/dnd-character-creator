@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { generateAIPrompt, exportPromptForPlatform, getEquipmentOptions, getPoseOptions, getBackgroundOptions } from '../utils/promptGenerator'
-import { getRecommendedEquipment, equipmentByClass } from '../data/equipmentData'
+import { getRecommendedEquipment, getEquipmentForClass } from '../data/equipmentData'
 import CharacterSheet from './CharacterSheet'
 
 const StepReview = ({ character, previousStep }) => {
@@ -11,7 +11,7 @@ const StepReview = ({ character, previousStep }) => {
     language: 'zh-TW',
     includeBackground: true,
     pose: 'default',
-    viewType: '3d-reference' // New: for 3D modeling reference
+    viewType: '3d-reference'
   })
   const [selectedPlatform, setSelectedPlatform] = useState('midjourney')
 
@@ -25,59 +25,44 @@ const StepReview = ({ character, previousStep }) => {
     link.click()
   }
 
-  // Get recommended equipment - ADD NULL CHECKS
-  const recommendedEquipment = character.class && character.race
+  // Get recommended equipment with null safety
+  const recommendedEquipment = character?.class && character?.race
     ? getRecommendedEquipment(character.class, character.race)
     : null
 
-  // Get detailed equipment data with descriptions - ADD NULL CHECKS
-  const equipmentDetails = character.class ? equipmentByClass[character.class] : null
-
-  // ADD NULL CHECKS for prompt generation
-  const generatedPrompt = character.class
-    ? generateAIPrompt(character, promptOptions)
-    : ''
-
-  const platformExport = character.class
-    ? exportPromptForPlatform(character, selectedPlatform, promptOptions)
+  // Get detailed equipment data with null safety
+  const equipmentDetails = character?.class 
+    ? getEquipmentForClass(character.class)
     : null
+
+  const generatePrompt = () => {
+    try {
+      return generateAIPrompt(character, promptOptions)
+    } catch (error) {
+      console.error('Error generating prompt:', error)
+      return '無法生成提示詞。請檢查角色數據。'
+    }
+  }
+
+  const exportForPlatform = () => {
+    try {
+      return exportPromptForPlatform(character, selectedPlatform, promptOptions)
+    } catch (error) {
+      console.error('Error exporting prompt:', error)
+      return '無法匯出提示詞。'
+    }
+  }
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
-    alert('Copied to clipboard!')
-  }
-
-  // Helper component for equipment item with tooltip
-  const EquipmentItem = ({ item }) => {
-    const [showTooltip, setShowTooltip] = useState(false)
-
-    return (
-      <li
-        className="text-gray-700 relative group cursor-help"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <span className="flex items-center gap-1">
-          {item.nameChinese || item.name}
-          <span className="text-blue-500 text-xs">❓</span>
-        </span>
-
-        {showTooltip && item.description && (
-          <div className="absolute left-0 top-full mt-1 z-10 bg-gray-900 text-white text-sm rounded-lg p-3 shadow-lg w-64">
-            <div className="font-semibold mb-1">{item.nameChinese || item.name}</div>
-            <div className="text-gray-200">{item.description}</div>
-            <div className="absolute -top-2 left-4 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-4 border-b-gray-900"></div>
-          </div>
-        )}
-      </li>
-    )
+    alert('已複製到剪貼簿！')
   }
 
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">Character Complete!</h2>
-        <p className="text-gray-600">Review your character sheet, download data, or generate AI images</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">角色完成</h2>
+        <p className="text-gray-600">檢視您的角色並生成 AI 圖像提示詞</p>
       </div>
 
       {/* Toggle Buttons */}
@@ -89,11 +74,11 @@ const StepReview = ({ character, previousStep }) => {
           }}
           className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
             showCharacterSheet
-              ? 'bg-dnd-blue text-white'
+              ? 'bg-blue-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          📋 Character Sheet
+          📋 角色卡
         </button>
         <button
           onClick={() => {
@@ -102,222 +87,133 @@ const StepReview = ({ character, previousStep }) => {
           }}
           className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
             showPromptGenerator
-              ? 'bg-dnd-blue text-white'
+              ? 'bg-purple-600 text-white'
               : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
         >
-          🎨 AI Image Generator
+          🎨 AI 圖像生成
         </button>
       </div>
 
       {/* Character Sheet View */}
-      {showCharacterSheet && character.class && (
-        <div className="space-y-4">
+      {showCharacterSheet && (
+        <div className="card">
           <CharacterSheet character={character} />
-
-          {/* Download Button */}
-          <div className="text-center">
+          
+          <div className="mt-6 flex gap-4 justify-center">
             <button
               onClick={downloadJSON}
-              className="btn btn-primary px-8 py-3 text-lg"
+              className="btn-secondary"
             >
-              📥 Download Character Data (JSON)
+              💾 下載角色 JSON
             </button>
           </div>
         </div>
       )}
 
-      {/* No Class Selected Warning */}
-      {showCharacterSheet && !character.class && (
-        <div className="card bg-yellow-50 border-2 border-yellow-400 p-6 text-center">
-          <p className="text-yellow-800 text-lg font-semibold mb-2">⚠️ Character Data Incomplete</p>
-          <p className="text-yellow-700">Please return to the previous step to complete all required character settings</p>
-          <button onClick={previousStep} className="btn btn-secondary mt-4">
-            ← Back to Settings
-          </button>
-        </div>
-      )}
-
       {/* AI Prompt Generator View */}
-      {showPromptGenerator && character.class && (
-        <div className="space-y-6">
-          {/* Prompt Options */}
-          <div className="card bg-white p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">🎨 AI Image Generation Settings</h3>
+      {showPromptGenerator && (
+        <div className="card space-y-6">
+          <div>
+            <h3 className="text-xl font-bold mb-4">AI 圖像生成提示詞</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              根據您的角色生成適合的 AI 圖像提示詞，可用於 Midjourney、DALL-E 等平台
+            </p>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              {/* Art Style */}
+            {/* Platform Selection */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-2">選擇平台：</label>
+              <div className="flex gap-2">
+                {['midjourney', 'dalle', 'stable-diffusion'].map(platform => (
+                  <button
+                    key={platform}
+                    onClick={() => setSelectedPlatform(platform)}
+                    className={`px-4 py-2 rounded-lg ${
+                      selectedPlatform === platform
+                        ? 'bg-purple-600 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                  >
+                    {platform === 'midjourney' && 'Midjourney'}
+                    {platform === 'dalle' && 'DALL-E'}
+                    {platform === 'stable-diffusion' && 'Stable Diffusion'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Prompt Options */}
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Art Style
-                </label>
+                <label className="block font-semibold mb-2">風格：</label>
                 <select
                   value={promptOptions.style}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, style: e.target.value })}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-dnd-blue focus:outline-none"
+                  onChange={(e) => setPromptOptions({...promptOptions, style: e.target.value})}
+                  className="input-field"
                 >
-                  <option value="fantasy-art">Fantasy Art</option>
-                  <option value="realistic">Realistic</option>
-                  <option value="anime">Anime</option>
-                  <option value="comic">Comic Book</option>
-                  <option value="oil-painting">Oil Painting</option>
-                  <option value="watercolor">Watercolor</option>
+                  <option value="fantasy-art">奇幻藝術</option>
+                  <option value="realistic">寫實風格</option>
+                  <option value="anime">動漫風格</option>
+                  <option value="oil-painting">油畫風格</option>
+                  <option value="digital-art">數位藝術</option>
                 </select>
               </div>
 
-              {/* View Type */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  View Type
-                </label>
-                <select
-                  value={promptOptions.viewType}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, viewType: e.target.value })}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-dnd-blue focus:outline-none"
-                >
-                  <option value="single-view">Single View</option>
-                  <option value="3d-reference">3D Reference Sheet</option>
-                </select>
-              </div>
-
-              {/* Pose */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Pose
-                </label>
+                <label className="block font-semibold mb-2">姿勢：</label>
                 <select
                   value={promptOptions.pose}
-                  onChange={(e) => setPromptOptions({ ...promptOptions, pose: e.target.value })}
-                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-dnd-blue focus:outline-none"
+                  onChange={(e) => setPromptOptions({...promptOptions, pose: e.target.value})}
+                  className="input-field"
                 >
-                  <option value="default">Default</option>
-                  <option value="action">Action Pose</option>
-                  <option value="combat">Combat Ready</option>
-                  <option value="casual">Casual</option>
-                  <option value="heroic">Heroic</option>
+                  <option value="default">預設姿勢</option>
+                  <option value="action">戰鬥姿勢</option>
+                  <option value="portrait">肖像特寫</option>
+                  <option value="full-body">全身站立</option>
                 </select>
               </div>
-
-              {/* Background */}
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={promptOptions.includeBackground}
-                    onChange={(e) => setPromptOptions({ ...promptOptions, includeBackground: e.target.checked })}
-                    className="w-4 h-4"
-                  />
-                  Include Background Description
-                </label>
-              </div>
             </div>
-          </div>
 
-          {/* Platform Selection */}
-          <div className="card bg-white p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">🖼️ Select AI Platform</h3>
-            <div className="flex flex-wrap gap-3">
-              {['midjourney', 'stable-diffusion', 'dalle', 'leonardo'].map(platform => (
+            <div className="mb-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={promptOptions.includeBackground}
+                  onChange={(e) => setPromptOptions({...promptOptions, includeBackground: e.target.checked})}
+                />
+                <span>包含背景環境描述</span>
+              </label>
+            </div>
+
+            {/* Generated Prompt */}
+            <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-300">
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="font-semibold">生成的提示詞：</h4>
                 <button
-                  key={platform}
-                  onClick={() => setSelectedPlatform(platform)}
-                  className={`px-4 py-2 rounded-lg font-semibold transition-colors capitalize ${
-                    selectedPlatform === platform
-                      ? 'bg-dnd-blue text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
+                  onClick={() => copyToClipboard(exportForPlatform())}
+                  className="btn-secondary text-sm"
                 >
-                  {platform}
+                  📋 複製
                 </button>
-              ))}
+              </div>
+              <pre className="whitespace-pre-wrap text-sm text-gray-700">
+                {exportForPlatform()}
+              </pre>
             </div>
           </div>
-
-          {/* Generated Prompt */}
-          <div className="card bg-white p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-gray-800">📝 Generated Prompt</h3>
-              <button
-                onClick={() => copyToClipboard(platformExport?.prompt || generatedPrompt)}
-                className="btn btn-secondary"
-              >
-                📋 Copy
-              </button>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-200">
-              <p className="text-gray-800 whitespace-pre-wrap font-mono text-sm">
-                {platformExport?.prompt || generatedPrompt || 'Please complete character setup first'}
-              </p>
-            </div>
-
-            {platformExport?.negativePrompt && (
-              <div className="mt-4">
-                <h4 className="font-semibold text-gray-700 mb-2">Negative Prompt:</h4>
-                <div className="bg-gray-50 p-4 rounded-lg border-2 border-gray-200">
-                  <p className="text-gray-800 whitespace-pre-wrap font-mono text-sm">
-                    {platformExport.negativePrompt}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {platformExport?.settings && (
-              <div className="mt-4">
-                <h4 className="font-semibold text-gray-700 mb-2">Recommended Settings:</h4>
-                <div className="bg-blue-50 p-3 rounded-lg text-sm">
-                  {Object.entries(platformExport.settings).map(([key, value]) => (
-                    <div key={key} className="flex justify-between py-1">
-                      <span className="font-medium capitalize">{key}:</span>
-                      <span className="text-gray-700">{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Equipment Recommendations (if available) */}
-          {recommendedEquipment && equipmentDetails && (
-            <div className="card bg-white p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">⚔️ Recommended Equipment</h3>
-              <div className="grid md:grid-cols-2 gap-4">
-                {equipmentDetails.weapons && equipmentDetails.weapons.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">Weapons</h4>
-                    <ul className="space-y-1">
-                      {equipmentDetails.weapons.map((item, idx) => (
-                        <EquipmentItem key={idx} item={item} />
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {equipmentDetails.armor && equipmentDetails.armor.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">Armor</h4>
-                    <ul className="space-y-1">
-                      {equipmentDetails.armor.map((item, idx) => (
-                        <EquipmentItem key={idx} item={item} />
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       )}
 
       {/* Navigation */}
-      <div className="flex justify-between pt-4">
-        <button onClick={previousStep} className="btn btn-secondary">
-          ← Previous
+      <div className="flex justify-between mt-8">
+        <button onClick={previousStep} className="btn-secondary">
+          ← 上一步
         </button>
         <button
           onClick={() => window.location.reload()}
-          className="btn bg-green-600 text-white hover:bg-green-700"
+          className="btn-primary"
         >
-          🔄 Create New Character
+          🎲 創建新角色
         </button>
       </div>
     </div>
