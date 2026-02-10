@@ -39,91 +39,128 @@ function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
     const isSelected = selectedEquipment.includes(item.name);
 
     return (
-      <div key={item.name} className="equipment-item">
-        <label className="equipment-label">
+      <div 
+        key={item.name} 
+        className={`relative bg-white rounded-lg p-4 border-2 transition-all duration-200 ${
+          isSelected 
+            ? 'border-dnd-blue shadow-md bg-blue-50' 
+            : 'border-gray-200 hover:border-dnd-gold hover:shadow-md'
+        }`}
+      >
+        <label className="flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             checked={isSelected}
             onChange={() => toggleEquipment(item)}
+            className="w-5 h-5 text-dnd-blue border-gray-300 rounded focus:ring-dnd-blue cursor-pointer"
           />
-          <span className="equipment-name">
-            {item.nameChinese || item.name}
-            {item.name !== (item.nameChinese || item.name) && (
-              <span className="equipment-name-en"> ({item.name})</span>
-            )}
+          <span className={`flex-1 font-semibold ${isSelected ? 'text-dnd-blue' : 'text-gray-800'}`}>
+            {item.name}
           </span>
           <button
             type="button"
-            className="tooltip-button"
+            className="text-2xl hover:scale-110 transition-transform"
             onMouseEnter={() => setHoveredItem(item.name)}
             onMouseLeave={() => setHoveredItem(null)}
-            aria-label="更多資訊"
+            aria-label="More information"
           >
-            ?
+            ℹ️
           </button>
         </label>
+        
         {hoveredItem === item.name && (
-          <div className="tooltip-content">
-            {item.description && <p><strong>說明：</strong> {item.description}</p>}
-            {item.damage && <p><strong>傷害：</strong> {item.damage}</p>}
-            {item.properties && <p><strong>特性：</strong> {item.properties}</p>}
-            {item.armorClass && <p><strong>護甲等級：</strong> {item.armorClass}</p>}
-            {item.useCase && <p><strong>用途：</strong> {item.useCase}</p>}
+          <div className="absolute z-10 mt-2 p-4 bg-white border-2 border-dnd-gold rounded-lg shadow-xl max-w-sm left-0 right-0">
+            {item.description && (
+              <p className="text-sm text-gray-700 mb-2">
+                <strong className="text-dnd-blue">Description:</strong> {item.description}
+              </p>
+            )}
+            {item.damage && (
+              <p className="text-sm text-gray-700 mb-2">
+                <strong className="text-red-600">Damage:</strong> {item.damage}
+              </p>
+            )}
+            {item.properties && (
+              <p className="text-sm text-gray-700 mb-2">
+                <strong className="text-purple-600">Properties:</strong> {item.properties}
+              </p>
+            )}
+            {item.armorClass && (
+              <p className="text-sm text-gray-700 mb-2">
+                <strong className="text-green-600">Armor Class:</strong> {item.armorClass}
+              </p>
+            )}
+            {item.useCase && (
+              <p className="text-sm text-gray-700">
+                <strong className="text-gray-600">Use Case:</strong> {item.useCase}
+              </p>
+            )}
           </div>
         )}
       </div>
     );
   };
 
-  const renderCategory = (categoryName, items) => {
+  const renderCategory = (categoryName, items, icon) => {
     if (!items || items.length === 0) return null;
 
     return (
-      <div className="equipment-category">
-        <h3>{categoryName}</h3>
-        <div className="equipment-list">
+      <div className="space-y-3">
+        <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2 pb-2 border-b-2 border-dnd-gold">
+          <span>{icon}</span>
+          {categoryName}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {items.map(item => renderEquipmentItem(item))}
         </div>
       </div>
     );
   };
 
-  const categoryNames = {
-    weapons: '武器',
-    armor: '護甲',
-    tools: '工具',
-    equipment: '一般裝備'
-  };
-
   return (
-    <div className="step-equipment">
-      <h2>選擇裝備</h2>
-      <p className="instruction">
-        為您的 {character.class} 選擇起始裝備
-        <br />
-        <small>選中的裝備將會出現在您的角色卡上</small>
-      </p>
-
-      <div className="equipment-categories">
-        {renderCategory(categoryNames.weapons, classEquipment.weapons)}
-        {renderCategory(categoryNames.armor, classEquipment.armor)}
-        {renderCategory(categoryNames.tools, classEquipment.tools)}
-        {renderCategory(categoryNames.equipment, classEquipment.equipment)}
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">Choose Equipment</h2>
+        <p className="text-gray-600">Select starting equipment for your {character.class}</p>
       </div>
 
-      {selectedEquipment.length === 0 && (
-        <div className="warning-message">
-          ⚠️ 建議至少選擇一件裝備
+      {/* Equipment Categories */}
+      <div className="space-y-6">
+        {renderCategory('Weapons', classEquipment.weapons, '⚔️')}
+        {renderCategory('Armor', classEquipment.armor, '🛡️')}
+        {renderCategory('Tools', classEquipment.tools, '🔧')}
+        {renderCategory('General Equipment', classEquipment.equipment, '🎒')}
+      </div>
+
+      {/* Selected Equipment Summary */}
+      {selectedEquipment.length > 0 && (
+        <div className="bg-blue-50 border-2 border-dnd-blue rounded-lg p-4">
+          <h4 className="font-bold text-dnd-blue mb-2">Selected Equipment ({selectedEquipment.length})</h4>
+          <div className="flex flex-wrap gap-2">
+            {selectedEquipment.map(item => (
+              <span key={item} className="bg-white px-3 py-1 rounded-full text-sm border border-dnd-blue text-gray-700">
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 
-      <div className="selected-summary">
-        <strong>已選擇：</strong> {selectedEquipment.length} 件裝備
-      </div>
-
-      <div className="navigation-buttons">
-        <button onClick={prevStep} className="prev-button">← 返回技能選擇</button>
-        <button onClick={handleNext} className="next-button">下一步：選擇背景 →</button>
+      {/* Navigation Buttons */}
+      <div className="flex justify-between pt-4">
+        <button 
+          onClick={prevStep} 
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200"
+        >
+          ← Previous
+        </button>
+        <button 
+          onClick={handleNext} 
+          className="bg-dnd-blue hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200"
+        >
+          Next: Background →
+        </button>
       </div>
     </div>
   );
