@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { generateAIPrompt, exportPromptForPlatform, getEquipmentOptions, getPoseOptions, getBackgroundOptions } from '../utils/promptGenerator'
-import { getRecommendedEquipment, getEquipmentForClass } from '../data/equipmentData'
+import { getRecommendedEquipment, equipmentByClass } from '../data/equipmentData'
 import CharacterSheet from './CharacterSheet'
 
 const StepReview = ({ character, previousStep }) => {
@@ -31,7 +31,7 @@ const StepReview = ({ character, previousStep }) => {
     : null
 
   // Get detailed equipment data with descriptions - ADD NULL CHECKS
-  const equipmentDetails = character.class ? getEquipmentForClass(character.class) : null
+  const equipmentDetails = character.class ? equipmentByClass[character.class] : null
 
   // ADD NULL CHECKS for prompt generation
   const generatedPrompt = character.class
