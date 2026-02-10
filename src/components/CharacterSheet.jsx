@@ -1,5 +1,6 @@
 import { CLASSES } from '../data/classes'
 import { races } from '../data/raceData'
+import { equipmentByClass } from '../data/equipmentData'
 import { useRef } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -50,6 +51,53 @@ const CharacterSheet = ({ character }) => {
     return 2 // Level 3 proficiency bonus
   }
 
+  // Get selected weapons from character equipment
+  const getSelectedWeapons = () => {
+    if (!character.equipment || !Array.isArray(character.equipment) || !character.class) {
+      return []
+    }
+
+    const classEquipment = equipmentByClass[character.class]
+    if (!classEquipment) return []
+
+    // Get all weapons from the class equipment data
+    const allWeapons = classEquipment.flatMap(category => 
+      category.items?.filter(item => item.damage) || []
+    )
+
+    // Filter to only the weapons that are in character.equipment
+    return allWeapons.filter(weapon => 
+      character.equipment.includes(weapon.name)
+    )
+  }
+
+  // Calculate weapon attack bonus
+  const getWeaponAttackBonus = (weapon) => {
+    // Determine if weapon uses STR or DEX
+    const usesDex = weapon.properties?.includes('靈巧') || 
+                    weapon.properties?.includes('遠程') ||
+                    weapon.range?.includes('遠程')
+
+    const abilityMod = usesDex 
+      ? getAbilityModifierNum(character.abilities.dexterity)
+      : getAbilityModifierNum(character.abilities.strength)
+
+    return abilityMod + getProficiencyBonus()
+  }
+
+  // Format weapon damage with ability modifier
+  const formatWeaponDamage = (weapon) => {
+    const usesDex = weapon.properties?.includes('靈巧') || 
+                    weapon.properties?.includes('遠程') ||
+                    weapon.range?.includes('遠程')
+
+    const abilityMod = usesDex 
+      ? getAbilityModifierNum(character.abilities.dexterity)
+      : getAbilityModifierNum(character.abilities.strength)
+
+    return `${weapon.damage} + ${abilityMod} ${weapon.damageType || ''}`
+  }
+
   const classData = character.class ? CLASSES[character.class] : null
   const raceData = character.race ? races[character.race] : null
 
@@ -75,25 +123,25 @@ const CharacterSheet = ({ character }) => {
     survival: "追蹤、狩獵、引導、預測天氣和避免自然危險。"
   }
 
-  const SKILLS = [
-    { name: '特技', key: 'acrobatics', ability: 'dexterity' },
-    { name: '馴獸', key: 'animalHandling', ability: 'wisdom' },
-    { name: '奧秘', key: 'arcana', ability: 'intelligence' },
-    { name: '運動', key: 'athletics', ability: 'strength' },
-    { name: '欺瞞', key: 'deception', ability: 'charisma' },
-    { name: '歷史', key: 'history', ability: 'intelligence' },
-    { name: '洞察', key: 'insight', ability: 'wisdom' },
-    { name: '威嚇', key: 'intimidation', ability: 'charisma' },
-    { name: '調查', key: 'investigation', ability: 'intelligence' },
-    { name: '醫藥', key: 'medicine', ability: 'wisdom' },
-    { name: '自然', key: 'nature', ability: 'intelligence' },
-    { name: '察覺', key: 'perception', ability: 'wisdom' },
-    { name: '表演', key: 'performance', ability: 'charisma' },
-    { name: '說服', key: 'persuasion', ability: 'charisma' },
-    { name: '宗教', key: 'religion', ability: 'intelligence' },
-    { name: '巧手', key: 'sleightOfHand', ability: 'dexterity' },
-    { name: '隱匿', key: 'stealth', ability: 'dexterity' },
-    { name: '求生', key: 'survival', ability: 'wisdom' }
+  const SKILLS = [\
+    { name: '特技', key: 'acrobatics', ability: 'dexterity' },\
+    { name: '馴獸', key: 'animalHandling', ability: 'wisdom' },\
+    { name: '奧秘', key: 'arcana', ability: 'intelligence' },\
+    { name: '運動', key: 'athletics', ability: 'strength' },\
+    { name: '欺瞞', key: 'deception', ability: 'charisma' },\
+    { name: '歷史', key: 'history', ability: 'intelligence' },\
+    { name: '洞察', key: 'insight', ability: 'wisdom' },\
+    { name: '威嚇', key: 'intimidation', ability: 'charisma' },\
+    { name: '調查', key: 'investigation', ability: 'intelligence' },\
+    { name: '醫藥', key: 'medicine', ability: 'wisdom' },\
+    { name: '自然', key: 'nature', ability: 'intelligence' },\
+    { name: '察覺', key: 'perception', ability: 'wisdom' },\
+    { name: '表演', key: 'performance', ability: 'charisma' },\
+    { name: '說服', key: 'persuasion', ability: 'charisma' },\
+    { name: '宗教', key: 'religion', ability: 'intelligence' },\
+    { name: '巧手', key: 'sleightOfHand', ability: 'dexterity' },\
+    { name: '隱匿', key: 'stealth', ability: 'dexterity' },\
+    { name: '求生', key: 'survival', ability: 'wisdom' }\
   ]
 
   const calculateSkillModifier = (skill) => {
@@ -165,13 +213,13 @@ const CharacterSheet = ({ character }) => {
       <div className="grid grid-cols-3 gap-4 mb-4">
         {/* Left Column - Abilities */}
         <div className="space-y-2">
-          {[
-            { name: '力量 (Strength)', key: 'strength', abbr: 'STR' },
-            { name: '敏捷 (Dexterity)', key: 'dexterity', abbr: 'DEX' },
-            { name: '體質 (Constitution)', key: 'constitution', abbr: 'CON' },
-            { name: '智力 (Intelligence)', key: 'intelligence', abbr: 'INT' },
-            { name: '感知 (Wisdom)', key: 'wisdom', abbr: 'WIS' },
-            { name: '魅力 (Charisma)', key: 'charisma', abbr: 'CHA' }
+          {[\
+            { name: '力量 (Strength)', key: 'strength', abbr: 'STR' },\
+            { name: '敏捷 (Dexterity)', key: 'dexterity', abbr: 'DEX' },\
+            { name: '體質 (Constitution)', key: 'constitution', abbr: 'CON' },\
+            { name: '智力 (Intelligence)', key: 'intelligence', abbr: 'INT' },\
+            { name: '感知 (Wisdom)', key: 'wisdom', abbr: 'WIS' },\
+            { name: '魅力 (Charisma)', key: 'charisma', abbr: 'CHA' }\
           ].map(ability => (
             <div key={ability.key} className="border-2 border-[#8b4513] bg-[#fdf5e6] p-2 text-center">
               <div className="text-sm font-bold">{ability.name}</div>
@@ -207,13 +255,13 @@ const CharacterSheet = ({ character }) => {
           <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-3">
             <div className="text-sm font-bold mb-2 text-center">豁免</div>
             <div className="space-y-1">
-              {[
-                { name: '力量', key: 'strength' },
-                { name: '敏捷', key: 'dexterity' },
-                { name: '體質', key: 'constitution' },
-                { name: '智力', key: 'intelligence' },
-                { name: '感知', key: 'wisdom' },
-                { name: '魅力', key: 'charisma' }
+              {[\
+                { name: '力量', key: 'strength' },\
+                { name: '敏捷', key: 'dexterity' },\
+                { name: '體質', key: 'constitution' },\
+                { name: '智力', key: 'intelligence' },\
+                { name: '感知', key: 'wisdom' },\
+                { name: '魅力', key: 'charisma' }\
               ].map(save => {
                 const isProficient = classData?.savingThrows?.includes(save.key)
                 const modifier = getAbilityModifierNum(character.abilities[save.key]) +
@@ -288,7 +336,7 @@ const CharacterSheet = ({ character }) => {
           <div className="text-center">
             <div className="text-xs text-gray-600 mb-1">生命值上限</div>
             <div className="text-3xl font-bold">
-              {classData ? parseInt(classData.hitDie.replace('d', '')) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              {classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
           <div className="text-center">
@@ -296,7 +344,7 @@ const CharacterSheet = ({ character }) => {
             <input
               type="number"
               className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
-              defaultValue={classData ? parseInt(classData.hitDie.replace('d', '')) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              defaultValue={classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             />
           </div>
           <div className="text-center">
@@ -310,7 +358,7 @@ const CharacterSheet = ({ character }) => {
         </div>
         <div className="mt-4 text-center">
           <div className="text-xs text-gray-600 mb-1">生命骰</div>
-          <div className="text-xl">3{classData?.hitDie || 'd8'}</div>
+          <div className="text-xl">3d{classData?.hitDice || 8}</div>
         </div>
       </div>
 
@@ -326,21 +374,21 @@ const CharacterSheet = ({ character }) => {
             </tr>
           </thead>
           <tbody>
-            {/* Example weapon entries */}
-            <tr className="border-b border-[#8b4513]">
-              <td className="p-2">長劍</td>
-              <td className="text-center">
-                {formatModifier(getAbilityModifierNum(character.abilities.strength) + getProficiencyBonus())}
-              </td>
-              <td>1d8 + {getAbilityModifierNum(character.abilities.strength)} 揮砍</td>
-            </tr>
-            <tr className="border-b border-[#8b4513]">
-              <td className="p-2">短弓</td>
-              <td className="text-center">
-                {formatModifier(getAbilityModifierNum(character.abilities.dexterity) + getProficiencyBonus())}
-              </td>
-              <td>1d6 + {getAbilityModifierNum(character.abilities.dexterity)} 穿刺</td>
-            </tr>
+            {getSelectedWeapons().length > 0 ? (
+              getSelectedWeapons().map((weapon, index) => (
+                <tr key={index} className="border-b border-[#8b4513]">
+                  <td className="p-2">{weapon.name}</td>
+                  <td className="text-center">
+                    {formatModifier(getWeaponAttackBonus(weapon))}
+                  </td>
+                  <td>{formatWeaponDamage(weapon)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="text-center text-gray-500 p-2">無武器</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
