@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import StepRace from './components/StepRace'
 import StepClass from './components/StepClass'
+import StepSubclass from './components/StepSubclass'
 import StepAbilities from './components/StepAbilities'
 import StepDetails from './components/StepDetails'
 import StepBackground from './components/StepBackground'
@@ -11,11 +12,12 @@ import ProgressBar from './components/ProgressBar'
 const STEPS = [
   { id: 1, name: '種族', component: StepRace },
   { id: 2, name: '職業', component: StepClass },
-  { id: 3, name: '屬性', component: StepAbilities },
-  { id: 4, name: '背景', component: StepBackground },
-  { id: 5, name: '裝備', component: StepEquipment },
-  { id: 6, name: '細節', component: StepDetails },
-  { id: 7, name: '完成', component: StepReview }
+  { id: 3, name: '子職業', component: StepSubclass },
+  { id: 4, name: '屬性', component: StepAbilities },
+  { id: 5, name: '背景', component: StepBackground },
+  { id: 6, name: '裝備', component: StepEquipment },
+  { id: 7, name: '細節', component: StepDetails },
+  { id: 8, name: '完成', component: StepReview }
 ]
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
     race: null,
     subrace: null,
     class: null,
+    subclass: null,
     abilities: {
       strength: 10,
       dexterity: 10,
