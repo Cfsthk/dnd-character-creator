@@ -1,5 +1,6 @@
 import { CLASSES } from '../data/classes'
 import { races } from '../data/raceData'
+import { equipmentByClass } from '../data/equipmentData'
 import { useRef } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -52,6 +53,73 @@ const CharacterSheet = ({ character }) => {
 
   const classData = character.class ? CLASSES[character.class] : null
   const raceData = character.race ? races[character.race] : null
+
+  // Get selected weapons from character equipment
+  const getSelectedWeapons = () => {
+    if (!character.equipment || !Array.isArray(character.equipment) || character.equipment.length === 0) {
+      return []
+    }
+
+    const classKey = character.class?.toLowerCase()
+    if (!classKey || !equipmentByClass[classKey]) {
+      return []
+    }
+
+    // Get all weapons for this class
+    const classWeapons = equipmentByClass[classKey].weapons || []
+    
+    // Filter to only weapons that are in the character's equipment
+    return classWeapons.filter(weapon => character.equipment.includes(weapon.name))
+  }
+
+  // Get weapon attack bonus based on weapon properties
+  const getWeaponAttackBonus = (weapon) => {
+    const profBonus = getProficiencyBonus()
+    
+    // Determine if weapon uses STR or DEX
+    // Finesse weapons can use DEX, ranged weapons use DEX, others use STR
+    const weaponProps = weapon.properties?.toLowerCase() || ''
+    const isFinesse = weaponProps.includes('靈巧') || weaponProps.includes('finesse')
+    const isRanged = weaponProps.includes('射程') || weaponProps.includes('投擲') || 
+                     weapon.name.includes('弓') || weapon.name.includes('弩')
+    
+    let abilityMod
+    if (isFinesse) {
+      // Finesse: use higher of STR or DEX
+      const strMod = getAbilityModifierNum(character.abilities.strength)
+      const dexMod = getAbilityModifierNum(character.abilities.dexterity)
+      abilityMod = Math.max(strMod, dexMod)
+    } else if (isRanged) {
+      // Ranged: use DEX
+      abilityMod = getAbilityModifierNum(character.abilities.dexterity)
+    } else {
+      // Melee: use STR
+      abilityMod = getAbilityModifierNum(character.abilities.strength)
+    }
+    
+    return abilityMod + profBonus
+  }
+
+  // Format damage string with ability modifier
+  const formatWeaponDamage = (weapon) => {
+    const weaponProps = weapon.properties?.toLowerCase() || ''
+    const isFinesse = weaponProps.includes('靈巧') || weaponProps.includes('finesse')
+    const isRanged = weaponProps.includes('射程') || weaponProps.includes('投擲') || 
+                     weapon.name.includes('弓') || weapon.name.includes('弩')
+    
+    let abilityMod
+    if (isFinesse) {
+      const strMod = getAbilityModifierNum(character.abilities.strength)
+      const dexMod = getAbilityModifierNum(character.abilities.dexterity)
+      abilityMod = Math.max(strMod, dexMod)
+    } else if (isRanged) {
+      abilityMod = getAbilityModifierNum(character.abilities.dexterity)
+    } else {
+      abilityMod = getAbilityModifierNum(character.abilities.strength)
+    }
+
+    return `${weapon.damage} + ${abilityMod}`
+  }
 
   // Skill descriptions in Traditional Chinese
   const SKILL_DESCRIPTIONS = {
@@ -107,43 +175,7 @@ const CharacterSheet = ({ character }) => {
     return num >= 0 ? `+${num}` : `${num}`
   }
 
-  // Extract weapons from equipment
-  const getWeapons = () => {
-    if (!character.equipment || !Array.isArray(character.equipment)) {
-      return []
-    }
-    
-    return character.equipment.filter(item => 
-      typeof item === 'object' && item !== null && item.damage
-    )
-  }
-
-  // Calculate attack bonus for a weapon
-  const getWeaponAttackBonus = (weapon) => {
-    // Determine if weapon uses STR or DEX based on properties
-    const usesFinesse = weapon.properties && typeof weapon.properties === 'string' && 
-                       weapon.properties.includes('靈巧')
-    const isRanged = weapon.properties && typeof weapon.properties === 'string' && 
-                    (weapon.properties.includes('投擲') || weapon.properties.includes('彈藥'))
-    
-    // For finesse weapons, use the higher of STR or DEX
-    // For ranged weapons, use DEX
-    // For other weapons, use STR
-    let abilityMod
-    if (usesFinesse) {
-      const strMod = getAbilityModifierNum(character.abilities.strength)
-      const dexMod = getAbilityModifierNum(character.abilities.dexterity)
-      abilityMod = Math.max(strMod, dexMod)
-    } else if (isRanged) {
-      abilityMod = getAbilityModifierNum(character.abilities.dexterity)
-    } else {
-      abilityMod = getAbilityModifierNum(character.abilities.strength)
-    }
-    
-    // Add proficiency bonus (assuming proficiency with selected weapons)
-    const totalBonus = abilityMod + getProficiencyBonus()
-    return { bonus: totalBonus, abilityMod }
-  }
+  const selectedWeapons = getSelectedWeapons()
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-[#f4e4c1] min-h-screen" ref={sheetRef}>
@@ -364,22 +396,16 @@ const CharacterSheet = ({ character }) => {
             </tr>
           </thead>
           <tbody>
-            {getWeapons().length > 0 ? (
-              getWeapons().map((weapon, index) => {
-                const { bonus, abilityMod } = getWeaponAttackBonus(weapon)
-                return (
-                  <tr key={index} className="border-b border-[#8b4513]">
-                    <td className="p-2">{weapon.name}</td>
-                    <td className="text-center">
-                      {formatModifier(bonus)}
-                    </td>
-                    <td>
-                      {weapon.damage}
-                      {abilityMod !== 0 && ` + ${Math.abs(abilityMod)}`}
-                    </td>
-                  </tr>
-                )
-              })
+            {selectedWeapons.length > 0 ? (
+              selectedWeapons.map((weapon, index) => (
+                <tr key={index} className="border-b border-[#8b4513]">
+                  <td className="p-2">{weapon.name}</td>
+                  <td className="text-center">
+                    {formatModifier(getWeaponAttackBonus(weapon))}
+                  </td>
+                  <td>{formatWeaponDamage(weapon)}</td>
+                </tr>
+              ))
             ) : (
               <tr>
                 <td colSpan="3" className="p-2 text-center text-gray-500">
