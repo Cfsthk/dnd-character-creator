@@ -10,18 +10,7 @@ export default defineConfig({
         manualChunks: undefined,
       }
     },
-    // Disable CSP checking during build
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: false,
-      },
-    },
+    // Use default esbuild minifier (no need to specify minify option)
+    // Remove terser configuration as it's not installed
   },
-  // Disable strict CSP in development
-  server: {
-    headers: {
-      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
-    }
-  }
 })
