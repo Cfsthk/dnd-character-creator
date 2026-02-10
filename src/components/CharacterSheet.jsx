@@ -1,6 +1,5 @@
 import { CLASSES } from '../data/classes'
 import { races } from '../data/raceData'
-import { equipmentByClass } from '../data/equipmentData'
 import { useRef } from 'react'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
@@ -53,73 +52,6 @@ const CharacterSheet = ({ character }) => {
 
   const classData = character.class ? CLASSES[character.class] : null
   const raceData = character.race ? races[character.race] : null
-
-  // Get selected weapons from character equipment
-  const getSelectedWeapons = () => {
-    if (!character.equipment || !Array.isArray(character.equipment) || character.equipment.length === 0) {
-      return []
-    }
-
-    const classKey = character.class?.toLowerCase()
-    if (!classKey || !equipmentByClass[classKey]) {
-      return []
-    }
-
-    // Get all weapons for this class
-    const classWeapons = equipmentByClass[classKey].weapons || []
-    
-    // Filter to only weapons that are in the character's equipment
-    return classWeapons.filter(weapon => character.equipment.includes(weapon.name))
-  }
-
-  // Get weapon attack bonus based on weapon properties
-  const getWeaponAttackBonus = (weapon) => {
-    const profBonus = getProficiencyBonus()
-    
-    // Determine if weapon uses STR or DEX
-    // Finesse weapons can use DEX, ranged weapons use DEX, others use STR
-    const weaponProps = weapon.properties?.toLowerCase() || ''
-    const isFinesse = weaponProps.includes('靈巧') || weaponProps.includes('finesse')
-    const isRanged = weaponProps.includes('射程') || weaponProps.includes('投擲') || 
-                     weapon.name.includes('弓') || weapon.name.includes('弩')
-    
-    let abilityMod
-    if (isFinesse) {
-      // Finesse: use higher of STR or DEX
-      const strMod = getAbilityModifierNum(character.abilities.strength)
-      const dexMod = getAbilityModifierNum(character.abilities.dexterity)
-      abilityMod = Math.max(strMod, dexMod)
-    } else if (isRanged) {
-      // Ranged: use DEX
-      abilityMod = getAbilityModifierNum(character.abilities.dexterity)
-    } else {
-      // Melee: use STR
-      abilityMod = getAbilityModifierNum(character.abilities.strength)
-    }
-    
-    return abilityMod + profBonus
-  }
-
-  // Format damage string with ability modifier
-  const formatWeaponDamage = (weapon) => {
-    const weaponProps = weapon.properties?.toLowerCase() || ''
-    const isFinesse = weaponProps.includes('靈巧') || weaponProps.includes('finesse')
-    const isRanged = weaponProps.includes('射程') || weaponProps.includes('投擲') || 
-                     weapon.name.includes('弓') || weapon.name.includes('弩')
-    
-    let abilityMod
-    if (isFinesse) {
-      const strMod = getAbilityModifierNum(character.abilities.strength)
-      const dexMod = getAbilityModifierNum(character.abilities.dexterity)
-      abilityMod = Math.max(strMod, dexMod)
-    } else if (isRanged) {
-      abilityMod = getAbilityModifierNum(character.abilities.dexterity)
-    } else {
-      abilityMod = getAbilityModifierNum(character.abilities.strength)
-    }
-
-    return `${weapon.damage} + ${abilityMod}`
-  }
 
   // Skill descriptions in Traditional Chinese
   const SKILL_DESCRIPTIONS = {
@@ -174,8 +106,6 @@ const CharacterSheet = ({ character }) => {
   const formatModifier = (num) => {
     return num >= 0 ? `+${num}` : `${num}`
   }
-
-  const selectedWeapons = getSelectedWeapons()
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-[#f4e4c1] min-h-screen" ref={sheetRef}>
@@ -358,7 +288,7 @@ const CharacterSheet = ({ character }) => {
           <div className="text-center">
             <div className="text-xs text-gray-600 mb-1">生命值上限</div>
             <div className="text-3xl font-bold">
-              {classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              {classData ? parseInt(classData.hitDie.replace('d', '')) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
           <div className="text-center">
@@ -366,7 +296,7 @@ const CharacterSheet = ({ character }) => {
             <input
               type="number"
               className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
-              defaultValue={classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              defaultValue={classData ? parseInt(classData.hitDie.replace('d', '')) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             />
           </div>
           <div className="text-center">
@@ -380,7 +310,7 @@ const CharacterSheet = ({ character }) => {
         </div>
         <div className="mt-4 text-center">
           <div className="text-xs text-gray-600 mb-1">生命骰</div>
-          <div className="text-xl">3d{classData?.hitDice || 8}</div>
+          <div className="text-xl">3{classData?.hitDie || 'd8'}</div>
         </div>
       </div>
 
@@ -396,23 +326,21 @@ const CharacterSheet = ({ character }) => {
             </tr>
           </thead>
           <tbody>
-            {selectedWeapons.length > 0 ? (
-              selectedWeapons.map((weapon, index) => (
-                <tr key={index} className="border-b border-[#8b4513]">
-                  <td className="p-2">{weapon.name}</td>
-                  <td className="text-center">
-                    {formatModifier(getWeaponAttackBonus(weapon))}
-                  </td>
-                  <td>{formatWeaponDamage(weapon)}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" className="p-2 text-center text-gray-500">
-                  無武器
-                </td>
-              </tr>
-            )}
+            {/* Example weapon entries */}
+            <tr className="border-b border-[#8b4513]">
+              <td className="p-2">長劍</td>
+              <td className="text-center">
+                {formatModifier(getAbilityModifierNum(character.abilities.strength) + getProficiencyBonus())}
+              </td>
+              <td>1d8 + {getAbilityModifierNum(character.abilities.strength)} 揮砍</td>
+            </tr>
+            <tr className="border-b border-[#8b4513]">
+              <td className="p-2">短弓</td>
+              <td className="text-center">
+                {formatModifier(getAbilityModifierNum(character.abilities.dexterity) + getProficiencyBonus())}
+              </td>
+              <td>1d6 + {getAbilityModifierNum(character.abilities.dexterity)} 穿刺</td>
+            </tr>
           </tbody>
         </table>
       </div>
