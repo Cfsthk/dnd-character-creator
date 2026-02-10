@@ -242,20 +242,18 @@ const CharacterSheet = ({ character }) => {
                 const isProficient = character.skills?.[skill.key] || false
                 const modifier = calculateSkillModifier(skill)
                 return (
-                  <div key={skill.key} className="text-xs">
-                    <div className="flex items-center">
-                      <input 
-                        type="checkbox" 
-                        checked={isProficient}
-                        readOnly
-                        className="mr-2"
-                      />
-                      <span className="w-8 font-semibold">{formatModifier(modifier)}</span>
-                      <span className="font-semibold">{skill.name}</span>
-                    </div>
-                    <div className="text-gray-600 ml-6 mb-1">
+                  <div key={skill.key} className="flex items-center text-xs">
+                    <input 
+                      type="checkbox" 
+                      checked={isProficient}
+                      readOnly
+                      className="mr-2"
+                    />
+                    <span className="w-8 font-semibold">{formatModifier(modifier)}</span>
+                    <span className="font-semibold">{skill.name}</span>
+                    <span className="text-gray-600 ml-2">
                       {SKILL_DESCRIPTIONS[skill.key]}
-                    </div>
+                    </span>
                   </div>
                 )
               })}
