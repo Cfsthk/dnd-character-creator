@@ -20,7 +20,7 @@ const CharacterSheet = ({ character }) => {
   const calculateAC = () => {
     const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
     const equipment = character.equipment || []
-    
+
     // Check for armor
     const hasLightArmor = equipment.some(e => e.includes('皮甲') || e.includes('Leather'))
     const hasChainShirt = equipment.some(e => e.includes('鎖甲衫') || e.includes('Chain Shirt'))
@@ -28,37 +28,37 @@ const CharacterSheet = ({ character }) => {
     const hasSplint = equipment.some(e => e.includes('板條甲') || e.includes('Splint'))
     const hasPlate = equipment.some(e => e.includes('板甲') || e.includes('Plate'))
     const hasShield = equipment.some(e => e.includes('盾牌') || e.includes('Shield'))
-    
+
     let baseAC = 10 + dexMod // Unarmored
-    
+
     if (hasPlate) baseAC = 18
     else if (hasSplint) baseAC = 17
     else if (hasChainMail) baseAC = 16
     else if (hasChainShirt) baseAC = 13 + Math.min(dexMod, 2)
     else if (hasLightArmor) baseAC = 11 + dexMod
-    
+
     // Monk unarmored defense
     if (character.class === 'monk' && !hasLightArmor && !hasChainShirt && !hasChainMail && !hasSplint && !hasPlate) {
       const wisMod = getAbilityModifierNum(character.abilities?.wisdom || 10)
       baseAC = 10 + dexMod + wisMod
     }
-    
+
     // Barbarian unarmored defense
     if (character.class === 'barbarian' && !hasLightArmor && !hasChainShirt && !hasChainMail && !hasSplint && !hasPlate) {
       const conMod = getAbilityModifierNum(character.abilities?.constitution || 10)
       baseAC = 10 + dexMod + conMod
     }
-    
+
     // Add shield bonus
     if (hasShield) baseAC += 2
-    
+
     return baseAC
   }
 
   // Calculate Spell Save DC
   const calculateSpellDC = () => {
     if (!classData) return null
-    
+
     let spellcastingAbility = null
     switch (character.class) {
       case 'wizard':
@@ -78,9 +78,9 @@ const CharacterSheet = ({ character }) => {
       default:
         return null
     }
-    
+
     if (!spellcastingAbility) return null
-    
+
     const abilityMod = getAbilityModifierNum(character.abilities?.[spellcastingAbility] || 10)
     const profBonus = getProficiencyBonus()
     return 8 + profBonus + abilityMod
@@ -91,7 +91,7 @@ const CharacterSheet = ({ character }) => {
     const strMod = getAbilityModifierNum(character.abilities?.strength || 10)
     const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
     const profBonus = getProficiencyBonus()
-    
+
     // Weapon damage dice mapping
     const weaponData = {
       '長劍': { damage: '1d8', finesse: false, versatile: '1d10' },
@@ -123,16 +123,16 @@ const CharacterSheet = ({ character }) => {
       '法杖': { damage: '1d6', finesse: false, versatile: '1d8' },
       'Quarterstaff': { damage: '1d6', finesse: false, versatile: '1d8' }
     }
-    
+
     const weapon = weaponData[weaponName]
     if (!weapon) return null
-    
+
     const useDex = weapon.finesse || weapon.ranged
     const abilityMod = useDex ? Math.max(strMod, dexMod) : (weapon.ranged ? dexMod : strMod)
     const attackBonus = abilityMod + profBonus
     const attackBonusStr = attackBonus >= 0 ? `+${attackBonus}` : `${attackBonus}`
     const damageMod = abilityMod >= 0 ? `+${abilityMod}` : `${abilityMod}`
-    
+
     return {
       attack: attackBonusStr,
       damage: `${weapon.damage}${damageMod}`,
@@ -143,7 +143,7 @@ const CharacterSheet = ({ character }) => {
   // Get spell damage by level
   const getSpellDamage = () => {
     if (!classData) return []
-    
+
     const spells = {
       wizard: [
         { name: '火焰箭 (Fire Bolt)', damage: '1d10', type: '火焰' },
@@ -174,16 +174,16 @@ const CharacterSheet = ({ character }) => {
       bard: [
         { name: '惡意嘲諷 (Vicious Mockery)', damage: '1d4', type: '心靈', save: true },
         { name: '雷鳴波 (Thunderwave)', damage: '2d8', type: '雷鳴', save: true },
-        { name: '失心狂笑 (Tasha\\'s Hideous Laughter)', damage: '無', type: '控制' }
+        { name: "失心狂笑 (Tasha's Hideous Laughter)", damage: '無', type: '控制' }
       ],
       paladin: [
         { name: '制裁邪惡 (Divine Smite)', damage: '+2d8', type: '光耀', note: '近戰時額外傷害' }
       ],
       ranger: [
-        { name: '獵人印記 (Hunter\\'s Mark)', damage: '+1d6', type: '額外', note: '標記目標' }
+        { name: "獵人印記 (Hunter's Mark)", damage: '+1d6', type: '額外', note: '標記目標' }
       ]
     }
-    
+
     return spells[character.class] || []
   }
 
@@ -395,10 +395,10 @@ const CharacterSheet = ({ character }) => {
         <div className="saves-list">
           {Object.entries(abilityNames).map(([key, name]) => (
             <div key={key} className="save-item">
-              <input 
-                type="checkbox" 
-                checked={savingThrows[key]} 
-                readOnly 
+              <input
+                type="checkbox"
+                checked={savingThrows[key]}
+                readOnly
               />
               <span className="save-modifier">{getSavingThrowModifier(key)}</span>
               <span className="save-name">{name}</span>
@@ -418,13 +418,13 @@ const CharacterSheet = ({ character }) => {
             const profBonus = isProficient ? 2 : 0
             const total = abilityMod + profBonus
             const modifier = total >= 0 ? `+${total}` : `${total}`
-            
+
             return (
               <div key={index} className="skill-item">
-                <input 
-                  type="checkbox" 
-                  checked={isProficient} 
-                  readOnly 
+                <input
+                  type="checkbox"
+                  checked={isProficient}
+                  readOnly
                 />
                 <span className="skill-modifier">{modifier}</span>
                 <span className="skill-name">{skill.nameChinese}</span>
@@ -481,27 +481,27 @@ const CharacterSheet = ({ character }) => {
           padding: 20px;
           font-family: 'Arial', sans-serif;
         }
-        
+
         .sheet-header {
           text-align: center;
           margin-bottom: 30px;
           padding-bottom: 20px;
           border-bottom: 3px solid #8b4513;
         }
-        
+
         .sheet-header h1 {
           font-size: 2.5em;
           margin: 0 0 10px 0;
           color: #2c1810;
         }
-        
+
         .character-info {
           display: flex;
           justify-content: center;
           gap: 30px;
           font-size: 1.1em;
         }
-        
+
         .combat-stats-section {
           margin: 30px 0;
           padding: 20px;
@@ -509,20 +509,20 @@ const CharacterSheet = ({ character }) => {
           border-radius: 8px;
           border: 2px solid #8b4513;
         }
-        
+
         .combat-stats-section h2 {
           text-align: center;
           color: #8b4513;
           margin-top: 0;
         }
-        
+
         .combat-stats-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
           gap: 15px;
           margin-top: 15px;
         }
-        
+
         .stat-box {
           background: white;
           padding: 15px;
@@ -530,23 +530,23 @@ const CharacterSheet = ({ character }) => {
           text-align: center;
           border: 2px solid #d2691e;
         }
-        
+
         .stat-label {
           font-size: 0.9em;
           color: #666;
           margin-bottom: 8px;
         }
-        
+
         .stat-value {
           font-size: 1.5em;
           font-weight: bold;
           color: #2c1810;
         }
-        
+
         .stat-value.large {
           font-size: 2em;
         }
-        
+
         .weapons-section,
         .spells-section {
           margin: 30px 0;
@@ -555,20 +555,20 @@ const CharacterSheet = ({ character }) => {
           border-radius: 8px;
           border: 2px solid #8b4513;
         }
-        
+
         .weapons-section h2,
         .spells-section h2 {
           color: #8b4513;
           margin-top: 0;
         }
-        
+
         .weapons-list,
         .spells-list {
           display: flex;
           flex-direction: column;
           gap: 12px;
         }
-        
+
         .weapon-item,
         .spell-item {
           background: white;
@@ -576,7 +576,7 @@ const CharacterSheet = ({ character }) => {
           border-radius: 6px;
           border-left: 4px solid #d2691e;
         }
-        
+
         .weapon-name,
         .spell-name {
           font-weight: bold;
@@ -584,7 +584,7 @@ const CharacterSheet = ({ character }) => {
           color: #2c1810;
           margin-bottom: 5px;
         }
-        
+
         .weapon-stats,
         .spell-stats {
           display: flex;
@@ -592,7 +592,7 @@ const CharacterSheet = ({ character }) => {
           font-size: 0.95em;
           color: #555;
         }
-        
+
         .attack-bonus,
         .damage,
         .versatile,
@@ -604,23 +604,23 @@ const CharacterSheet = ({ character }) => {
           background: #f0f0f0;
           border-radius: 4px;
         }
-        
+
         .abilities-section {
           margin: 30px 0;
         }
-        
+
         .abilities-section h2 {
           text-align: center;
           color: #8b4513;
         }
-        
+
         .abilities-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
           gap: 15px;
           margin: 20px 0;
         }
-        
+
         .ability-box {
           background: #f5f5dc;
           border: 2px solid #8b4513;
@@ -628,42 +628,42 @@ const CharacterSheet = ({ character }) => {
           padding: 15px;
           text-align: center;
         }
-        
+
         .ability-name {
           font-weight: bold;
           color: #8b4513;
           margin-bottom: 5px;
         }
-        
+
         .ability-score {
           font-size: 2em;
           font-weight: bold;
           color: #2c1810;
         }
-        
+
         .ability-modifier {
           font-size: 1.2em;
           color: #666;
           margin-top: 5px;
         }
-        
+
         .saves-section,
         .skills-section {
           margin: 30px 0;
         }
-        
+
         .saves-section h2,
         .skills-section h2 {
           color: #8b4513;
         }
-        
+
         .saves-list,
         .skills-list {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           gap: 8px;
         }
-        
+
         .save-item,
         .skill-item {
           display: flex;
@@ -673,7 +673,7 @@ const CharacterSheet = ({ character }) => {
           background: #f9f9f9;
           border-radius: 4px;
         }
-        
+
         .save-modifier,
         .skill-modifier {
           min-width: 40px;
@@ -681,20 +681,20 @@ const CharacterSheet = ({ character }) => {
           font-weight: bold;
           color: #2c1810;
         }
-        
+
         .equipment-section {
           margin: 30px 0;
         }
-        
+
         .equipment-section h2 {
           color: #8b4513;
         }
-        
+
         .equipment-list {
           list-style-type: none;
           padding: 0;
         }
-        
+
         .equipment-list li {
           padding: 8px 12px;
           margin: 5px 0;
@@ -702,33 +702,33 @@ const CharacterSheet = ({ character }) => {
           border-left: 3px solid #d2691e;
           border-radius: 4px;
         }
-        
+
         .features-section {
           margin: 30px 0;
         }
-        
+
         .features-section h2 {
           color: #8b4513;
         }
-        
+
         .feature-group {
           margin: 20px 0;
         }
-        
+
         .feature-group h3 {
           color: #2c1810;
         }
-        
+
         .feature-group ul {
           list-style-type: disc;
           padding-left: 25px;
         }
-        
+
         .feature-group li {
           margin: 8px 0;
           line-height: 1.6;
         }
-        
+
         @media print {
           .character-sheet {
             max-width: 100%;
