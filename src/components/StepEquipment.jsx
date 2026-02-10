@@ -102,6 +102,17 @@ function StepEquipment({ character, updateCharacter, nextStep, prevStep }) {
     <div className="max-w-6xl mx-auto">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">選擇裝備</h2>
       
+      {/* Equipment selection guidelines */}
+      <div className="mb-6 p-4 bg-yellow-50 border-2 border-yellow-300 rounded-lg">
+        <h3 className="font-bold text-yellow-800 mb-2">📋 裝備選擇指南</h3>
+        <div className="text-sm text-yellow-700 space-y-1">
+          <div>• <strong>武器：</strong>建議選擇 1-2 件主要武器（近戰或遠程）</div>
+          <div>• <strong>護甲：</strong>選擇 1 套適合你職業的護甲</div>
+          <div>• <strong>工具：</strong>根據職業特性選擇專業工具或法術焦點</div>
+          <div>• <strong>一般裝備：</strong>可自由選擇冒險必需品（繩索、口糧、火把等）</div>
+        </div>
+      </div>
+      
       {/* Selected equipment count */}
       {selectedEquipment.length > 0 && (
         <div className="mb-6 p-4 bg-blue-100 border-2 border-blue-300 rounded-lg">
