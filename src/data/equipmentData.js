@@ -1,860 +1,737 @@
-// Equipment recommendations based on race and class combinations
-// Traditional Chinese descriptions included with detailed stats
+// 依據種族和職業組合的裝備推薦
+// 包含詳細的繁體中文描述、屬性和使用情境
 
 export const equipmentByClass = {
   barbarian: {
-    name: 'Barbarian',
-    nameChinese: '野蠻人',
+    name: '野蠻人',
     weapons: [
       { 
-        name: 'Greataxe', 
-        nameChinese: '巨斧', 
-        description: 'A massive two-handed axe that deals devastating damage',
-        descriptionChinese: '一把巨大的雙手斧，造成毀滅性傷害',
-        damage: '1d12 slashing',
-        properties: 'Heavy, Two-handed',
-        propertiesChinese: '重型、雙手',
-        useCase: 'Best for maximizing single-hit damage during Rage',
-        useCaseChinese: '在狂暴時最大化單次攻擊傷害'
+        name: '巨斧', 
+        description: '一把巨大的雙手斧頭，能造成毀滅性的傷害。這是野蠻人最喜愛的武器，每次揮擊都能展現原始的力量。',
+        damage: '1d12 揮砍',
+        properties: '重型、雙手',
+        useCase: '適合力量型戰士，在近戰中造成最大傷害。與狂暴能力配合效果絕佳。'
       },
       { 
-        name: 'Handaxe (2)', 
-        nameChinese: '手斧 (2)', 
-        description: 'Versatile throwing axes that can be dual-wielded',
-        descriptionChinese: '多用途的投擲斧，可以雙持',
-        damage: '1d6 slashing',
-        properties: 'Light, Thrown (range 20/60)',
-        propertiesChinese: '輕型、投擲（射程 20/60）',
-        useCase: 'Useful for ranged attacks and two-weapon fighting',
-        useCaseChinese: '適合遠程攻擊和雙武器戰鬥'
+        name: '戰斧', 
+        description: '單手戰斧，平衡性良好。可以雙手持握以增加傷害，也能搭配盾牌使用。',
+        damage: '1d8 揮砍（單手）或 1d10 揮砍（雙手）',
+        properties: '多用途',
+        useCase: '靈活的選擇，可根據戰況在攻擊和防禦間切換。'
+      },
+      { 
+        name: '標槍', 
+        description: '可投擲的長矛，適合遠程攻擊。野蠻人可以在衝鋒前先投擲削弱敵人。',
+        damage: '1d6 穿刺',
+        properties: '投擲（射程 30/120 呎）',
+        useCase: '在近戰前削弱遠處敵人，或攻擊飛行生物。'
       }
     ],
     armor: [
       { 
-        name: 'Hide Armor', 
-        nameChinese: '獸皮甲', 
-        description: 'Crude armor made from thick furs and pelts',
-        descriptionChinese: '由厚重毛皮製成的粗糙護甲',
-        armorClass: '12 + Dex modifier (max 2)',
-        useCase: 'Medium armor that doesn\'t interfere with Rage abilities',
-        useCaseChinese: '不會影響狂暴能力的中型護甲'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Javelin (4)', 
-        nameChinese: '標槍 (4)', 
-        description: 'Simple throwing spears for ranged combat',
-        descriptionChinese: '用於遠程戰鬥的簡易投擲長矛',
-        damage: '1d6 piercing',
-        properties: 'Thrown (range 30/120)',
-        propertiesChinese: '投擲（射程 30/120）',
-        useCase: 'Ranged option before closing to melee',
-        useCaseChinese: '進入近戰前的遠程選項'
+        name: '皮甲', 
+        description: '由硬化皮革製成的柔軟護甲。不會妨礙野蠻人的靈活移動和狂暴能力。',
+        armorClass: 'AC 11 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '最適合野蠻人的護甲選擇，因為可以在狂暴時使用，且不影響移動速度。'
       },
       { 
-        name: 'Explorer\'s Pack', 
-        nameChinese: '探險者背包', 
-        description: 'Contains bedroll, mess kit, tinderbox, torches, rations, waterskin, and rope',
-        descriptionChinese: '包含睡袋、餐具、火絨盒、火把、口糧、水袋和繩索',
-        useCase: 'Essential survival gear for wilderness adventures',
-        useCaseChinese: '荒野冒險必備的生存裝備'
+        name: '盾牌', 
+        description: '木製或金屬圓盾，可額外提供 +2 AC。',
+        armorClass: '+2 AC',
+        properties: '需佔用一隻手',
+        useCase: '搭配單手武器使用時提供額外防護。'
+      }
+    ],
+    tools: [],
+    equipment: [
+      { 
+        name: '探險者背包', 
+        description: '包含背包、睡袋、餐具、10 支火把、10 天口糧、水袋和 50 呎麻繩。',
+        useCase: '冒險必備的基本裝備組合。'
+      },
+      { 
+        name: '攀爬工具組', 
+        description: '包含特殊釘鞋、手套和安全帶，用於攀爬懸崖和牆壁。',
+        useCase: '在山區或地城探索時非常有用。'
       }
     ]
   },
+
   bard: {
-    name: 'Bard',
-    nameChinese: '吟遊詩人',
+    name: '吟遊詩人',
     weapons: [
       { 
-        name: 'Rapier', 
-        nameChinese: '刺劍', 
-        description: 'An elegant blade perfect for finesse combat',
-        descriptionChinese: '優雅的劍刃，完美適合巧技戰鬥',
-        damage: '1d8 piercing',
-        properties: 'Finesse',
-        propertiesChinese: '巧技',
-        useCase: 'Uses Dexterity for attack and damage rolls',
-        useCaseChinese: '使用敏捷進行攻擊和傷害檢定'
+        name: '細劍', 
+        description: '優雅的刺擊武器，適合敏捷型戰士。吟遊詩人常用它展現華麗的劍術。',
+        damage: '1d8 穿刺',
+        properties: '靈巧',
+        useCase: '利用敏捷而非力量進行攻擊，適合吟遊詩人的戰鬥風格。'
       },
       { 
-        name: 'Dagger', 
-        nameChinese: '匕首', 
-        description: 'A small, concealable blade',
-        descriptionChinese: '小型、易於隱藏的刀刃',
-        damage: '1d4 piercing',
-        properties: 'Finesse, Light, Thrown (range 20/60)',
-        propertiesChinese: '巧技、輕型、投擲（射程 20/60）',
-        useCase: 'Backup weapon and ranged option',
-        useCaseChinese: '備用武器和遠程選項'
+        name: '長劍', 
+        description: '經典的騎士之劍，平衡且多用途。',
+        damage: '1d8 揮砍（單手）或 1d10 揮砍（雙手）',
+        properties: '多用途',
+        useCase: '可靠的全能武器，適合各種戰鬥情境。'
+      },
+      { 
+        name: '手弩', 
+        description: '小型弩機，可單手操作。讓吟遊詩人在演奏樂器時仍能自衛。',
+        damage: '1d6 穿刺',
+        properties: '彈藥（射程 30/120 呎）、輕型、裝填',
+        useCase: '遠程攻擊選項，在需要保持距離時使用。'
       }
     ],
     armor: [
       { 
-        name: 'Leather Armor', 
-        nameChinese: '皮甲', 
-        description: 'Light armor that doesn\'t restrict movement or spellcasting',
-        descriptionChinese: '不限制移動或施法的輕型護甲',
-        armorClass: '11 + Dex modifier',
-        useCase: 'Allows full Dexterity bonus and no casting penalties',
-        useCaseChinese: '允許完整敏捷加值且無施法懲罰'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Lute', 
-        nameChinese: '魯特琴', 
-        description: 'A musical instrument that serves as your spellcasting focus',
-        descriptionChinese: '作為你施法焦點的樂器',
-        useCase: 'Required for casting Bard spells',
-        useCaseChinese: '施展吟遊詩人法術所需'
+        name: '皮甲', 
+        description: '時尚的硬化皮革護甲，不會影響演奏或施法。',
+        armorClass: 'AC 11 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '最適合吟遊詩人，因為不會干擾施法動作。'
       },
       { 
-        name: 'Diplomat\'s Pack', 
-        nameChinese: '外交官背包', 
-        description: 'Contains chest, maps, fine clothes, ink, pen, lamp, oil, paper, perfume, sealing wax, and soap',
-        descriptionChinese: '包含箱子、地圖、精緻服裝、墨水、筆、燈、油、紙張、香水、封蠟和肥皂',
-        useCase: 'Tools for social encounters and performances',
-        useCaseChinese: '社交場合和表演的工具'
-      }
-    ]
-  },
-  cleric: {
-    name: 'Cleric',
-    nameChinese: '牧師',
-    weapons: [
-      { 
-        name: 'Mace', 
-        nameChinese: '釘錘', 
-        description: 'A simple bludgeoning weapon favored by clerics',
-        descriptionChinese: '牧師偏好的簡易鈍擊武器',
-        damage: '1d6 bludgeoning',
-        properties: 'Simple weapon',
-        propertiesChinese: '簡易武器',
-        useCase: 'Reliable damage without using bladed weapons',
-        useCaseChinese: '可靠傷害且不使用刀劍類武器'
-      },
-      { 
-        name: 'Shield', 
-        nameChinese: '盾牌', 
-        description: 'Wooden or metal shield strapped to your arm',
-        descriptionChinese: '綁在手臂上的木製或金屬盾牌',
-        armorClass: '+2 AC',
-        useCase: 'Significantly improves armor class for frontline clerics',
-        useCaseChinese: '大幅提升前線牧師的護甲等級'
-      }
-    ],
-    armor: [
-      { 
-        name: 'Scale Mail', 
-        nameChinese: '鱗甲', 
-        description: 'Armor made of overlapping metal scales',
-        descriptionChinese: '由重疊金屬鱗片製成的護甲',
-        armorClass: '14 + Dex modifier (max 2)',
-        properties: 'Disadvantage on Stealth',
-        propertiesChinese: '潛行劣勢',
-        useCase: 'Good protection for most Cleric domains',
-        useCaseChinese: '對大多數牧師領域提供良好防護'
-      },
-      { 
-        name: 'Chain Mail', 
-        nameChinese: '鎖甲', 
-        description: 'Heavy armor made of interlocking metal rings',
-        descriptionChinese: '由互鎖金屬環製成的重型護甲',
-        armorClass: '16',
-        properties: 'Heavy, Str 13 required, Disadvantage on Stealth',
-        propertiesChinese: '重型、需要力量13、潛行劣勢',
-        useCase: 'Best protection for War domain and heavy-armor clerics',
-        useCaseChinese: '戰爭領域和重甲牧師的最佳防護'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Holy Symbol', 
-        nameChinese: '聖徽', 
-        description: 'A divine focus representing your deity',
-        descriptionChinese: '代表你神祇的神聖焦點',
-        useCase: 'Required for casting Cleric spells',
-        useCaseChinese: '施展牧師法術所需'
-      },
-      { 
-        name: 'Priest\'s Pack', 
-        nameChinese: '神職人員背包', 
-        description: 'Contains blanket, candles, tinderbox, alms box, incense, vestments, rations, and waterskin',
-        descriptionChinese: '包含毛毯、蠟燭、火絨盒、施捨箱、香、祭服、口糧和水袋',
-        useCase: 'Religious items for ceremonies and healing',
-        useCaseChinese: '儀式和治療用的宗教物品'
-      }
-    ]
-  },
-  druid: {
-    name: 'Druid',
-    nameChinese: '德魯伊',
-    weapons: [
-      { 
-        name: 'Scimitar', 
-        nameChinese: '彎刀', 
-        description: 'A curved sword favored by nature warriors',
-        descriptionChinese: '自然戰士偏好的彎曲劍',
-        damage: '1d6 slashing',
-        properties: 'Finesse, Light',
-        propertiesChinese: '巧技、輕型',
-        useCase: 'Good for Wild Shape forms that can use weapons',
-        useCaseChinese: '適合能使用武器的野性變身形態'
-      },
-      { 
-        name: 'Wooden Shield', 
-        nameChinese: '木盾', 
-        description: 'A shield made from natural materials',
-        descriptionChinese: '由天然材料製成的盾牌',
-        armorClass: '+2 AC',
-        useCase: 'Provides defense without using metal',
-        useCaseChinese: '在不使用金屬的情況下提供防禦'
-      }
-    ],
-    armor: [
-      { 
-        name: 'Leather Armor', 
-        nameChinese: '皮甲', 
-        description: 'Natural hide armor acceptable for druids',
-        descriptionChinese: '德魯伊可接受的天然皮革護甲',
-        armorClass: '11 + Dex modifier',
-        useCase: 'Non-metal armor that druids can wear',
-        useCaseChinese: '德魯伊可以穿著的非金屬護甲'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Druidic Focus', 
-        nameChinese: '德魯伊法器', 
-        description: 'A totem, staff, or natural item channeling druidic magic',
-        descriptionChinese: '引導德魯伊魔法的圖騰、法杖或自然物品',
-        useCase: 'Required for casting Druid spells',
-        useCaseChinese: '施展德魯伊法術所需'
-      },
-      { 
-        name: 'Explorer\'s Pack', 
-        nameChinese: '探險者背包', 
-        description: 'Wilderness survival gear',
-        descriptionChinese: '荒野生存裝備',
-        useCase: 'Essential tools for outdoor adventures',
-        useCaseChinese: '戶外冒險的必備工具'
-      }
-    ]
-  },
-  fighter: {
-    name: 'Fighter',
-    nameChinese: '戰士',
-    weapons: [
-      { 
-        name: 'Longsword', 
-        nameChinese: '長劍', 
-        description: 'A versatile military weapon',
-        descriptionChinese: '多功能的軍用武器',
-        damage: '1d8 slashing (1d10 two-handed)',
-        properties: 'Versatile',
-        propertiesChinese: '多用',
-        useCase: 'Can be used one or two-handed for flexibility',
-        useCaseChinese: '可單手或雙手使用以獲得靈活性'
-      },
-      { 
-        name: 'Shield', 
-        nameChinese: '盾牌', 
-        description: 'Essential defensive equipment',
-        descriptionChinese: '必備的防禦裝備',
-        armorClass: '+2 AC',
-        useCase: 'Significantly boosts survivability',
-        useCaseChinese: '大幅提升生存能力'
-      },
-      { 
-        name: 'Longbow + 20 Arrows', 
-        nameChinese: '長弓 + 20箭', 
-        description: 'Long-range weapon for distance combat',
-        descriptionChinese: '用於遠距離戰鬥的遠程武器',
-        damage: '1d8 piercing',
-        properties: 'Ammunition (range 150/600), Heavy, Two-handed',
-        propertiesChinese: '彈藥（射程 150/600）、重型、雙手',
-        useCase: 'Engage enemies from afar',
-        useCaseChinese: '從遠處攻擊敵人'
-      }
-    ],
-    armor: [
-      { 
-        name: 'Chain Mail', 
-        nameChinese: '鎖甲', 
-        description: 'Heavy armor providing excellent protection',
-        descriptionChinese: '提供出色防護的重型護甲',
-        armorClass: '16',
-        properties: 'Heavy, Str 13 required, Disadvantage on Stealth',
-        propertiesChinese: '重型、需要力量13、潛行劣勢',
-        useCase: 'Best early-game protection for frontline fighters',
-        useCaseChinese: '前線戰士的最佳早期防護'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Dungeoneer\'s Pack', 
-        nameChinese: '地城探險者背包', 
-        description: 'Contains backpack, crowbar, hammer, pitons, torches, tinderbox, rations, waterskin, and rope',
-        descriptionChinese: '包含背包、撬棍、錘子、岩釘、火把、火絨盒、口糧、水袋和繩索',
-        useCase: 'Essential tools for dungeon exploration',
-        useCaseChinese: '地下城探險的必備工具'
-      }
-    ]
-  },
-  monk: {
-    name: 'Monk',
-    nameChinese: '武僧',
-    weapons: [
-      { 
-        name: 'Shortsword', 
-        nameChinese: '短劍', 
-        description: 'A monk weapon for armed combat',
-        descriptionChinese: '用於武裝戰鬥的武僧武器',
-        damage: '1d6 piercing',
-        properties: 'Finesse, Light',
-        propertiesChinese: '巧技、輕型',
-        useCase: 'Higher damage option than unarmed strikes early on',
-        useCaseChinese: '早期比徒手攻擊傷害更高的選擇'
-      },
-      { 
-        name: 'Dart (10)', 
-        nameChinese: '飛鏢 (10)', 
-        description: 'Thrown monk weapons',
-        descriptionChinese: '投擲武僧武器',
-        damage: '1d4 piercing',
-        properties: 'Finesse, Thrown (range 20/60)',
-        propertiesChinese: '巧技、投擲（射程 20/60）',
-        useCase: 'Ranged attacks using Dexterity and Martial Arts',
-        useCaseChinese: '使用敏捷和武術的遠程攻擊'
-      }
-    ],
-    armor: [
-      { 
-        name: 'No Armor', 
-        nameChinese: '無護甲', 
-        description: 'Monks don\'t wear armor to use Unarmored Defense',
-        descriptionChinese: '武僧不穿護甲以使用無甲防禦',
-        armorClass: '10 + Dex modifier + Wis modifier',
-        useCase: 'Allows Unarmored Defense class feature',
-        useCaseChinese: '允許使用無甲防禦職業特性'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Explorer\'s Pack', 
-        nameChinese: '探險者背包', 
-        description: 'Basic adventuring gear',
-        descriptionChinese: '基本冒險裝備',
-        useCase: 'Essential supplies for traveling monks',
-        useCaseChinese: '旅行武僧的必需品'
-      }
-    ]
-  },
-  paladin: {
-    name: 'Paladin',
-    nameChinese: '聖騎士',
-    weapons: [
-      { 
-        name: 'Longsword', 
-        nameChinese: '長劍', 
-        description: 'The iconic paladin weapon',
-        descriptionChinese: '標誌性的聖騎士武器',
-        damage: '1d8 slashing (1d10 two-handed)',
-        properties: 'Versatile',
-        propertiesChinese: '多用',
-        useCase: 'Pairs well with Divine Smite for devastating critical hits',
-        useCaseChinese: '配合神聖打擊造成毀滅性重擊'
-      },
-      { 
-        name: 'Shield', 
-        nameChinese: '盾牌', 
-        description: 'Symbol of a defender of the faith',
-        descriptionChinese: '信仰守護者的象徵',
-        armorClass: '+2 AC',
-        useCase: 'Essential for tanking and protecting allies',
-        useCaseChinese: '承擔傷害和保護盟友的必需品'
-      },
-      { 
-        name: 'Javelin (5)', 
-        nameChinese: '標槍 (5)', 
-        description: 'Holy throwing spears',
-        descriptionChinese: '神聖的投擲長矛',
-        damage: '1d6 piercing',
-        properties: 'Thrown (range 30/120)',
-        propertiesChinese: '投擲（射程 30/120）',
-        useCase: 'Ranged option before charging into melee',
-        useCaseChinese: '衝入近戰前的遠程選項'
-      }
-    ],
-    armor: [
-      { 
-        name: 'Chain Mail', 
-        nameChinese: '鎖甲', 
-        description: 'Heavy armor befitting a holy warrior',
-        descriptionChinese: '適合神聖戰士的重型護甲',
-        armorClass: '16',
-        properties: 'Heavy, Str 13 required, Disadvantage on Stealth',
-        propertiesChinese: '重型、需要力量13、潛行劣勢',
-        useCase: 'Excellent protection for frontline combat',
-        useCaseChinese: '前線戰鬥的出色防護'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Holy Symbol', 
-        nameChinese: '聖徽', 
-        description: 'Sacred focus for paladin spells',
-        descriptionChinese: '聖騎士法術的神聖焦點',
-        useCase: 'Required for casting paladin spells',
-        useCaseChinese: '施展聖騎士法術所需'
-      },
-      { 
-        name: 'Priest\'s Pack', 
-        nameChinese: '神職人員背包', 
-        description: 'Religious and adventuring supplies',
-        descriptionChinese: '宗教和冒險用品',
-        useCase: 'Tools for holy quests and healing',
-        useCaseChinese: '神聖任務和治療的工具'
-      }
-    ]
-  },
-  ranger: {
-    name: 'Ranger',
-    nameChinese: '遊俠',
-    weapons: [
-      { 
-        name: 'Longbow + 20 Arrows', 
-        nameChinese: '長弓 + 20箭', 
-        description: 'Primary ranged weapon for hunters',
-        descriptionChinese: '獵人的主要遠程武器',
-        damage: '1d8 piercing',
-        properties: 'Ammunition (range 150/600), Heavy, Two-handed',
-        propertiesChinese: '彈藥（射程 150/600）、重型、雙手',
-        useCase: 'Excellent for sniping from distance',
-        useCaseChinese: '適合從遠距離狙擊'
-      },
-      { 
-        name: 'Shortsword (2)', 
-        nameChinese: '短劍 (2)', 
-        description: 'Dual-wielding weapons for close combat',
-        descriptionChinese: '近戰雙持武器',
-        damage: '1d6 piercing',
-        properties: 'Finesse, Light',
-        propertiesChinese: '巧技、輕型',
-        useCase: 'Two-weapon fighting for multiple attacks',
-        useCaseChinese: '雙武器戰鬥進行多次攻擊'
-      }
-    ],
-    armor: [
-      { 
-        name: 'Scale Mail', 
-        nameChinese: '鱗甲', 
-        description: 'Medium armor for wilderness warriors',
-        descriptionChinese: '荒野戰士的中型護甲',
-        armorClass: '14 + Dex modifier (max 2)',
-        properties: 'Disadvantage on Stealth',
-        propertiesChinese: '潛行劣勢',
-        useCase: 'Good protection without sacrificing too much mobility',
-        useCaseChinese: '在不犧牲太多機動性的情況下提供良好防護'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Explorer\'s Pack', 
-        nameChinese: '探險者背包', 
-        description: 'Wilderness survival essentials',
-        descriptionChinese: '荒野生存必需品',
-        useCase: 'Perfect for outdoor tracking and survival',
-        useCaseChinese: '完美適合戶外追蹤和生存'
-      }
-    ]
-  },
-  rogue: {
-    name: 'Rogue',
-    nameChinese: '盜賊',
-    weapons: [
-      { 
-        name: 'Rapier', 
-        nameChinese: '刺劍', 
-        description: 'Precision weapon for Sneak Attack',
-        descriptionChinese: '用於偷襲的精準武器',
-        damage: '1d8 piercing',
-        properties: 'Finesse',
-        propertiesChinese: '巧技',
-        useCase: 'Highest damage die for finesse weapons',
-        useCaseChinese: '巧技武器中傷害骰最高'
-      },
-      { 
-        name: 'Shortbow + 20 Arrows', 
-        nameChinese: '短弓 + 20箭', 
-        description: 'Ranged weapon for stealthy attacks',
-        descriptionChinese: '用於隱秘攻擊的遠程武器',
-        damage: '1d6 piercing',
-        properties: 'Ammunition (range 80/320), Two-handed',
-        propertiesChinese: '彈藥（射程 80/320）、雙手',
-        useCase: 'Sneak Attack from range',
-        useCaseChinese: '從遠處進行偷襲'
-      },
-      { 
-        name: 'Dagger (2)', 
-        nameChinese: '匕首 (2)', 
-        description: 'Concealable backup weapons',
-        descriptionChinese: '可隱藏的備用武器',
-        damage: '1d4 piercing',
-        properties: 'Finesse, Light, Thrown (range 20/60)',
-        propertiesChinese: '巧技、輕型、投擲（射程 20/60）',
-        useCase: 'Hidden weapons and thrown attacks',
-        useCaseChinese: '隱藏武器和投擲攻擊'
-      }
-    ],
-    armor: [
-      { 
-        name: 'Leather Armor', 
-        nameChinese: '皮甲', 
-        description: 'Light armor for maximum stealth',
-        descriptionChinese: '最大隱秘性的輕型護甲',
-        armorClass: '11 + Dex modifier',
-        useCase: 'No penalties to stealth or mobility',
-        useCaseChinese: '對潛行或機動性無懲罰'
-      }
-    ],
-    equipment: [
-      { 
-        name: 'Thieves\' Tools', 
-        nameChinese: '盜賊工具', 
-        description: 'Lockpicks and trap-disarming tools',
-        descriptionChinese: '開鎖和解除陷阱的工具',
-        useCase: 'Essential for lockpicking and disabling traps',
-        useCaseChinese: '開鎖和解除陷阱的必需品'
-      },
-      { 
-        name: 'Burglar\'s Pack', 
-        nameChinese: '竊賊背包', 
-        description: 'Contains backpack, ball bearings, string, bell, candles, crowbar, hammer, pitons, hooded lantern, oil, rations, tinderbox, waterskin, and rope',
-        descriptionChinese: '包含背包、滾珠、細繩、鈴鐺、蠟燭、撬棍、錘子、岩釘、罩燈、油、口糧、火絨盒、水袋和繩索',
-        useCase: 'Tools for stealth infiltration and heists',
-        useCaseChinese: '潛行滲透和盜竊的工具'
+        name: '鑲釘皮甲', 
+        description: '在皮甲上加裝金屬釘釘，提供更好的防護。',
+        armorClass: 'AC 12 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '稍重但提供更好的防護，仍允許靈活移動。'
       }
     ],
     tools: [
       { 
-        name: 'Thieves\' Tools', 
-        nameChinese: '盜賊工具', 
-        description: 'Professional lockpicking kit',
-        descriptionChinese: '專業開鎖工具組',
-        useCase: 'Required for lockpicking and trap disarming',
-        useCaseChinese: '開鎖和解除陷阱所需'
+        name: '魯特琴', 
+        description: '弦樂器，吟遊詩人用來施放法術和娛樂觀眾。',
+        useCase: '作為施法焦點，也能賺取表演收入。'
+      },
+      { 
+        name: '長笛', 
+        description: '木製管樂器，音色優美動聽。',
+        useCase: '另一種施法焦點選項，便於攜帶。'
+      }
+    ],
+    equipment: [
+      { 
+        name: '外交官背包', 
+        description: '包含箱子、2 個地圖或卷軸盒、華麗服裝、墨水、羽毛筆、燈籠、2 瓶油、5 張紙、香水瓶、蠟封和肥皂。',
+        useCase: '適合社交場合和外交任務。'
+      },
+      { 
+        name: '變裝工具組', 
+        description: '包含化妝品、染髮劑、小道具和服裝配件。',
+        useCase: '潛入、偽裝和秘密任務時使用。'
       }
     ]
   },
+
+  cleric: {
+    name: '牧師',
+    weapons: [
+      { 
+        name: '釘頭錘', 
+        description: '沉重的鈍擊武器，許多牧師偏好使用以避免見血。',
+        damage: '1d6 鈍擊',
+        properties: '無',
+        useCase: '可靠的近戰武器，適合不想使用刀劍的聖職者。'
+      },
+      { 
+        name: '戰錘', 
+        description: '鍛造精良的戰鬥錘，可單手或雙手使用。',
+        damage: '1d8 鈍擊（單手）或 1d10 鈍擊（雙手）',
+        properties: '多用途',
+        useCase: '靈活的武器選擇，搭配盾牌或雙手持握皆可。'
+      }
+    ],
+    armor: [
+      { 
+        name: '鎖甲', 
+        description: '由互相連接的金屬環組成的護甲，提供良好防護。',
+        armorClass: 'AC 16',
+        properties: '重甲、需力量 13',
+        useCase: '牧師可穿著的最佳重甲之一，提供優秀的防護。'
+      },
+      { 
+        name: '鏈甲衫', 
+        description: '穿在衣服下的金屬環甲衣。',
+        armorClass: 'AC 13 + 敏捷調整值（最高 +2）',
+        properties: '中甲',
+        useCase: '平衡防護和靈活性的選擇。'
+      },
+      { 
+        name: '盾牌', 
+        description: '神聖符號裝飾的盾牌，可作為施法焦點。',
+        armorClass: '+2 AC',
+        properties: '可當作聖徽使用',
+        useCase: '提供防護同時作為施法焦點。'
+      }
+    ],
+    tools: [],
+    equipment: [
+      { 
+        name: '牧師背包', 
+        description: '包含背包、毯子、10 支蠟燭、火絨盒、施捨箱、2 塊香料、水袋。',
+        useCase: '牧師冒險的基本裝備。'
+      },
+      { 
+        name: '聖徽', 
+        description: '代表你信仰的神聖符號，用於施放神術。',
+        useCase: '施法必需品，可佩戴或持握。'
+      },
+      { 
+        name: '祈禱書', 
+        description: '記錄祈禱文和神學知識的書籍。',
+        useCase: '準備法術和進行宗教儀式時使用。'
+      }
+    ]
+  },
+
+  druid: {
+    name: '德魯伊',
+    weapons: [
+      { 
+        name: '彎刀', 
+        description: '彎曲的單刃劍，德魯伊傳統武器。',
+        damage: '1d6 揮砍',
+        properties: '靈巧、輕型',
+        useCase: '德魯伊的經典武器選擇，靈活且致命。'
+      },
+      { 
+        name: '木棒', 
+        description: '簡單的木製武器，也可作為施法焦點。',
+        damage: '1d4 鈍擊',
+        properties: '輕型',
+        useCase: '可同時用於戰鬥和施法。'
+      },
+      { 
+        name: '標槍', 
+        description: '木製投擲長矛，適合狩獵。',
+        damage: '1d6 穿刺',
+        properties: '投擲（射程 30/120 呎）',
+        useCase: '在變身前進行遠程攻擊。'
+      }
+    ],
+    armor: [
+      { 
+        name: '皮甲', 
+        description: '天然皮革製成的護甲，符合德魯伊的自然誓言。',
+        armorClass: 'AC 11 + 敏捷調整值',
+        properties: '輕甲、非金屬',
+        useCase: '德魯伊唯一可穿著的護甲類型。'
+      },
+      { 
+        name: '木盾', 
+        description: '天然木材製成的盾牌，可雕刻自然符號。',
+        armorClass: '+2 AC',
+        properties: '非金屬',
+        useCase: '提供額外防護而不違背德魯伊誓言。'
+      }
+    ],
+    tools: [
+      { 
+        name: '草藥師工具組', 
+        description: '包含藥草、藥瓶、剪刀和研缽，用於製作藥劑和毒藥。',
+        useCase: '製作治療藥劑和天然毒藥。'
+      }
+    ],
+    equipment: [
+      { 
+        name: '德魯伊焦點', 
+        description: '樹枝、槲寄生或其他自然物品，用於施放德魯伊法術。',
+        useCase: '施法必需品。'
+      },
+      { 
+        name: '探險者背包', 
+        description: '包含背包、睡袋、餐具、10 支火把、10 天口糧、水袋和 50 呎麻繩。',
+        useCase: '野外生存的基本裝備。'
+      },
+      { 
+        name: '圖騰', 
+        description: '代表自然力量的木製或石製圖騰。',
+        useCase: '儀式和冥想時使用。'
+      }
+    ]
+  },
+
+  fighter: {
+    name: '戰士',
+    weapons: [
+      { 
+        name: '長劍', 
+        description: '經典的騎士之劍，可靠且多用途。戰士的標誌性武器。',
+        damage: '1d8 揮砍（單手）或 1d10 揮砍（雙手）',
+        properties: '多用途',
+        useCase: '全能武器，適合所有戰鬥情境。'
+      },
+      { 
+        name: '巨劍', 
+        description: '雙手持握的大型劍，需要力量和技巧才能揮舞。',
+        damage: '2d6 揮砍',
+        properties: '重型、雙手',
+        useCase: '造成巨大傷害，適合前線戰士。'
+      },
+      { 
+        name: '長弓', 
+        description: '遠程武器，射程遠且威力強大。',
+        damage: '1d8 穿刺',
+        properties: '彈藥（射程 150/600 呎）、重型、雙手',
+        useCase: '遠程戰鬥，在敵人接近前削弱他們。'
+      },
+      { 
+        name: '戰斧', 
+        description: '單手戰斧，可搭配盾牌使用。',
+        damage: '1d8 揮砍（單手）或 1d10 揮砍（雙手）',
+        properties: '多用途',
+        useCase: '靈活的近戰選擇。'
+      }
+    ],
+    armor: [
+      { 
+        name: '鎖甲', 
+        description: '由互相連接的金屬環組成，提供優秀防護。',
+        armorClass: 'AC 16',
+        properties: '重甲、需力量 13',
+        useCase: '戰士的標準護甲，平衡防護和移動性。'
+      },
+      { 
+        name: '板甲', 
+        description: '最強的護甲，由成形金屬板組成。',
+        armorClass: 'AC 18',
+        properties: '重甲、需力量 15',
+        useCase: '最佳防護，適合前線坦克型戰士。'
+      },
+      { 
+        name: '盾牌', 
+        description: '金屬或木製盾牌，可刻上家族紋章。',
+        armorClass: '+2 AC',
+        properties: '需佔用一隻手',
+        useCase: '使用單手武器時提供額外防護。'
+      }
+    ],
+    tools: [],
+    equipment: [
+      { 
+        name: '地城探險者背包', 
+        description: '包含背包、撬棍、鐵錘、10 根釘子、10 支火把、火絨盒、10 天口糧、水袋和 50 呎麻繩。',
+        useCase: '地城探索必備裝備。'
+      },
+      { 
+        name: '磨刀石', 
+        description: '用於保持武器鋒利的石頭。',
+        useCase: '維護武器的必需品。'
+      }
+    ]
+  },
+
+  monk: {
+    name: '武僧',
+    weapons: [
+      { 
+        name: '短劍', 
+        description: '輕巧的刺擊武器，適合武僧的快速攻擊風格。',
+        damage: '1d6 穿刺',
+        properties: '靈巧、輕型、武僧武器',
+        useCase: '利用敏捷進行攻擊，可觸發武僧的額外攻擊。'
+      },
+      { 
+        name: '木棒', 
+        description: '簡單的木製武器，武僧訓練的基礎。',
+        damage: '1d4 鈍擊',
+        properties: '輕型、武僧武器',
+        useCase: '基本武僧武器，可用於各種技巧。'
+      },
+      { 
+        name: '飛鏢', 
+        description: '小型投擲武器，武僧可以快速連續投擲。',
+        damage: '1d4 穿刺',
+        properties: '靈巧、投擲（射程 20/60 呎）、武僧武器',
+        useCase: '遠程攻擊選項。'
+      }
+    ],
+    armor: [
+      { 
+        name: '無甲防禦', 
+        description: '武僧不穿護甲時，AC = 10 + 敏捷調整值 + 感知調整值',
+        armorClass: '10 + 敏捷 + 感知',
+        properties: '職業能力',
+        useCase: '武僧的主要防禦方式，隨等級提升而增強。'
+      }
+    ],
+    tools: [],
+    equipment: [
+      { 
+        name: '探險者背包', 
+        description: '包含背包、睡袋、餐具、10 支火把、10 天口糧、水袋和 50 呎麻繩。',
+        useCase: '基本冒險裝備。'
+      },
+      { 
+        name: '冥想珠', 
+        description: '用於專注和冥想的念珠。',
+        useCase: '恢復氣和專注心神。'
+      },
+      { 
+        name: '草藥', 
+        description: '治療用的藥草和草藥。',
+        useCase: '自然療法和恢復。'
+      }
+    ]
+  },
+
+  paladin: {
+    name: '聖武士',
+    weapons: [
+      { 
+        name: '長劍', 
+        description: '聖武士的象徵武器，常被祝福並刻上神聖符號。',
+        damage: '1d8 揮砍（單手）或 1d10 揮砍（雙手）',
+        properties: '多用途',
+        useCase: '經典聖武士武器，可配合神擊能力。'
+      },
+      { 
+        name: '巨劍', 
+        description: '雄偉的雙手劍，適合正義的戰士。',
+        damage: '2d6 揮砍',
+        properties: '重型、雙手',
+        useCase: '最大化神擊傷害的選擇。'
+      },
+      { 
+        name: '戰錘', 
+        description: '神聖的錘子，象徵正義的力量。',
+        damage: '1d8 鈍擊（單手）或 1d10 鈍擊（雙手）',
+        properties: '多用途',
+        useCase: '對抗不死生物特別有效。'
+      }
+    ],
+    armor: [
+      { 
+        name: '鎖甲', 
+        description: '拋光的金屬環甲，反射神聖之光。',
+        armorClass: 'AC 16',
+        properties: '重甲、需力量 13',
+        useCase: '聖武士的標準護甲。'
+      },
+      { 
+        name: '板甲', 
+        description: '刻有神聖符號的全身板甲。',
+        armorClass: 'AC 18',
+        properties: '重甲、需力量 15',
+        useCase: '最強防護，適合前線聖武士。'
+      },
+      { 
+        name: '盾牌', 
+        description: '刻有神聖印記的盾牌，可作為聖徽使用。',
+        armorClass: '+2 AC',
+        properties: '可當作聖徽',
+        useCase: '防禦和施法的雙重用途。'
+      }
+    ],
+    tools: [],
+    equipment: [
+      { 
+        name: '牧師背包', 
+        description: '包含背包、毯子、10 支蠟燭、火絨盒、施捨箱、2 塊香料、水袋。',
+        useCase: '聖武士的基本裝備。'
+      },
+      { 
+        name: '聖徽', 
+        description: '你誓言的神聖象徵。',
+        useCase: '施放聖武士法術的焦點。'
+      },
+      { 
+        name: '祈禱書', 
+        description: '記錄誓言和祈禱文的書籍。',
+        useCase: '準備法術和宗教儀式。'
+      }
+    ]
+  },
+
+  ranger: {
+    name: '遊俠',
+    weapons: [
+      { 
+        name: '長弓', 
+        description: '遊俠的主要武器，適合狩獵和遠程戰鬥。',
+        damage: '1d8 穿刺',
+        properties: '彈藥（射程 150/600 呎）、重型、雙手',
+        useCase: '遊俠的首選武器，在遠距離精確射擊。'
+      },
+      { 
+        name: '雙短劍', 
+        description: '一對短劍，適合雙武器戰鬥風格。',
+        damage: '1d6 穿刺（每把）',
+        properties: '靈巧、輕型',
+        useCase: '近戰時使用雙武器攻擊。'
+      },
+      { 
+        name: '長劍', 
+        description: '可靠的近戰武器選擇。',
+        damage: '1d8 揮砍（單手）或 1d10 揮砍（雙手）',
+        properties: '多用途',
+        useCase: '平衡的近戰選項。'
+      }
+    ],
+    armor: [
+      { 
+        name: '鑲釘皮甲', 
+        description: '輕便但堅固的護甲，不會妨礙在野外的行動。',
+        armorClass: 'AC 12 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '遊俠的理想護甲，允許隱匿和靈活移動。'
+      },
+      { 
+        name: '盾牌', 
+        description: '木製或皮革盾牌，可提供額外防護。',
+        armorClass: '+2 AC',
+        properties: '需佔用一隻手',
+        useCase: '使用單手武器時的防禦選項。'
+      }
+    ],
+    tools: [],
+    equipment: [
+      { 
+        name: '探險者背包', 
+        description: '包含背包、睡袋、餐具、10 支火把、10 天口糧、水袋和 50 呎麻繩。',
+        useCase: '野外生存必備。'
+      },
+      { 
+        name: '狩獵陷阱', 
+        description: '鋼製捕獸夾，可用於狩獵或防禦。',
+        useCase: '設置陷阱捕捉獵物或阻擋敵人。'
+      },
+      { 
+        name: '動物誘餌', 
+        description: '用於吸引或安撫野生動物的食物。',
+        useCase: '與動物互動或設置陷阱。'
+      }
+    ]
+  },
+
+  rogue: {
+    name: '盜賊',
+    weapons: [
+      { 
+        name: '細劍', 
+        description: '優雅的刺擊武器，完美適合偷襲攻擊。',
+        damage: '1d8 穿刺',
+        properties: '靈巧',
+        useCase: '盜賊的首選武器，最大化偷襲傷害。'
+      },
+      { 
+        name: '短劍', 
+        description: '輕巧的刺擊武器，可雙持。',
+        damage: '1d6 穿刺',
+        properties: '靈巧、輕型',
+        useCase: '雙武器戰鬥或隱藏武器。'
+      },
+      { 
+        name: '短弓', 
+        description: '緊湊的遠程武器，適合從陰影中攻擊。',
+        damage: '1d6 穿刺',
+        properties: '彈藥（射程 80/320 呎）、雙手',
+        useCase: '遠程偷襲攻擊。'
+      },
+      { 
+        name: '手弩', 
+        description: '單手弩機，可搭配近戰武器使用。',
+        damage: '1d6 穿刺',
+        properties: '彈藥（射程 30/120 呎）、輕型、裝填',
+        useCase: '近距離遠程攻擊。'
+      }
+    ],
+    armor: [
+      { 
+        name: '皮甲', 
+        description: '不會發出聲音的柔軟皮革護甲。',
+        armorClass: 'AC 11 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '最適合隱匿行動的護甲。'
+      },
+      { 
+        name: '鑲釘皮甲', 
+        description: '稍重但提供更好防護的皮甲。',
+        armorClass: 'AC 12 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '需要更多防護時的選擇。'
+      }
+    ],
+    tools: [
+      { 
+        name: '盜賊工具', 
+        description: '包含小銼刀、撬鎖針、小鏡子、細鉗子和剪刀。',
+        useCase: '開鎖和解除陷阱的必需品。'
+      }
+    ],
+    equipment: [
+      { 
+        name: '盜賊背包', 
+        description: '包含背包、1000 顆滾珠、10 呎線、鈴鐺、5 支蠟燭、撬棍、鐵錘、10 根釘子、5 天口糧、水袋和 50 呎麻繩。',
+        useCase: '盜賊專用的實用工具組合。'
+      },
+      { 
+        name: '變裝工具組', 
+        description: '化妝品、假髮和服裝配件。',
+        useCase: '偽裝身份和潛入。'
+      },
+      { 
+        name: '攀爬工具組', 
+        description: '釘鞋、手套和安全帶。',
+        useCase: '爬上建築物或懸崖。'
+      }
+    ]
+  },
+
   sorcerer: {
-    name: 'Sorcerer',
-    nameChinese: '術士',
+    name: '術士',
     weapons: [
       { 
-        name: 'Light Crossbow + 20 Bolts', 
-        nameChinese: '輕弩 + 20弩箭', 
-        description: 'Simple ranged weapon for backup',
-        descriptionChinese: '用於備用的簡易遠程武器',
-        damage: '1d8 piercing',
-        properties: 'Ammunition (range 80/320), Loading, Two-handed',
-        propertiesChinese: '彈藥（射程 80/320）、裝填、雙手',
-        useCase: 'Conserve spell slots with ranged attacks',
-        useCaseChinese: '用遠程攻擊保存法術位'
+        name: '匕首', 
+        description: '輕巧的刀刃，可近戰或投擲。術士的基本自衛武器。',
+        damage: '1d4 穿刺',
+        properties: '靈巧、輕型、投擲（射程 20/60 呎）',
+        useCase: '緊急自衛武器，主要依靠法術。'
       },
       { 
-        name: 'Dagger (2)', 
-        nameChinese: '匕首 (2)', 
-        description: 'Last resort melee weapons',
-        descriptionChinese: '最後手段的近戰武器',
-        damage: '1d4 piercing',
-        properties: 'Finesse, Light, Thrown (range 20/60)',
-        propertiesChinese: '巧技、輕型、投擲（射程 20/60）',
-        useCase: 'Emergency backup when out of spells',
-        useCaseChinese: '法術用盡時的緊急備用'
+        name: '飛鏢', 
+        description: '可快速投擲的小型武器。',
+        damage: '1d4 穿刺',
+        properties: '靈巧、投擲（射程 20/60 呎）',
+        useCase: '保持距離的簡單選項。'
+      },
+      { 
+        name: '輕弩', 
+        description: '簡單的遠程武器。',
+        damage: '1d8 穿刺',
+        properties: '彈藥（射程 80/320 呎）、裝填、雙手',
+        useCase: '節省法術位時使用。'
       }
     ],
     armor: [
       { 
-        name: 'No Armor', 
-        nameChinese: '無護甲', 
-        description: 'Rely on Dexterity and magical protection',
-        descriptionChinese: '依賴敏捷和魔法防護',
-        armorClass: '10 + Dex modifier',
-        useCase: 'Use Mage Armor spell for better AC',
-        useCaseChinese: '使用法甲術獲得更好的AC'
+        name: '無護甲', 
+        description: '術士通常不穿護甲，依靠法術防護自己。',
+        armorClass: 'AC 10 + 敏捷調整值',
+        properties: '可施展法術',
+        useCase: '術士的標準選擇，配合護甲法術如法師護甲。'
       }
     ],
+    tools: [],
     equipment: [
       { 
-        name: 'Arcane Focus', 
-        nameChinese: '奧術法器', 
-        description: 'Crystal, orb, or wand channeling innate magic',
-        descriptionChinese: '引導天生魔法的水晶、法球或魔杖',
-        useCase: 'Required for casting Sorcerer spells',
-        useCaseChinese: '施展術士法術所需'
+        name: '探險者背包', 
+        description: '包含背包、睡袋、餐具、10 支火把、10 天口糧、水袋和 50 呎麻繩。',
+        useCase: '基本冒險裝備。'
       },
       { 
-        name: 'Dungeoneer\'s Pack', 
-        nameChinese: '地城探險者背包', 
-        description: 'Adventuring supplies',
-        descriptionChinese: '冒險用品',
-        useCase: 'Basic gear for dungeon exploration',
-        useCaseChinese: '地下城探險的基本裝備'
+        name: '奧術焦點', 
+        description: '水晶、寶珠、權杖、法杖或魔杖，用於施放術士法術。',
+        useCase: '施法必需品。'
+      },
+      { 
+        name: '法術成分袋', 
+        description: '裝有施法材料的小袋。',
+        useCase: '替代奧術焦點的選項。'
       }
     ]
   },
+
   warlock: {
-    name: 'Warlock',
-    nameChinese: '邪術師',
+    name: '邪術師',
     weapons: [
       { 
-        name: 'Light Crossbow + 20 Bolts', 
-        nameChinese: '輕弩 + 20弩箭', 
-        description: 'Ranged weapon before Eldritch Blast',
-        descriptionChinese: '在獲得魔能爆前的遠程武器',
-        damage: '1d8 piercing',
-        properties: 'Ammunition (range 80/320), Loading, Two-handed',
-        propertiesChinese: '彈藥（射程 80/320）、裝填、雙手',
-        useCase: 'Physical damage option',
-        useCaseChinese: '物理傷害選項'
+        name: '輕弩', 
+        description: '簡單的遠程武器，可配合妖火箭使用。',
+        damage: '1d8 穿刺',
+        properties: '彈藥（射程 80/320 呎）、裝填、雙手',
+        useCase: '物理攻擊選項，通常使用妖火箭更好。'
       },
       { 
-        name: 'Dagger (2)', 
-        nameChinese: '匕首 (2)', 
-        description: 'Ritual sacrifice and backup weapons',
-        descriptionChinese: '儀式犧牲和備用武器',
-        damage: '1d4 piercing',
-        properties: 'Finesse, Light, Thrown (range 20/60)',
-        propertiesChinese: '巧技、輕型、投擲（射程 20/60）',
-        useCase: 'Flavor and emergency melee',
-        useCaseChinese: '風格和緊急近戰'
+        name: '匕首', 
+        description: '隱藏武器，可近戰或投擲。',
+        damage: '1d4 穿刺',
+        properties: '靈巧、輕型、投擲（射程 20/60 呎）',
+        useCase: '緊急自衛，主要使用咒法。'
       }
     ],
     armor: [
       { 
-        name: 'Leather Armor', 
-        nameChinese: '皮甲', 
-        description: 'Light protection for spellcasters',
-        descriptionChinese: '施法者的輕型防護',
-        armorClass: '11 + Dex modifier',
-        useCase: 'Basic defense without spell penalties',
-        useCaseChinese: '基本防禦且無施法懲罰'
+        name: '皮甲', 
+        description: '輕便的護甲，允許靈活施法。',
+        armorClass: 'AC 11 + 敏捷調整值',
+        properties: '輕甲',
+        useCase: '邪術師可穿著的基本護甲。'
       }
     ],
+    tools: [],
     equipment: [
       { 
-        name: 'Arcane Focus', 
-        nameChinese: '奧術法器', 
-        description: 'Pact-bound focus channeling otherworldly power',
-        descriptionChinese: '引導異界力量的契約焦點',
-        useCase: 'Required for casting Warlock spells',
-        useCaseChinese: '施展邪術師法術所需'
+        name: '學者背包', 
+        description: '包含背包、學識之書、墨水瓶、羽毛筆、10 張羊皮紙、香料小袋和小刀。',
+        useCase: '研究和記錄的工具。'
       },
       { 
-        name: 'Scholar\'s Pack', 
-        nameChinese: '學者背包', 
-        description: 'Contains backpack, book of lore, ink, pen, parchment, sand, and small knife',
-        descriptionChinese: '包含背包、學識書、墨水、筆、羊皮紙、沙子和小刀',
-        useCase: 'Research materials for arcane knowledge',
-        useCaseChinese: '研究奧秘知識的材料'
+        name: '奧術焦點', 
+        description: '代表你守護者力量的物品。',
+        useCase: '施放邪術師法術的焦點。'
+      },
+      { 
+        name: '契約之書', 
+        description: '記錄你與守護者契約的神秘書籍。',
+        useCase: '某些守護者恩惠需要此書。'
       }
     ]
   },
+
   wizard: {
-    name: 'Wizard',
-    nameChinese: '法師',
+    name: '法師',
     weapons: [
       { 
-        name: 'Quarterstaff', 
-        nameChinese: '長棍', 
-        description: 'Traditional wizard weapon and walking stick',
-        descriptionChinese: '傳統法師武器和手杖',
-        damage: '1d6 bludgeoning (1d8 two-handed)',
-        properties: 'Versatile',
-        propertiesChinese: '多用',
-        useCase: 'Can double as arcane focus with Arcane Focus staff',
-        useCaseChinese: '配合奧術法杖可兼作法器'
+        name: '匕首', 
+        description: '法師的標準自衛武器，輕巧易藏。',
+        damage: '1d4 穿刺',
+        properties: '靈巧、輕型、投擲（射程 20/60 呎）',
+        useCase: '緊急情況使用，主要依靠法術。'
       },
       { 
-        name: 'Dagger', 
-        nameChinese: '匕首', 
-        description: 'Scholar\'s utility knife',
-        descriptionChinese: '學者的萬用刀',
-        damage: '1d4 piercing',
-        properties: 'Finesse, Light, Thrown (range 20/60)',
-        propertiesChinese: '巧技、輕型、投擲（射程 20/60）',
-        useCase: 'Last resort weapon',
-        useCaseChinese: '最後手段武器'
+        name: '木棍', 
+        description: '可作為行走杖或施法焦點的木棒。',
+        damage: '1d6 鈍擊',
+        properties: '多用途',
+        useCase: '可用作武器或法杖。'
       }
     ],
     armor: [
       { 
-        name: 'No Armor', 
-        nameChinese: '無護甲', 
-        description: 'Wizards rely on magical protection',
-        descriptionChinese: '法師依賴魔法防護',
-        armorClass: '10 + Dex modifier',
-        useCase: 'Cast Mage Armor for AC 13 + Dex',
-        useCaseChinese: '施展法甲術獲得AC 13 + 敏捷'
+        name: '無護甲', 
+        description: '法師不穿護甲，使用法師護甲等法術代替。',
+        armorClass: 'AC 10 + 敏捷調整值',
+        properties: '可施展法術',
+        useCase: '標準選擇，配合防護法術使用。'
       }
     ],
+    tools: [],
     equipment: [
       { 
-        name: 'Spellbook', 
-        nameChinese: '法術書', 
-        description: 'Essential tome containing your known spells',
-        descriptionChinese: '包含你已知法術的必要典籍',
-        useCase: 'Absolutely required for preparing wizard spells',
-        useCaseChinese: '準備法師法術絕對必需'
+        name: '學者背包', 
+        description: '包含背包、學識之書、墨水瓶、羽毛筆、10 張羊皮紙、香料小袋和小刀。',
+        useCase: '法師研究的必備工具。'
       },
       { 
-        name: 'Arcane Focus', 
-        nameChinese: '奧術法器', 
-        description: 'Wand, staff, or orb for spellcasting',
-        descriptionChinese: '用於施法的魔杖、法杖或法球',
-        useCase: 'Required for casting wizard spells',
-        useCaseChinese: '施展法師法術所需'
+        name: '法術書', 
+        description: '記錄你所知法術的魔法書。',
+        useCase: '準備法術和學習新法術的必需品。'
       },
       { 
-        name: 'Scholar\'s Pack', 
-        nameChinese: '學者背包', 
-        description: 'Academic research materials',
-        descriptionChinese: '學術研究材料',
-        useCase: 'Tools for magical research and study',
-        useCaseChinese: '魔法研究和學習的工具'
+        name: '奧術焦點', 
+        description: '水晶、寶珠、權杖、法杖或魔杖。',
+        useCase: '施放法術的焦點。'
+      },
+      { 
+        name: '法術成分袋', 
+        description: '裝有各種施法材料的袋子。',
+        useCase: '替代奧術焦點的選項。'
       }
     ]
   }
-}
+};
 
-// Race-specific equipment recommendations
-export const equipmentByRace = {
-  dwarf: {
-    bonus: [
-      { 
-        name: 'Warhammer', 
-        nameChinese: '戰錘', 
-        description: 'Traditional dwarven weapon of war',
-        descriptionChinese: '傳統矮人戰爭武器',
-        damage: '1d8 bludgeoning (1d10 two-handed)',
-        properties: 'Versatile',
-        propertiesChinese: '多用',
-        useCase: 'Dwarven cultural weapon proficiency',
-        useCaseChinese: '矮人文化武器熟練'
-      },
-      { 
-        name: 'Battleaxe', 
-        nameChinese: '戰斧', 
-        description: 'Masterwork dwarven craftsmanship',
-        descriptionChinese: '矮人大師級工藝',
-        damage: '1d8 slashing (1d10 two-handed)',
-        properties: 'Versatile',
-        propertiesChinese: '多用',
-        useCase: 'Alternative dwarven weapon',
-        useCaseChinese: '替代矮人武器'
-      }
-    ]
-  },
-  elf: {
-    bonus: [
-      { 
-        name: 'Longbow', 
-        nameChinese: '長弓', 
-        description: 'Elegant elven archery tradition',
-        descriptionChinese: '優雅的精靈箭術傳統',
-        damage: '1d8 piercing',
-        properties: 'Ammunition (range 150/600), Heavy, Two-handed',
-        propertiesChinese: '彈藥（射程 150/600）、重型、雙手',
-        useCase: 'Elven weapon training proficiency',
-        useCaseChinese: '精靈武器訓練熟練'
-      },
-      { 
-        name: 'Longsword', 
-        nameChinese: '長劍', 
-        description: 'Graceful elven blade',
-        descriptionChinese: '優雅的精靈劍',
-        damage: '1d8 slashing (1d10 two-handed)',
-        properties: 'Versatile',
-        propertiesChinese: '多用',
-        useCase: 'Elven weapon proficiency',
-        useCaseChinese: '精靈武器熟練'
-      }
-    ]
-  },
-  halfling: {
-    bonus: [
-      { 
-        name: 'Sling', 
-        nameChinese: '投石索', 
-        description: 'Simple weapon for small folk',
-        descriptionChinese: '小型生物的簡易武器',
-        damage: '1d4 bludgeoning',
-        properties: 'Ammunition (range 30/120)',
-        propertiesChinese: '彈藥（射程 30/120）',
-        useCase: 'Size-appropriate ranged weapon',
-        useCaseChinese: '適合體型的遠程武器'
-      },
-      { 
-        name: 'Shortsword', 
-        nameChinese: '短劍', 
-        description: 'Light blade for small warriors',
-        descriptionChinese: '小型戰士的輕型劍',
-        damage: '1d6 piercing',
-        properties: 'Finesse, Light',
-        propertiesChinese: '巧技、輕型',
-        useCase: 'Perfect size for halflings',
-        useCaseChinese: '完美適合半身人的尺寸'
-      }
-    ]
-  },
-  dragonborn: {
-    bonus: [
-      { 
-        name: 'Greatsword', 
-        nameChinese: '巨劍', 
-        description: 'Massive blade befitting dragonborn strength',
-        descriptionChinese: '適合龍裔力量的巨大劍刃',
-        damage: '2d6 slashing',
-        properties: 'Heavy, Two-handed',
-        propertiesChinese: '重型、雙手',
-        useCase: 'Maximizes dragonborn Strength bonus',
-        useCaseChinese: '最大化龍裔力量加值'
-      }
-    ]
-  }
-}
-
-// Combined recommendations
-export const getRecommendedEquipment = (characterClass, characterRace) => {
-  const classEquipment = equipmentByClass[characterClass?.toLowerCase()] || {}
-  const raceBonus = equipmentByRace[characterRace?.toLowerCase()]?.bonus || []
-
-  return {
-    classEquipment,
-    raceBonus,
-    totalItems: [
-      ...(classEquipment.weapons || []),
-      ...(classEquipment.armor || []),
-      ...(classEquipment.equipment || []),
-      ...raceBonus
-    ]
-  }
-}
-
-// Starting gold by class (in gp)
-export const startingGold = {
-  barbarian: '2d4 × 10',
-  bard: '5d4 × 10',
-  cleric: '5d4 × 10',
-  druid: '2d4 × 10',
-  fighter: '5d4 × 10',
-  monk: '5d4',
-  paladin: '5d4 × 10',
-  ranger: '5d4 × 10',
-  rogue: '4d4 × 10',
-  sorcerer: '3d4 × 10',
-  warlock: '4d4 × 10',
-  wizard: '4d4 × 10'
-}
+export default equipmentByClass;
