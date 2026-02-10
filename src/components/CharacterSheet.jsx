@@ -242,16 +242,18 @@ const CharacterSheet = ({ character }) => {
                 const isProficient = character.skills?.[skill.key] || false
                 const modifier = calculateSkillModifier(skill)
                 return (
-                  <div key={skill.key} className="flex items-center text-sm group relative">
-                    <input 
-                      type="checkbox" 
-                      checked={isProficient}
-                      readOnly
-                      className="mr-2"
-                    />
-                    <span className="w-10">{formatModifier(modifier)}</span>
-                    <span className="cursor-help">{skill.name}</span>
-                    <div className="absolute left-0 top-6 bg-gray-800 text-white text-xs p-2 rounded shadow-lg w-64 z-10 hidden group-hover:block">
+                  <div key={skill.key} className="text-xs">
+                    <div className="flex items-center">
+                      <input 
+                        type="checkbox" 
+                        checked={isProficient}
+                        readOnly
+                        className="mr-2"
+                      />
+                      <span className="w-8 font-semibold">{formatModifier(modifier)}</span>
+                      <span className="font-semibold">{skill.name}</span>
+                    </div>
+                    <div className="text-gray-600 ml-6 mb-1">
                       {SKILL_DESCRIPTIONS[skill.key]}
                     </div>
                   </div>
@@ -392,69 +394,30 @@ const CharacterSheet = ({ character }) => {
         <div className="text-sm font-bold mb-3 text-center">特性與特質</div>
         <div className="space-y-3">
           {/* Race Features */}
-          {raceData?.traits && Object.keys(raceData.traits).length > 0 && (
+          {raceData?.traits && typeof raceData.traits === 'string' && (
             <div>
               <div className="font-bold text-sm mb-1">種族特性:</div>
-              {Object.entries(raceData.traits).map(([key, trait]) => (
-                <div key={key} className="mb-2 pl-2">
-                  <div className="font-semibold text-sm">{trait?.name || '未命名'}</div>
-                  <div className="text-xs text-gray-700">{trait?.description || ''}</div>
-                </div>
-              ))}
+              <div className="text-xs text-gray-700 pl-2">
+                {raceData.traits}
+              </div>
             </div>
           )}
           
-          {/* Class Features - Level 1-3 only */}
-          {classData?.features && Array.isArray(classData.features) && (
+          {/* Class Features */}
+          {classData?.keyFeatures && Array.isArray(classData.keyFeatures) && (
             <div className="mt-3">
               <div className="font-bold text-sm mb-1">職業特性:</div>
-              {classData.features
-                .filter(feature => feature && feature.level && feature.level <= 3)
-                .map((feature, index) => (
-                  <div key={index} className="mb-2 pl-2">
-                    <div className="font-semibold text-sm">{feature?.name || '未命名特性'}</div>
-                    <div className="text-xs text-gray-700">{feature?.description || ''}</div>
-                  </div>
-                ))}
+              {classData.keyFeatures.map((feature, index) => (
+                <div key={index} className="text-xs text-gray-700 pl-2 mb-1">
+                  {feature}
+                </div>
+              ))}
             </div>
           )}
         </div>
       </div>
 
-      {/* Personality & Background */}
-      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4">
-        <div className="text-sm font-bold mb-3 text-center">個性特質</div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="font-semibold text-xs mb-1">個性特徵:</div>
-            <textarea 
-              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
-              defaultValue={character.personality?.traits || ''}
-            />
-          </div>
-          <div>
-            <div className="font-semibold text-xs mb-1">理想:</div>
-            <textarea 
-              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
-              defaultValue={character.personality?.ideals || ''}
-            />
-          </div>
-          <div>
-            <div className="font-semibold text-xs mb-1">羈絆:</div>
-            <textarea 
-              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
-              defaultValue={character.personality?.bonds || ''}
-            />
-          </div>
-          <div>
-            <div className="font-semibold text-xs mb-1">缺陷:</div>
-            <textarea 
-              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
-              defaultValue={character.personality?.flaws || ''}
-            />
-          </div>
-        </div>
-      </div>
+
     </div>
   )
 }
