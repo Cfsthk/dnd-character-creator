@@ -114,12 +114,12 @@ const CharacterSheet = ({ character }) => {
   }
 
   const abilityScores = [
-    { name: 'STR', fullName: 'Strength', score: character.abilityScores.strength },
-    { name: 'DEX', fullName: 'Dexterity', score: character.abilityScores.dexterity },
-    { name: 'CON', fullName: 'Constitution', score: character.abilityScores.constitution },
-    { name: 'INT', fullName: 'Intelligence', score: character.abilityScores.intelligence },
-    { name: 'WIS', fullName: 'Wisdom', score: character.abilityScores.wisdom },
-    { name: 'CHA', fullName: 'Charisma', score: character.abilityScores.charisma }
+    { name: 'STR', fullName: 'Strength', score: character.abilityScores?.strength || 10 },
+    { name: 'DEX', fullName: 'Dexterity', score: character.abilityScores?.dexterity || 10 },
+    { name: 'CON', fullName: 'Constitution', score: character.abilityScores?.constitution || 10 },
+    { name: 'INT', fullName: 'Intelligence', score: character.abilityScores?.intelligence || 10 },
+    { name: 'WIS', fullName: 'Wisdom', score: character.abilityScores?.wisdom || 10 },
+    { name: 'CHA', fullName: 'Charisma', score: character.abilityScores?.charisma || 10 }
   ]
 
   const skillAbilityMap = {
@@ -442,8 +442,8 @@ const CharacterSheet = ({ character }) => {
       <div style={styles.section}>
         <h2 style={styles.sectionTitle}>Skills</h2>
         <div style={styles.skillsList}>
-          {Object.keys(skillAbilityMap).map(skill => {
-            const isProficient = character.skills[skill]
+          {skillAbilityMap && typeof skillAbilityMap === 'object' && Object.keys(skillAbilityMap).map(skill => {
+            const isProficient = character.skills?.[skill]
             const description = SKILL_DESCRIPTIONS[skill]
             
             return (
@@ -516,11 +516,11 @@ const CharacterSheet = ({ character }) => {
       )}
 
       {/* Spell Slots */}
-      {character.spellSlots && Object.keys(character.spellSlots).length > 0 && (
+      {character.spellSlots && typeof character.spellSlots === 'object' && Object.keys(character.spellSlots).length > 0 && (
         <div style={styles.section}>
           <h2 style={styles.sectionTitle}>Spell Slots</h2>
           <div style={styles.statsGrid}>
-            {Object.entries(character.spellSlots).map(([level, slots]) => (
+            {character.spellSlots && Object.entries(character.spellSlots).map(([level, slots]) => (
               <div key={level} style={styles.statBox}>
                 <div style={styles.statLabel}>Level {level}</div>
                 <div style={styles.statValue}>{slots}</div>
