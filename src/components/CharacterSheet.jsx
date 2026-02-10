@@ -166,12 +166,12 @@ const CharacterSheet = ({ character }) => {
         {/* Left Column - Abilities */}
         <div className="space-y-2">
           {[
-            { name: '力量', key: 'strength', abbr: 'STR' },
-            { name: '敏捷', key: 'dexterity', abbr: 'DEX' },
-            { name: '體質', key: 'constitution', abbr: 'CON' },
-            { name: '智力', key: 'intelligence', abbr: 'INT' },
-            { name: '感知', key: 'wisdom', abbr: 'WIS' },
-            { name: '魅力', key: 'charisma', abbr: 'CHA' }
+            { name: '力量 (Strength)', key: 'strength', abbr: 'STR' },
+            { name: '敏捷 (Dexterity)', key: 'dexterity', abbr: 'DEX' },
+            { name: '體質 (Constitution)', key: 'constitution', abbr: 'CON' },
+            { name: '智力 (Intelligence)', key: 'intelligence', abbr: 'INT' },
+            { name: '感知 (Wisdom)', key: 'wisdom', abbr: 'WIS' },
+            { name: '魅力 (Charisma)', key: 'charisma', abbr: 'CHA' }
           ].map(ability => (
             <div key={ability.key} className="border-2 border-[#8b4513] bg-[#fdf5e6] p-2 text-center">
               <div className="text-sm font-bold">{ability.name}</div>
