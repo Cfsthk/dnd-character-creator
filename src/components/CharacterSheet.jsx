@@ -56,223 +56,203 @@ const CharacterSheet = ({ character }) => {
   // Skill descriptions in Traditional Chinese
   const SKILL_DESCRIPTIONS = {
     acrobatics: "平衡、翻滾、空中特技和在困難地形上保持直立。",
-    animalHandling: "安撫、訓練動物或察覺動物意圖。解讀馴騎語言和行為。",
-    arcana: "回想關於法術、法陣、法陣、魔物、神祕符號和魔法傳統的知識。",
+    animalHandling: "安撫、訓練動物或察覺動物意圖。解讀駭訛詐訊和行為。",
+    arcana: "回憶關於法術、法陣、法陣、魔物、異能虛假和魔法傳統的知識。",
     athletics: "攀爬、跳躍、游泳和其他需要高度體力活動。",
-    deception: "透過說謊、隱瞞性質騙擾真相的說謊。",
+    deception: "透過誤導、隱瞞性質擺真相的詐欺。",
     history: "回憶歷史事件、傳奇人物、古代王國、過去的文明。",
-    insight: "判斷生物的真實意圖、解讀肢體語言和尋覓說謊。",
-    intimidation: "透過威脅、敵意行為和暴力嚇唬他人。",
-    investigation: "尋找線索、推理邏輯和解讀謎團或神秘事件。",
-    medicine: "穩定垂死的同伴、診斷疾病和治療傷口。",
-    nature: "回想關於地形、植物、動物、天氣和自然循環的知識。",
+    insight: "判斷生物的真實意圖、解讀肢體語言和察覺詐欺。",
+    intimidation: "透過威脅、敵意行為和暴力嚇阻他人。",
+    investigation: "尋找線索、推理邏輯和解讀謎團或奇事件。",
+    medicine: "穩定瀕死的傷患、診斷疾病和治療傷口。",
+    nature: "回憶關於地形、植物、動物、天氣和自然循環的知識。",
     perception: "使用感官發現、聽到或察覺某物的存在。",
-    performance: "透過音樂、舞蹈、表演、說書故事或其他劇意來取悅觀眾。",
-    persuasion: "透過機敏、社交禮儀或良好性來影響他人。",
-    religion: "回想關於神祇、儀式、祈禱、宗教階級和神聖象徵的知識。",
-    sleightOfHand: "扒竊、藏匿小物、開鎖或執行需要手指靈活的任務。",
-    stealth: "在不被發現的情況下隱藏或安靜移動。",
-    survival: "追蹤、狩獵、引導隊伍、預測天氣和避免自然危險。"
+    performance: "透過音樂、舞蹈、表演、詐唬故事或其他娛樂侖取悅觀眾。",
+    persuasion: "透過機敏、社交禮儀或善良性侖影響他人。",
+    religion: "回憶關於神祇、儀式、祈禱、宗教隸屬和神聖傳統的知識。",
+    sleightOfHand: "扒竊、隱匿小物、靈巧或埋藏需要手指靈活度的行為。",
+    stealth: "隱藏自己或在不被他人注意的情況下移動。",
+    survival: "追蹤、狩獵、引導、預測天氣和避免自然危險。"
   }
 
-  // Calculate skill bonuses
-  const getSkillBonus = (skill) => {
-    const abilityMap = {
-      acrobatics: character.dexterity,
-      animalHandling: character.wisdom,
-      arcana: character.intelligence,
-      athletics: character.strength,
-      deception: character.charisma,
-      history: character.intelligence,
-      insight: character.wisdom,
-      intimidation: character.charisma,
-      investigation: character.intelligence,
-      medicine: character.wisdom,
-      nature: character.intelligence,
-      perception: character.wisdom,
-      performance: character.charisma,
-      persuasion: character.charisma,
-      religion: character.intelligence,
-      sleightOfHand: character.dexterity,
-      stealth: character.dexterity,
-      survival: character.wisdom
-    }
+  const SKILLS = [
+    { name: '特技', key: 'acrobatics', ability: 'dexterity' },
+    { name: '馴獸', key: 'animalHandling', ability: 'wisdom' },
+    { name: '奧秘', key: 'arcana', ability: 'intelligence' },
+    { name: '運動', key: 'athletics', ability: 'strength' },
+    { name: '欺瞞', key: 'deception', ability: 'charisma' },
+    { name: '歷史', key: 'history', ability: 'intelligence' },
+    { name: '洞察', key: 'insight', ability: 'wisdom' },
+    { name: '威嚇', key: 'intimidation', ability: 'charisma' },
+    { name: '調查', key: 'investigation', ability: 'intelligence' },
+    { name: '醫藥', key: 'medicine', ability: 'wisdom' },
+    { name: '自然', key: 'nature', ability: 'intelligence' },
+    { name: '察覺', key: 'perception', ability: 'wisdom' },
+    { name: '表演', key: 'performance', ability: 'charisma' },
+    { name: '說服', key: 'persuasion', ability: 'charisma' },
+    { name: '宗教', key: 'religion', ability: 'intelligence' },
+    { name: '巧手', key: 'sleightOfHand', ability: 'dexterity' },
+    { name: '隱匿', key: 'stealth', ability: 'dexterity' },
+    { name: '求生', key: 'survival', ability: 'wisdom' }
+  ]
 
-    const ability = abilityMap[skill]
-    const abilityMod = getAbilityModifierNum(ability)
-    const isProficient = character.skills && character.skills.includes(skill)
-    const profBonus = isProficient ? getProficiencyBonus() : 0
-    const total = abilityMod + profBonus
-
-    return {
-      total: total >= 0 ? `+${total}` : `${total}`,
-      isProficient
-    }
+  const calculateSkillModifier = (skill) => {
+    const abilityScore = character.abilities[skill.ability]
+    const abilityMod = getAbilityModifierNum(abilityScore)
+    const profBonus = character.skills?.[skill.key] ? getProficiencyBonus() : 0
+    return abilityMod + profBonus
   }
 
-  // Get skill name in Traditional Chinese
-  const getSkillName = (skill) => {
-    const skillNames = {
-      acrobatics: '特技',
-      animalHandling: '馴獸',
-      arcana: '祕法',
-      athletics: '運動',
-      deception: '欺瞞',
-      history: '歷史',
-      insight: '洞察',
-      intimidation: '威嚇',
-      investigation: '調查',
-      medicine: '醫藥',
-      nature: '自然',
-      perception: '察覺',
-      performance: '表演',
-      persuasion: '說服',
-      religion: '宗教',
-      sleightOfHand: '巧手',
-      stealth: '隱匿',
-      survival: '求生'
-    }
-    return skillNames[skill] || skill
-  }
-
-  // Get ability name in Traditional Chinese
-  const getAbilityName = (ability) => {
-    const abilityNames = {
-      strength: '力量',
-      dexterity: '敏捷',
-      constitution: '體質',
-      intelligence: '智力',
-      wisdom: '感知',
-      charisma: '魅力'
-    }
-    return abilityNames[ability.toLowerCase()] || ability
+  const formatModifier = (num) => {
+    return num >= 0 ? `+${num}` : `${num}`
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 py-8 px-4">
+    <div className="max-w-4xl mx-auto p-8 bg-[#f4e4c1] min-h-screen" ref={sheetRef}>
       {/* Export Button */}
-      <div className="max-w-4xl mx-auto mb-4">
+      <div className="mb-4 flex justify-end print:hidden">
         <button
           onClick={exportToPDF}
-          className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-2 px-6 rounded-lg shadow-lg transition-colors"
+          className="px-4 py-2 bg-[#8b4513] text-white rounded hover:bg-[#654321] transition-colors"
         >
-          📥 匯出角色卡 (PDF)
+          匯出 PDF
         </button>
       </div>
 
-      {/* Character Sheet */}
-      <div ref={sheetRef} className="max-w-4xl mx-auto bg-[#f4e4c1] rounded-lg shadow-2xl p-8 border-4 border-amber-800">
-        {/* Header Section */}
-        <div className="border-b-4 border-amber-800 pb-6 mb-6">
-          <h1 className="text-4xl font-bold text-amber-900 mb-4 text-center font-medieval">
-            {character.name || '未命名角色'}
-          </h1>
-          <div className="grid grid-cols-3 gap-4 text-center">
-            <div className="bg-amber-100 p-3 rounded border-2 border-amber-700">
-              <div className="text-sm text-amber-700 font-semibold">種族</div>
-              <div className="text-xl font-bold text-amber-900">
-                {raceData?.name || character.race || '-'}
-              </div>
+      {/* Header */}
+      <div className="border-4 border-[#8b4513] p-6 mb-4 bg-[#fdf5e6]">
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <label className="text-xs text-gray-600">角色名稱</label>
+            <div className="text-2xl font-bold border-b-2 border-[#8b4513]">
+              {character.name || '未命名角色'}
             </div>
-            <div className="bg-amber-100 p-3 rounded border-2 border-amber-700">
-              <div className="text-sm text-amber-700 font-semibold">職業</div>
-              <div className="text-xl font-bold text-amber-900">
-                {classData?.name || character.class || '-'}
-              </div>
+          </div>
+          <div>
+            <label className="text-xs text-gray-600">職業與等級</label>
+            <div className="text-xl border-b-2 border-[#8b4513]">
+              {classData?.name_zh || character.class} 3級
             </div>
-            <div className="bg-amber-100 p-3 rounded border-2 border-amber-700">
-              <div className="text-sm text-amber-700 font-semibold">等級</div>
-              <div className="text-xl font-bold text-amber-900">3</div>
+          </div>
+          <div>
+            <label className="text-xs text-gray-600">種族</label>
+            <div className="text-xl border-b-2 border-[#8b4513]">
+              {raceData?.name || character.race}
             </div>
           </div>
         </div>
-
-        {/* Main Stats Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          {/* Left Column - Ability Scores */}
-          <div className="space-y-3">
-            <h2 className="text-2xl font-bold text-amber-900 mb-4 border-b-2 border-amber-700 pb-2">
-              屬性值
-            </h2>
-            {['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].map((ability) => (
-              <div key={ability} className="bg-amber-100 p-3 rounded border-2 border-amber-700">
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold text-amber-900">
-                    {getAbilityName(ability)}
-                  </span>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-amber-900">
-                      {character[ability] || 10}
-                    </div>
-                    <div className="text-sm text-amber-700">
-                      ({getAbilityModifier(character[ability] || 10)})
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Middle Column - Combat Stats */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-amber-900 mb-4 border-b-2 border-amber-700 pb-2">
-              戰鬥數據
-            </h2>
-            
-            <div className="bg-amber-100 p-4 rounded border-2 border-amber-700 text-center">
-              <div className="text-sm text-amber-700 font-semibold">護甲等級</div>
-              <div className="text-3xl font-bold text-amber-900">
-                {10 + getAbilityModifierNum(character.dexterity || 10)}
-              </div>
-            </div>
-
-            <div className="bg-amber-100 p-4 rounded border-2 border-amber-700 text-center">
-              <div className="text-sm text-amber-700 font-semibold">生命值</div>
-              <div className="text-3xl font-bold text-amber-900">
-                {(classData?.hitDie || 8) + getAbilityModifierNum(character.constitution || 10) * 3}
-              </div>
-            </div>
-
-            <div className="bg-amber-100 p-4 rounded border-2 border-amber-700 text-center">
-              <div className="text-sm text-amber-700 font-semibold">速度</div>
-              <div className="text-3xl font-bold text-amber-900">
-                {raceData?.speed || 30} 呎
-              </div>
-            </div>
-
-            <div className="bg-amber-100 p-4 rounded border-2 border-amber-700 text-center">
-              <div className="text-sm text-amber-700 font-semibold">熟練加值</div>
-              <div className="text-3xl font-bold text-amber-900">
-                +{getProficiencyBonus()}
-              </div>
-            </div>
-
-            <div className="bg-amber-100 p-4 rounded border-2 border-amber-700 text-center">
-              <div className="text-sm text-amber-700 font-semibold">先攻值</div>
-              <div className="text-3xl font-bold text-amber-900">
-                {getAbilityModifier(character.dexterity || 10)}
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column - Skills */}
+        <div className="grid grid-cols-3 gap-4 mt-4">
           <div>
-            <h2 className="text-2xl font-bold text-amber-900 mb-4 border-b-2 border-amber-700 pb-2">
-              技能
-            </h2>
-            <div className="space-y-2">
-              {Object.keys(SKILL_DESCRIPTIONS).map((skill) => {
-                const bonus = getSkillBonus(skill)
+            <label className="text-xs text-gray-600">背景</label>
+            <div className="border-b-2 border-[#8b4513]">
+              {character.background || '無'}
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-gray-600">陣營</label>
+            <div className="border-b-2 border-[#8b4513]">
+              {character.alignment || '未選擇'}
+            </div>
+          </div>
+          <div>
+            <label className="text-xs text-gray-600">經驗值</label>
+            <div className="border-b-2 border-[#8b4513]">900</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Stats Section */}
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        {/* Left Column - Abilities */}
+        <div className="space-y-2">
+          {[
+            { name: '力量', key: 'strength', abbr: 'STR' },
+            { name: '敏捷', key: 'dexterity', abbr: 'DEX' },
+            { name: '體質', key: 'constitution', abbr: 'CON' },
+            { name: '智力', key: 'intelligence', abbr: 'INT' },
+            { name: '感知', key: 'wisdom', abbr: 'WIS' },
+            { name: '魅力', key: 'charisma', abbr: 'CHA' }
+          ].map(ability => (
+            <div key={ability.key} className="border-2 border-[#8b4513] bg-[#fdf5e6] p-2 text-center">
+              <div className="text-sm font-bold">{ability.name}</div>
+              <div className="text-3xl font-bold">{character.abilities[ability.key]}</div>
+              <div className="text-xl border-t-2 border-[#8b4513] mt-1 pt-1">
+                {getAbilityModifier(character.abilities[ability.key])}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Middle Column - Skills and Saves */}
+        <div className="col-span-2 space-y-4">
+          {/* Inspiration, Proficiency, Perception */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-2 text-center">
+              <div className="text-2xl font-bold">0</div>
+              <div className="text-xs">靈感</div>
+            </div>
+            <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-2 text-center">
+              <div className="text-2xl font-bold">+{getProficiencyBonus()}</div>
+              <div className="text-xs">熟練加值</div>
+            </div>
+            <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-2 text-center">
+              <div className="text-2xl font-bold">
+                {formatModifier(calculateSkillModifier({ key: 'perception', ability: 'wisdom' }))}
+              </div>
+              <div className="text-xs">被動察覺</div>
+            </div>
+          </div>
+
+          {/* Saving Throws */}
+          <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-3">
+            <div className="text-sm font-bold mb-2 text-center">豁免</div>
+            <div className="space-y-1">
+              {[
+                { name: '力量', key: 'strength' },
+                { name: '敏捷', key: 'dexterity' },
+                { name: '體質', key: 'constitution' },
+                { name: '智力', key: 'intelligence' },
+                { name: '感知', key: 'wisdom' },
+                { name: '魅力', key: 'charisma' }
+              ].map(save => {
+                const isProficient = classData?.savingThrows?.includes(save.key)
+                const modifier = getAbilityModifierNum(character.abilities[save.key]) + 
+                               (isProficient ? getProficiencyBonus() : 0)
                 return (
-                  <div 
-                    key={skill} 
-                    className={`p-2 rounded border ${bonus.isProficient ? 'bg-amber-200 border-amber-800 border-2' : 'bg-amber-50 border-amber-600'}`}
-                  >
-                    <div className="flex justify-between items-center">
-                      <span className={`text-sm ${bonus.isProficient ? 'font-bold' : 'font-medium'} text-amber-900`}>
-                        {bonus.isProficient && '★ '}{getSkillName(skill)}
-                      </span>
-                      <span className="font-bold text-amber-900">{bonus.total}</span>
+                  <div key={save.key} className="flex items-center text-sm">
+                    <input 
+                      type="checkbox" 
+                      checked={isProficient}
+                      readOnly
+                      className="mr-2"
+                    />
+                    <span className="w-10">{formatModifier(modifier)}</span>
+                    <span>{save.name}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Skills */}
+          <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-3">
+            <div className="text-sm font-bold mb-2 text-center">技能</div>
+            <div className="space-y-1">
+              {SKILLS.map(skill => {
+                const isProficient = character.skills?.[skill.key] || false
+                const modifier = calculateSkillModifier(skill)
+                return (
+                  <div key={skill.key} className="flex items-center text-sm group relative">
+                    <input 
+                      type="checkbox" 
+                      checked={isProficient}
+                      readOnly
+                      className="mr-2"
+                    />
+                    <span className="w-10">{formatModifier(modifier)}</span>
+                    <span className="cursor-help">{skill.name}</span>
+                    <div className="absolute left-0 top-6 bg-gray-800 text-white text-xs p-2 rounded shadow-lg w-64 z-10 hidden group-hover:block">
+                      {SKILL_DESCRIPTIONS[skill.key]}
                     </div>
                   </div>
                 )
@@ -280,69 +260,200 @@ const CharacterSheet = ({ character }) => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Features & Traits Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Class Features */}
-          <div className="bg-amber-100 p-4 rounded border-2 border-amber-700">
-            <h2 className="text-xl font-bold text-amber-900 mb-3 border-b-2 border-amber-700 pb-2">
-              職業特性
-            </h2>
-            <div className="space-y-2">
-              {classData?.features?.filter(feature => !feature.level || feature.level <= 3).map((feature, index) => (
-                <div key={index} className="bg-white p-3 rounded border border-amber-600">
-                  <div className="font-bold text-amber-900">{feature.name}</div>
-                  <div className="text-sm text-gray-700 mt-1">{feature.description}</div>
-                </div>
-              ))}
+      {/* Combat Stats */}
+      <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 text-center">
+          <div className="text-xs text-gray-600 mb-1">護甲等級</div>
+          <div className="text-4xl font-bold">
+            {10 + getAbilityModifierNum(character.abilities.dexterity)}
+          </div>
+        </div>
+        <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 text-center">
+          <div className="text-xs text-gray-600 mb-1">先攻</div>
+          <div className="text-4xl font-bold">
+            {getAbilityModifier(character.abilities.dexterity)}
+          </div>
+        </div>
+        <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 text-center">
+          <div className="text-xs text-gray-600 mb-1">速度</div>
+          <div className="text-4xl font-bold">{raceData?.speed || 30}呎</div>
+        </div>
+      </div>
+
+      {/* Hit Points */}
+      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
+        <div className="grid grid-cols-3 gap-4">
+          <div className="text-center">
+            <div className="text-xs text-gray-600 mb-1">生命值上限</div>
+            <div className="text-3xl font-bold">
+              {classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
+          <div className="text-center">
+            <div className="text-xs text-gray-600 mb-1">當前生命值</div>
+            <input 
+              type="number" 
+              className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
+              defaultValue={classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+            />
+          </div>
+          <div className="text-center">
+            <div className="text-xs text-gray-600 mb-1">臨時生命值</div>
+            <input 
+              type="number" 
+              className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
+              defaultValue={0}
+            />
+          </div>
+        </div>
+        <div className="mt-4 text-center">
+          <div className="text-xs text-gray-600 mb-1">生命骰</div>
+          <div className="text-xl">3d{classData?.hitDice || 8}</div>
+        </div>
+      </div>
 
-          {/* Racial Traits */}
-          <div className="bg-amber-100 p-4 rounded border-2 border-amber-700">
-            <h2 className="text-xl font-bold text-amber-900 mb-3 border-b-2 border-amber-700 pb-2">
-              種族特性
-            </h2>
-            <div className="space-y-2">
-              {raceData?.traits?.map((trait, index) => (
-                <div key={index} className="bg-white p-3 rounded border border-amber-600">
-                  <div className="font-bold text-amber-900">{trait.name}</div>
-                  <div className="text-sm text-gray-700 mt-1">{trait.description}</div>
-                </div>
-              ))}
+      {/* Attacks & Spellcasting */}
+      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
+        <div className="text-sm font-bold mb-3 text-center">攻擊與施法</div>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b-2 border-[#8b4513]">
+              <th className="text-left p-2">名稱</th>
+              <th className="text-center p-2">命中加值</th>
+              <th className="text-left p-2">傷害/類型</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Example weapon entries */}
+            <tr className="border-b border-[#8b4513]">
+              <td className="p-2">長劍</td>
+              <td className="text-center">
+                {formatModifier(getAbilityModifierNum(character.abilities.strength) + getProficiencyBonus())}
+              </td>
+              <td>1d8 + {getAbilityModifierNum(character.abilities.strength)} 揮砍</td>
+            </tr>
+            <tr className="border-b border-[#8b4513]">
+              <td className="p-2">短弓</td>
+              <td className="text-center">
+                {formatModifier(getAbilityModifierNum(character.abilities.dexterity) + getProficiencyBonus())}
+              </td>
+              <td>1d6 + {getAbilityModifierNum(character.abilities.dexterity)} 穿刺</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Spellcasting Stats - Only for spellcasting classes */}
+      {classData?.spellcastingAbility && (
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          <div className="text-center p-2 border border-[#8b4513] rounded bg-white">
+            <div className="text-xs text-gray-600">法術攻擊加值</div>
+            <div className="text-lg font-bold">
+              {formatModifier(getAbilityModifierNum(character.abilities[classData.spellcastingAbility]) + getProficiencyBonus())}
+            </div>
+          </div>
+          <div className="text-center p-2 border border-[#8b4513] rounded bg-white">
+            <div className="text-xs text-gray-600">法術豁免 DC</div>
+            <div className="text-lg font-bold">
+              {8 + getAbilityModifierNum(character.abilities[classData.spellcastingAbility]) + getProficiencyBonus()}
             </div>
           </div>
         </div>
+      )}
 
-        {/* Equipment Section */}
-        <div className="mt-6 bg-amber-100 p-4 rounded border-2 border-amber-700">
-          <h2 className="text-xl font-bold text-amber-900 mb-3 border-b-2 border-amber-700 pb-2">
-            裝備
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {character.equipment && character.equipment.length > 0 ? (
-              character.equipment.map((item, index) => (
-                <div key={index} className="bg-white p-2 rounded border border-amber-600">
-                  <span className="text-amber-900">{item}</span>
+      {/* Equipment */}
+      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
+        <div className="text-sm font-bold mb-3 text-center">裝備</div>
+        <div className="space-y-2">
+          {character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0 ? (
+            character.equipment.map((item, index) => (
+              <div key={index} className="border-b border-[#8b4513] pb-1">
+                • {item}
+              </div>
+            ))
+          ) : (
+            <div className="text-gray-500 text-center">無裝備</div>
+          )}
+        </div>
+        <div className="mt-4 flex justify-between items-center border-t-2 border-[#8b4513] pt-2">
+          <span className="font-bold">金幣 (GP):</span>
+          <input 
+            type="number" 
+            className="w-24 text-center border-2 border-[#8b4513] rounded bg-white"
+            defaultValue={0}
+          />
+        </div>
+      </div>
+
+      {/* Features & Traits */}
+      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
+        <div className="text-sm font-bold mb-3 text-center">特性與特質</div>
+        <div className="space-y-3">
+          {/* Race Features */}
+          {raceData?.traits && Object.keys(raceData.traits).length > 0 && (
+            <div>
+              <div className="font-bold text-sm mb-1">種族特性:</div>
+              {Object.entries(raceData.traits).map(([key, trait]) => (
+                <div key={key} className="mb-2 pl-2">
+                  <div className="font-semibold text-sm">{trait?.name || '未命名'}</div>
+                  <div className="text-xs text-gray-700">{trait?.description || ''}</div>
                 </div>
-              ))
-            ) : (
-              <div className="text-gray-500 italic col-span-2">尚未選擇裝備</div>
-            )}
+              ))}
+            </div>
+          )}
+          
+          {/* Class Features - Level 1-3 only */}
+          {classData?.features && Array.isArray(classData.features) && (
+            <div className="mt-3">
+              <div className="font-bold text-sm mb-1">職業特性:</div>
+              {classData.features
+                .filter(feature => feature && feature.level && feature.level <= 3)
+                .map((feature, index) => (
+                  <div key={index} className="mb-2 pl-2">
+                    <div className="font-semibold text-sm">{feature?.name || '未命名特性'}</div>
+                    <div className="text-xs text-gray-700">{feature?.description || ''}</div>
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Personality & Background */}
+      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4">
+        <div className="text-sm font-bold mb-3 text-center">個性特質</div>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="font-semibold text-xs mb-1">個性特徵:</div>
+            <textarea 
+              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
+              defaultValue={character.personality?.traits || ''}
+            />
+          </div>
+          <div>
+            <div className="font-semibold text-xs mb-1">理想:</div>
+            <textarea 
+              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
+              defaultValue={character.personality?.ideals || ''}
+            />
+          </div>
+          <div>
+            <div className="font-semibold text-xs mb-1">羈絆:</div>
+            <textarea 
+              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
+              defaultValue={character.personality?.bonds || ''}
+            />
+          </div>
+          <div>
+            <div className="font-semibold text-xs mb-1">缺陷:</div>
+            <textarea 
+              className="w-full h-20 p-2 border border-[#8b4513] rounded bg-white text-sm"
+              defaultValue={character.personality?.flaws || ''}
+            />
           </div>
         </div>
-
-        {/* Background Section */}
-        {character.background && (
-          <div className="mt-6 bg-amber-100 p-4 rounded border-2 border-amber-700">
-            <h2 className="text-xl font-bold text-amber-900 mb-3 border-b-2 border-amber-700 pb-2">
-              背景故事
-            </h2>
-            <div className="bg-white p-3 rounded border border-amber-600">
-              <p className="text-gray-700 whitespace-pre-wrap">{character.background}</p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
