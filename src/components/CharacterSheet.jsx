@@ -47,337 +47,374 @@ const CharacterSheet = ({ character }) => {
     shortsword: "Martial melee weapon. Light, finesse. A short blade ideal for quick strikes.",
     longsword: "Martial melee weapon. Versatile (1d8/1d10). The classic knight's blade.",
     greatsword: "Martial melee weapon. Two-handed, heavy. A massive blade wielded with both hands.",
-    battleaxe: "Martial melee weapon. Versatile (1d8/1d10). A sturdy axe for chopping foes.",
+    battleaxe: "Martial melee weapon. Versatile (1d8/1d10). A single-bladed axe for chopping foes.",
+    greataxe: "Martial melee weapon. Two-handed, heavy. A massive two-handed axe.",
+    warhammer: "Martial melee weapon. Versatile (1d8/1d10). A hammer designed for battle.",
+    maul: "Martial melee weapon. Two-handed, heavy. A massive two-handed hammer.",
+    rapier: "Martial melee weapon. Finesse. A thin, elegant blade designed for thrusting.",
     handaxe: "Simple melee weapon. Light, thrown (20/60 ft). A small axe that can be thrown.",
     mace: "Simple melee weapon. A heavy club with a metal head.",
     quarterstaff: "Simple melee weapon. Versatile (1d6/1d8). A simple wooden staff.",
-    spear: "Simple melee weapon. Thrown (20/60 ft), versatile (1d6/1d8). A pointed weapon on a shaft.",
-    lightCrossbow: "Simple ranged weapon. Ammunition (80/320 ft), loading, two-handed. A small crossbow.",
-    shortbow: "Simple ranged weapon. Ammunition (80/320 ft), two-handed. A compact bow.",
-    longbow: "Martial ranged weapon. Ammunition (150/600 ft), heavy, two-handed. A powerful war bow.",
+    club: "Simple melee weapon. Light. A basic wooden club.",
+    spear: "Simple melee weapon. Thrown (20/60 ft), versatile (1d6/1d8). A shaft with a pointed head.",
+    lightCrossbow: "Simple ranged weapon. Ammunition (80/320 ft), loading, two-handed. A mechanical bow.",
+    shortbow: "Simple ranged weapon. Ammunition (80/320 ft), two-handed. A small bow.",
+    longbow: "Martial ranged weapon. Ammunition (150/600 ft), heavy, two-handed. A tall bow with long range.",
     
     // Armor
-    leather: "Light armor. AC 11 + Dex modifier. Flexible and quiet, made from boiled leather.",
-    studdedLeather: "Light armor. AC 12 + Dex modifier. Reinforced with metal studs for extra protection.",
-    chainShirt: "Medium armor. AC 13 + Dex modifier (max 2). Interlocking metal rings worn under clothing.",
-    scaleMail: "Medium armor. AC 14 + Dex modifier (max 2). Overlapping metal scales on a leather backing. Disadvantage on Stealth.",
-    breastplate: "Medium armor. AC 14 + Dex modifier (max 2). Metal chest piece worn over leather.",
-    halfPlate: "Medium armor. AC 15 + Dex modifier (max 2). Partial plate armor protecting vital areas. Disadvantage on Stealth.",
-    ringMail: "Heavy armor. AC 14. Leather with heavy rings sewn in. Disadvantage on Stealth.",
-    chainMail: "Heavy armor. AC 16. Interlocking metal rings covering the body. Str 13 required. Disadvantage on Stealth.",
-    splint: "Heavy armor. AC 17. Metal strips on a leather backing. Str 15 required. Disadvantage on Stealth.",
-    plate: "Heavy armor. AC 18. Full suit of interlocking metal plates. Str 15 required. Disadvantage on Stealth.",
-    shield: "Shield. +2 AC. Wooden or metal shield strapped to your arm.",
+    leather: "Light armor. Flexible protection made from boiled and hardened leather. AC 11 + Dex modifier.",
+    studded: "Light armor. Leather reinforced with metal studs. AC 12 + Dex modifier.",
+    hide: "Medium armor. Crude armor from thick furs and pelts. AC 12 + Dex modifier (max 2).",
+    chainShirt: "Medium armor. Made of interlocking metal rings. AC 13 + Dex modifier (max 2).",
+    scaleMail: "Medium armor. Coat of leather with overlapping metal pieces. AC 14 + Dex modifier (max 2). Disadvantage on Stealth.",
+    breastplate: "Medium armor. Fitted metal chest piece. AC 14 + Dex modifier (max 2).",
+    halfPlate: "Medium armor. Separate armor pieces covering most of the body. AC 15 + Dex modifier (max 2). Disadvantage on Stealth.",
+    ringMail: "Heavy armor. Leather armor with heavy rings sewn on. AC 14. Disadvantage on Stealth.",
+    chainMail: "Heavy armor. Interlocking metal rings covering the body. AC 16. Str 13 required. Disadvantage on Stealth.",
+    splint: "Heavy armor. Narrow vertical metal strips riveted to backing. AC 17. Str 15 required. Disadvantage on Stealth.",
+    plate: "Heavy armor. Interlocking metal plates covering the entire body. AC 18. Str 15 required. Disadvantage on Stealth.",
+    shield: "Add +2 to AC. Must be wielded in one hand.",
     
-    // Adventuring gear
-    backpack: "A leather pack for carrying supplies (1 cubic foot / 30 pounds).",
-    bedroll: "A warm blanket and padding for sleeping on the ground.",
-    rope: "50 feet of hempen rope. Useful for climbing, binding, or makeshift solutions.",
-    torches: "10 wooden sticks with oil-soaked wrappings. Each burns for 1 hour, providing bright light in 20-foot radius.",
-    rations: "10 days of dried food (meat, fruit, hardtack). Each day's ration weighs 2 pounds.",
-    waterskin: "A leather container holding 4 pints of liquid.",
-    tinderbox: "Flint, fire steel, and tinder for starting fires.",
-    healersKit: "10 uses. Bandages, salves, and splints for stabilizing dying creatures.",
-    componentsPouch: "A belt pouch with compartments for holding spell components.",
-    arcane Focus: "A special item (orb, staff, wand, etc.) used to channel magical energy.",
-    holySymbol: "A sacred representation of your deity used as a spellcasting focus.",
-    spellbook: "A leather-bound tome with 100 blank pages for recording wizard spells.",
-    thievesTools: "Lockpicks, small files, and other tools for disabling traps and picking locks.",
-    musicalInstrument: "An instrument you're proficient with for performances.",
+    // Tools
+    thievesTools: "Picks, files, and small tools for disabling traps and picking locks. Proficiency allows adding proficiency bonus to checks.",
+    artisanTools: "Specialized tools for crafting items (blacksmith's, carpenter's, etc.). Proficiency allows adding proficiency bonus to checks.",
+    musicalInstrument: "An instrument (lute, flute, drum, etc.). Proficiency allows adding proficiency bonus to Performance checks.",
     
-    // Other common items
-    potion: "A magical liquid that produces an effect when consumed.",
-    goldPieces: "The standard currency in most D&D worlds. 1 gp = 10 silver pieces = 100 copper pieces."
+    // Packs
+    explorersPack: "Includes backpack, bedroll, mess kit, tinderbox, 10 torches, 10 days rations, waterskin, 50 ft rope.",
+    dungeoneersPack: "Includes backpack, crowbar, hammer, 10 pitons, 10 torches, tinderbox, 10 days rations, waterskin, 50 ft rope.",
+    priestsPack: "Includes backpack, blanket, 10 candles, tinderbox, alms box, incense, censer, vestments, 2 days rations, waterskin.",
+    scholarsPack: "Includes backpack, book of lore, ink, ink pen, 10 parchment sheets, small bag of sand, small knife.",
+    diplomatsPack: "Includes chest, 2 cases for maps/scrolls, fine clothes, ink, 5 ink sheets, lamp, 2 oil flasks, 5 paper sheets, perfume, sealing wax, soap."
   }
 
-  // Render ability scores section
-  const renderAbilityScores = () => {
-    const abilities = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
-    
-    return (
-      <div className="ability-scores-grid">
-        {abilities.map((ability) => {
-          const score = character.abilities?.[ability] || 10
-          const modifier = getAbilityModifier(score)
-          
-          return (
-            <div key={ability} className="ability-score-box">
-              <div className="ability-name">{ability.toUpperCase().substring(0, 3)}</div>
-              <div className="ability-modifier">{modifier}</div>
-              <div className="ability-score">{score}</div>
-            </div>
-          )
-        })}
-      </div>
-    )
+  // Get ability scores with defensive checks
+  const abilities = character.abilities || {}
+  const str = abilities.strength || 10
+  const dex = abilities.dexterity || 10
+  const con = abilities.constitution || 10
+  const int = abilities.intelligence || 10
+  const wis = abilities.wisdom || 10
+  const cha = abilities.charisma || 10
+
+  // Calculate skill modifiers
+  const skillAbilities = {
+    acrobatics: dex,
+    animalHandling: wis,
+    arcana: int,
+    athletics: str,
+    deception: cha,
+    history: int,
+    insight: wis,
+    intimidation: cha,
+    investigation: int,
+    medicine: wis,
+    nature: int,
+    perception: wis,
+    performance: cha,
+    persuasion: cha,
+    religion: int,
+    sleightOfHand: dex,
+    stealth: dex,
+    survival: wis
   }
 
-  // Render skills section
-  const renderSkills = () => {
-    const skillAbilityMap = {
-      acrobatics: 'dexterity',
-      animalHandling: 'wisdom',
-      arcana: 'intelligence',
-      athletics: 'strength',
-      deception: 'charisma',
-      history: 'intelligence',
-      insight: 'wisdom',
-      intimidation: 'charisma',
-      investigation: 'intelligence',
-      medicine: 'wisdom',
-      nature: 'intelligence',
-      perception: 'wisdom',
-      performance: 'charisma',
-      persuasion: 'charisma',
-      religion: 'intelligence',
-      sleightOfHand: 'dexterity',
-      stealth: 'dexterity',
-      survival: 'wisdom'
+  const getSkillModifier = (skill) => {
+    const abilityScore = skillAbilities[skill]
+    const mod = getAbilityModifierNum(abilityScore)
+    const proficient = character.skills?.includes(skill)
+    const total = proficient ? mod + getProficiencyBonus() : mod
+    return total >= 0 ? `+${total}` : `${total}`
+  }
+
+  const isProficient = (skill) => character.skills?.includes(skill)
+
+  // Calculate saving throw modifiers
+  const getSavingThrowModifier = (ability) => {
+    let abilityScore
+    switch(ability) {
+      case 'strength': abilityScore = str; break
+      case 'dexterity': abilityScore = dex; break
+      case 'constitution': abilityScore = con; break
+      case 'intelligence': abilityScore = int; break
+      case 'wisdom': abilityScore = wis; break
+      case 'charisma': abilityScore = cha; break
+      default: abilityScore = 10
     }
-
-    return (
-      <div className="skills-list">
-        {Object.keys(skillAbilityMap).map((skill) => {
-          const ability = skillAbilityMap[skill]
-          const abilityScore = character.abilities?.[ability] || 10
-          const abilityMod = getAbilityModifierNum(abilityScore)
-          const isProficient = character.skills?.includes(skill)
-          const profBonus = isProficient ? getProficiencyBonus() : 0
-          const totalBonus = abilityMod + profBonus
-          const bonusStr = totalBonus >= 0 ? `+${totalBonus}` : `${totalBonus}`
-
-          const skillName = skill.replace(/([A-Z])/g, ' $1').trim()
-          const capitalizedSkillName = skillName.charAt(0).toUpperCase() + skillName.slice(1)
-          const description = SKILL_DESCRIPTIONS[skill] || ""
-
-          return (
-            <div 
-              key={skill} 
-              className={`skill-item ${isProficient ? 'proficient' : ''}`}
-              title={description}
-            >
-              <div className="skill-checkbox">
-                {isProficient && <span className="proficiency-dot">●</span>}
-              </div>
-              <div className="skill-bonus">{bonusStr}</div>
-              <div className="skill-name">
-                {capitalizedSkillName}
-                <span className="skill-ability"> ({ability.substring(0, 3)})</span>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-    )
+    
+    const mod = getAbilityModifierNum(abilityScore)
+    const proficient = classData?.savingThrows?.includes(ability)
+    const total = proficient ? mod + getProficiencyBonus() : mod
+    return total >= 0 ? `+${total}` : `${total}`
   }
 
-  // Render saving throws section
-  const renderSavingThrows = () => {
-    const abilities = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma']
-    
-    return (
-      <div className="saving-throws-list">
-        {abilities.map((ability) => {
-          const score = character.abilities?.[ability] || 10
-          const abilityMod = getAbilityModifierNum(score)
-          const isProficient = classData?.savingThrows?.includes(ability)
-          const profBonus = isProficient ? getProficiencyBonus() : 0
-          const totalBonus = abilityMod + profBonus
-          const bonusStr = totalBonus >= 0 ? `+${totalBonus}` : `${totalBonus}`
-
-          return (
-            <div key={ability} className={`saving-throw-item ${isProficient ? 'proficient' : ''}`}>
-              <div className="saving-throw-checkbox">
-                {isProficient && <span className="proficiency-dot">●</span>}
-              </div>
-              <div className="saving-throw-bonus">{bonusStr}</div>
-              <div className="saving-throw-name">{ability.charAt(0).toUpperCase() + ability.slice(1)}</div>
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  // Render features and traits
-  const renderFeaturesAndTraits = () => {
-    return (
-      <div className="features-traits-section">
-        {/* Race traits */}
-        {raceData?.traits && (
-          <div className="trait-category">
-            <h4>Racial Traits</h4>
-            {Array.isArray(raceData.traits) 
-              ? raceData.traits.map((trait, index) => (
-                  <div key={index} className="trait-item">
-                    <strong>{trait.name}:</strong> {trait.description}
-                  </div>
-                ))
-              : <div className="trait-item">{raceData.traits}</div>
-            }
-          </div>
-        )}
-
-        {/* Class features */}
-        {classData?.features && (
-          <div className="trait-category">
-            <h4>Class Features (Level 1)</h4>
-            {classData.features.map((feature, index) => (
-              <div key={index} className="trait-item">
-                <strong>{feature.name}:</strong> {feature.description}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    )
-  }
-
-  // Render equipment section
-  const renderEquipment = () => {
-    if (!character.equipment || character.equipment.length === 0) {
-      return <p className="no-equipment">No equipment selected</p>
-    }
-
-    return (
-      <div className="equipment-list">
-        {character.equipment.map((item, index) => {
-          // Convert display name to key (e.g., "Leather Armor" -> "leather")
-          const itemKey = item.toLowerCase().replace(/[^a-z]/g, '')
-          const description = EQUIPMENT_DESCRIPTIONS[itemKey] || "Standard adventuring equipment."
-          
-          return (
-            <div key={index} className="equipment-item" title={description}>
-              <span className="equipment-bullet">•</span>
-              <span className="equipment-name">{item}</span>
-            </div>
-          )
-        })}
-      </div>
-    )
-  }
-
-  // Calculate AC
-  const calculateAC = () => {
-    let baseAC = 10
-    const dexMod = getAbilityModifierNum(character.abilities?.dexterity || 10)
-    
-    // Check for armor
-    const hasLeather = character.equipment?.some(item => item.toLowerCase().includes('leather') && !item.toLowerCase().includes('studded'))
-    const hasStuddedLeather = character.equipment?.some(item => item.toLowerCase().includes('studded leather'))
-    const hasChainShirt = character.equipment?.some(item => item.toLowerCase().includes('chain shirt'))
-    const hasScaleMail = character.equipment?.some(item => item.toLowerCase().includes('scale mail'))
-    const hasBreastplate = character.equipment?.some(item => item.toLowerCase().includes('breastplate'))
-    const hasHalfPlate = character.equipment?.some(item => item.toLowerCase().includes('half plate'))
-    const hasRingMail = character.equipment?.some(item => item.toLowerCase().includes('ring mail'))
-    const hasChainMail = character.equipment?.some(item => item.toLowerCase().includes('chain mail'))
-    const hasSplint = character.equipment?.some(item => item.toLowerCase().includes('splint'))
-    const hasPlate = character.equipment?.some(item => item.toLowerCase().includes('plate') && !item.toLowerCase().includes('half'))
-    const hasShield = character.equipment?.some(item => item.toLowerCase().includes('shield'))
-    
-    if (hasPlate) baseAC = 18
-    else if (hasSplint) baseAC = 17
-    else if (hasChainMail) baseAC = 16
-    else if (hasHalfPlate) baseAC = 15 + Math.min(dexMod, 2)
-    else if (hasBreastplate) baseAC = 14 + Math.min(dexMod, 2)
-    else if (hasScaleMail) baseAC = 14 + Math.min(dexMod, 2)
-    else if (hasRingMail) baseAC = 14
-    else if (hasChainShirt) baseAC = 13 + Math.min(dexMod, 2)
-    else if (hasStuddedLeather) baseAC = 12 + dexMod
-    else if (hasLeather) baseAC = 11 + dexMod
-    else baseAC = 10 + dexMod // No armor
-    
-    if (hasShield) baseAC += 2
-    
-    return baseAC
-  }
+  const isSaveProficient = (ability) => classData?.savingThrows?.includes(ability)
 
   // Calculate HP
-  const calculateHP = () => {
-    if (!classData) return 0
-    const conMod = getAbilityModifierNum(character.abilities?.constitution || 10)
-    return classData.hitDie + conMod
+  const hitDice = classData?.hitDice || 8
+  const hp = hitDice + getAbilityModifierNum(con)
+
+  // Calculate AC
+  let ac = 10 + getAbilityModifierNum(dex)
+  if (character.armor) {
+    // Simplified AC calculation - would need full armor data for complete implementation
+    if (character.armor.includes('leather')) ac = 11 + getAbilityModifierNum(dex)
+    if (character.armor.includes('studded')) ac = 12 + getAbilityModifierNum(dex)
+    if (character.armor.includes('hide')) ac = 12 + Math.min(getAbilityModifierNum(dex), 2)
+    if (character.armor.includes('chainShirt')) ac = 13 + Math.min(getAbilityModifierNum(dex), 2)
+    if (character.armor.includes('scaleMail')) ac = 14 + Math.min(getAbilityModifierNum(dex), 2)
+    if (character.armor.includes('breastplate')) ac = 14 + Math.min(getAbilityModifierNum(dex), 2)
+    if (character.armor.includes('halfPlate')) ac = 15 + Math.min(getAbilityModifierNum(dex), 2)
+    if (character.armor.includes('ringMail')) ac = 14
+    if (character.armor.includes('chainMail')) ac = 16
+    if (character.armor.includes('splint')) ac = 17
+    if (character.armor.includes('plate')) ac = 18
+  }
+  if (character.equipment?.includes('shield')) ac += 2
+
+  // Format equipment names
+  const formatEquipmentName = (item) => {
+    return item
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .trim()
+  }
+
+  // Get equipment description
+  const getEquipmentDescription = (item) => {
+    return EQUIPMENT_DESCRIPTIONS[item] || "Standard adventuring equipment."
   }
 
   return (
     <div className="character-sheet">
-      {/* Header Section */}
       <div className="sheet-header">
-        <div className="character-name-section">
-          <h1 className="character-name">{character.name || 'Unnamed Character'}</h1>
-          <div className="character-details">
-            <span className="detail-item">{character.race || 'Unknown Race'}</span>
-            <span className="detail-separator">•</span>
-            <span className="detail-item">{character.class || 'Unknown Class'}</span>
-            <span className="detail-separator">•</span>
-            <span className="detail-item">Level 1</span>
+        <h1>{character.name || 'Unnamed Character'}</h1>
+        <p className="subtitle">
+          Level 1 {raceData?.name || character.race} {classData?.name || character.class}
+        </p>
+      </div>
+
+      <div className="sheet-grid">
+        {/* Ability Scores */}
+        <section className="ability-scores">
+          <h2>Ability Scores</h2>
+          <div className="abilities-grid">
+            <div className="ability-box">
+              <div className="ability-name">STR</div>
+              <div className="ability-modifier">{getAbilityModifier(str)}</div>
+              <div className="ability-score">{str}</div>
+            </div>
+            <div className="ability-box">
+              <div className="ability-name">DEX</div>
+              <div className="ability-modifier">{getAbilityModifier(dex)}</div>
+              <div className="ability-score">{dex}</div>
+            </div>
+            <div className="ability-box">
+              <div className="ability-name">CON</div>
+              <div className="ability-modifier">{getAbilityModifier(con)}</div>
+              <div className="ability-score">{con}</div>
+            </div>
+            <div className="ability-box">
+              <div className="ability-name">INT</div>
+              <div className="ability-modifier">{getAbilityModifier(int)}</div>
+              <div className="ability-score">{int}</div>
+            </div>
+            <div className="ability-box">
+              <div className="ability-name">WIS</div>
+              <div className="ability-modifier">{getAbilityModifier(wis)}</div>
+              <div className="ability-score">{wis}</div>
+            </div>
+            <div className="ability-box">
+              <div className="ability-name">CHA</div>
+              <div className="ability-modifier">{getAbilityModifier(cha)}</div>
+              <div className="ability-score">{cha}</div>
+            </div>
           </div>
-        </div>
-        
-        {character.background && (
-          <div className="background-section">
-            <span className="background-label">Background:</span> {character.background}
+        </section>
+
+        {/* Combat Stats */}
+        <section className="combat-stats">
+          <h2>Combat Stats</h2>
+          <div className="stat-group">
+            <div className="stat-box">
+              <div className="stat-label">Armor Class</div>
+              <div className="stat-value">{ac}</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Hit Points</div>
+              <div className="stat-value">{hp}</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Speed</div>
+              <div className="stat-value">{raceData?.speed || 30} ft</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Initiative</div>
+              <div className="stat-value">{getAbilityModifier(dex)}</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Proficiency Bonus</div>
+              <div className="stat-value">+{getProficiencyBonus()}</div>
+            </div>
+            <div className="stat-box">
+              <div className="stat-label">Hit Dice</div>
+              <div className="stat-value">1d{hitDice}</div>
+            </div>
           </div>
+        </section>
+
+        {/* Saving Throws */}
+        <section className="saving-throws">
+          <h2>Saving Throws</h2>
+          <div className="saves-list">
+            {['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'].map(ability => (
+              <div key={ability} className={`save-item ${isSaveProficient(ability) ? 'proficient' : ''}`}>
+                <span className="proficiency-dot">{isSaveProficient(ability) ? '●' : '○'}</span>
+                <span className="save-name">{ability.charAt(0).toUpperCase() + ability.slice(1)}</span>
+                <span className="save-bonus">{getSavingThrowModifier(ability)}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Skills */}
+        <section className="skills">
+          <h2>Skills</h2>
+          <div className="skills-list">
+            {Object.keys(skillAbilities).map(skill => (
+              <div 
+                key={skill} 
+                className={`skill-item ${isProficient(skill) ? 'proficient' : ''}`}
+                title={SKILL_DESCRIPTIONS[skill]}
+              >
+                <span className="proficiency-dot">{isProficient(skill) ? '●' : '○'}</span>
+                <span className="skill-name">
+                  {skill.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                </span>
+                <span className="skill-bonus">{getSkillModifier(skill)}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Features & Traits */}
+        <section className="features">
+          <h2>Features & Traits</h2>
+          
+          {raceData?.traits && (
+            <div className="trait-group">
+              <h3>Racial Traits</h3>
+              {Array.isArray(raceData.traits) ? (
+                raceData.traits.map((trait, index) => (
+                  <div key={index} className="trait-item">
+                    <strong>{trait.name}:</strong> {trait.description}
+                  </div>
+                ))
+              ) : (
+                <div className="trait-item">{raceData.traits}</div>
+              )}
+            </div>
+          )}
+
+          {classData?.features && (
+            <div className="trait-group">
+              <h3>Class Features</h3>
+              {classData.features[1]?.map((feature, index) => (
+                <div key={index} className="trait-item">
+                  <strong>{feature.name}:</strong> {feature.description}
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Equipment */}
+        <section className="equipment">
+          <h2>Equipment</h2>
+          
+          {character.weapons && character.weapons.length > 0 && (
+            <div className="equipment-group">
+              <h3>Weapons</h3>
+              <ul>
+                {character.weapons.map((weapon, index) => (
+                  <li key={index} title={getEquipmentDescription(weapon)}>
+                    {formatEquipmentName(weapon)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {character.armor && character.armor.length > 0 && (
+            <div className="equipment-group">
+              <h3>Armor</h3>
+              <ul>
+                {character.armor.map((armor, index) => (
+                  <li key={index} title={getEquipmentDescription(armor)}>
+                    {formatEquipmentName(armor)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {character.equipment && character.equipment.length > 0 && (
+            <div className="equipment-group">
+              <h3>Other Equipment</h3>
+              <ul>
+                {character.equipment.map((item, index) => (
+                  <li key={index} title={getEquipmentDescription(item)}>
+                    {formatEquipmentName(item)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+
+        {/* Spellcasting */}
+        {classData?.spellcasting && (
+          <section className="spellcasting">
+            <h2>Spellcasting</h2>
+            <div className="spellcasting-info">
+              <div className="stat-box">
+                <div className="stat-label">Spellcasting Ability</div>
+                <div className="stat-value">{classData.spellcasting.ability.toUpperCase()}</div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-label">Spell Save DC</div>
+                <div className="stat-value">
+                  {8 + getProficiencyBonus() + getAbilityModifierNum(
+                    classData.spellcasting.ability === 'intelligence' ? int :
+                    classData.spellcasting.ability === 'wisdom' ? wis :
+                    classData.spellcasting.ability === 'charisma' ? cha : 10
+                  )}
+                </div>
+              </div>
+              <div className="stat-box">
+                <div className="stat-label">Spell Attack Bonus</div>
+                <div className="stat-value">
+                  +{getProficiencyBonus() + getAbilityModifierNum(
+                    classData.spellcasting.ability === 'intelligence' ? int :
+                    classData.spellcasting.ability === 'wisdom' ? wis :
+                    classData.spellcasting.ability === 'charisma' ? cha : 10
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {character.spells && character.spells.length > 0 && (
+              <div className="spells-known">
+                <h3>Spells Known</h3>
+                <ul>
+                  {character.spells.map((spell, index) => (
+                    <li key={index}>{spell}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
         )}
-      </div>
-
-      {/* Main Stats Row */}
-      <div className="main-stats-row">
-        <div className="stat-box">
-          <div className="stat-value">{calculateAC()}</div>
-          <div className="stat-label">Armor Class</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-value">{calculateHP()}</div>
-          <div className="stat-label">Hit Points</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-value">30 ft</div>
-          <div className="stat-label">Speed</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-value">+{getProficiencyBonus()}</div>
-          <div className="stat-label">Proficiency</div>
-        </div>
-      </div>
-
-      {/* Two Column Layout */}
-      <div className="sheet-columns">
-        {/* Left Column */}
-        <div className="left-column">
-          {/* Ability Scores */}
-          <div className="sheet-section">
-            <h3 className="section-title">Ability Scores</h3>
-            {renderAbilityScores()}
-          </div>
-
-          {/* Saving Throws */}
-          <div className="sheet-section">
-            <h3 className="section-title">Saving Throws</h3>
-            {renderSavingThrows()}
-          </div>
-
-          {/* Skills */}
-          <div className="sheet-section">
-            <h3 className="section-title">Skills</h3>
-            {renderSkills()}
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="right-column">
-          {/* Equipment */}
-          <div className="sheet-section">
-            <h3 className="section-title">Equipment</h3>
-            {renderEquipment()}
-          </div>
-
-          {/* Features and Traits */}
-          <div className="sheet-section">
-            <h3 className="section-title">Features & Traits</h3>
-            {renderFeaturesAndTraits()}
-          </div>
-        </div>
       </div>
     </div>
   )
