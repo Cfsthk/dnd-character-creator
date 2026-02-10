@@ -66,58 +66,82 @@ export function generateAIPrompt(character, options = {}) {
 
 function build3DReferencePrompt(character, classData, language, style) {
   const isZh = language === 'zh' || language === 'zh-TW'
-  
+
   const parts = []
-  
+
   // Character identity
   const identity = isZh
     ? `${character.race || '冒險者'} ${classData.name}`
     : `${character.race || 'adventurer'} ${classData.nameEn || classData.name}`
   parts.push(identity)
-  
-  // 3D modeling reference sheet specification
+
+  // 3D PRINTING SPECIFIC: Three orthographic views
   const viewSpec = isZh
-    ? '角色設定參考圖，四視圖展示（正面、背面、左側面、右側面），T-pose站立姿勢'
-    : 'character reference sheet, turnaround views (front view, back view, left side view, right side view), T-pose standing'
+    ? '3D列印用三視圖，正面視圖、背面視圖、側面視圖'
+    : '3D printing reference sheet, three orthographic views: front view, back view, side view'
   parts.push(viewSpec)
-  
-  // Clean outline style
-  const outlineStyle = isZh
-    ? '乾淨的線條輪廓，清晰的細節，適合3D建模參考'
-    : 'clean outline style, clear line art, detailed for 3D modeling reference'
-  parts.push(outlineStyle)
-  
-  // Equipment description
-  const equipment = buildEquipment(classData, language)
+
+  // 3D PRINTING SPECIFIC: Standing pose for stability
+  const poseSpec = isZh
+    ? '直立站姿，雙腳平放地面，手臂自然垂放身側'
+    : 'standing upright, feet flat on ground, arms naturally at sides'
+  parts.push(poseSpec)
+
+  // 3D PRINTING SPECIFIC: Clear outlines and solid structure
+  const structureSpec = isZh
+    ? '清晰輪廓線，結構扎實，無懸浮部件，所有部位與身體連接'
+    : 'clear outlines, solid structure, no floating parts, all elements connected to body'
+  parts.push(structureSpec)
+
+  // 3D PRINTING SPECIFIC: Thick base for stability
+  const baseSpec = isZh
+    ? '加厚底座，支撐穩定'
+    : 'thick base platform for stability'
+  parts.push(baseSpec)
+
+  // Equipment description - simplified for 3D printing
+  const equipment = buildEquipmentFor3DPrint(classData, language)
   parts.push(equipment)
-  
+
   // Physical appearance
   const appearance = buildAppearance(character, classData, language)
   parts.push(appearance)
-  
-  // White/neutral background for clarity
+
+  // 3D PRINTING SPECIFIC: White background for clarity
   const background = isZh
-    ? '純白背景，無陰影，平面光照'
-    : 'white background, no shadows, flat lighting'
+    ? '純白背景，無陰影，正交投影，平面光照'
+    : 'pure white background, no shadows, orthographic projection, flat even lighting'
   parts.push(background)
-  
-  // Style modifier
+
+  // 3D PRINTING SPECIFIC: Technical illustration style
   const styleModifier = isZh
-    ? '概念藝術風格，技術性插圖'
-    : 'concept art style, technical illustration'
+    ? '技術插圖風格，3D建模參考用，簡潔設計適合列印'
+    : 'technical illustration style, 3D modeling reference, simplified design for printing'
   parts.push(styleModifier)
-  
+
   // Quality tags
   const quality = isZh
-    ? '高品質，專業級別，完整細節展示'
-    : 'high quality, professional grade, full detail showcase'
+    ? '高品質，專業級別，完整細節展示，可列印設計'
+    : 'high quality, professional grade, full detail showcase, printable design'
   parts.push(quality)
-  
+
   return parts.filter(Boolean).join(', ')
 }
 
+function buildEquipmentFor3DPrint(classData, language) {
+  const equipment = classData.visualData.equipment
+  const armor = equipment.armor[0] || ''
+  const weapon = equipment.weapons[0] || ''
+
+  if (language === 'zh' || language === 'zh-TW') {
+    return `簡化裝備適合列印：${armor}，武器與身體相連：${weapon}`
+  }
+
+  return `simplified equipment for printing: ${armor}, weapon connected to body: ${weapon}`
+}
+
 function buildIdentity(character, classData, language) {
-  if (language === 'zh') {
+  if (language === 'zh' || language === 'zh-TW') {
     return `${character.race || '冒險者'} ${classData.name}, ${character.alignment || '中立'}`
   }
   return `${character.race || 'adventurer'} ${classData.nameEn}, ${character.alignment || 'neutral'}`
@@ -125,16 +149,16 @@ function buildIdentity(character, classData, language) {
 
 function buildAppearance(character, classData, language) {
   const visual = classData.visualData.appearance
-  
+
   if (character.details?.appearance) {
     // Use custom description if provided
     return character.details.appearance
   }
 
-  if (language === 'zh') {
+  if (language === 'zh' || language === 'zh-TW') {
     return `${visual.build === 'muscular and athletic build' ? '肌肉發達運動體格' : '精實體格'}, ${visual.posture === 'confident battle-ready stance' ? '自信戰鬥姿態' : '警戒姿態'}`
   }
-  
+
   return `${visual.build}, ${visual.posture}, ${visual.features || ''}`
 }
 
@@ -142,60 +166,60 @@ function buildEquipment(classData, language) {
   const equipment = classData.visualData.equipment
   const armor = equipment.armor[0] || ''
   const weapon = equipment.weapons[0] || ''
-  
-  if (language === 'zh') {
+
+  if (language === 'zh' || language === 'zh-TW') {
     return `裝備: ${armor}, 武器: ${weapon}`
   }
-  
+
   return `wearing ${armor}, wielding ${weapon}`
 }
 
 function buildPose(classData, pose, language) {
   const poses = classData.visualData.poses
-  
+
   if (pose === 'default' && poses.length > 0) {
     return poses[0]
   }
-  
-  if (language === 'zh') {
+
+  if (language === 'zh' || language === 'zh-TW') {
     return '英雄姿態'
   }
-  
+
   return 'heroic pose'
 }
 
 function buildBackground(classData, language) {
   const settings = classData.visualData.atmosphere.setting
   const setting = settings[0] || 'fantasy landscape'
-  
-  if (language === 'zh') {
+
+  if (language === 'zh' || language === 'zh-TW') {
     return `背景: ${setting}`
   }
-  
+
   return `background: ${setting}`
 }
 
 function buildAtmosphere(classData, language) {
   const lighting = classData.visualData.atmosphere.lighting
   const mood = classData.visualData.atmosphere.mood
-  
-  if (language === 'zh') {
+
+  if (language === 'zh' || language === 'zh-TW') {
     return `氛圍: ${mood}`
   }
-  
+
   return `${lighting}, ${mood} atmosphere`
 }
 
 function buildStyle(style, language) {
   const styles = {
-    'fantasy-art': language === 'zh' ? '奇幻藝術風格' : 'fantasy art style',
-    'realistic': language === 'zh' ? '寫實風格' : 'realistic style',
-    'anime': language === 'zh' ? '動漫風格' : 'anime style',
-    'oil-painting': language === 'zh' ? '油畫風格' : 'oil painting style',
-    'digital-art': language === 'zh' ? '數位藝術風格' : 'digital art style',
-    'comic-book': language === 'zh' ? '漫畫風格' : 'comic book style'
+    'fantasy-art': language === 'zh' || language === 'zh-TW' ? '奇幻藝術風格' : 'fantasy art style',
+    'realistic': language === 'zh' || language === 'zh-TW' ? '寫實風格' : 'realistic style',
+    'anime': language === 'zh' || language === 'zh-TW' ? '動漫風格' : 'anime style',
+    'oil-painting': language === 'zh' || language === 'zh-TW' ? '油畫風格' : 'oil painting style',
+    'digital-art': language === 'zh' || language === 'zh-TW' ? '數位藝術風格' : 'digital art style',
+    'comic-book': language === 'zh' || language === 'zh-TW' ? '漫畫風格' : 'comic book style'
   }
-  
+
   return styles[style] || styles['fantasy-art']
 }
 
@@ -205,7 +229,7 @@ function buildStyle(style, language) {
 export function getEquipmentOptions(character) {
   const classData = CLASSES[character.class]
   if (!classData) return { armor: [], weapons: [], accessories: [] }
-  
+
   return {
     armor: classData.visualData.equipment.armor,
     weapons: classData.visualData.equipment.weapons,
@@ -219,7 +243,7 @@ export function getEquipmentOptions(character) {
 export function getPoseOptions(character) {
   const classData = CLASSES[character.class]
   if (!classData) return []
-  
+
   return classData.visualData.poses
 }
 
@@ -229,7 +253,7 @@ export function getPoseOptions(character) {
 export function getBackgroundOptions(character) {
   const classData = CLASSES[character.class]
   if (!classData) return []
-  
+
   return classData.visualData.atmosphere.setting
 }
 
@@ -239,27 +263,30 @@ export function getBackgroundOptions(character) {
 export function generatePromptVariations(character) {
   const styles = ['fantasy-art', 'realistic', 'anime', 'oil-painting']
   const variations = []
-  
+
   styles.forEach(style => {
     const englishPrompt = generateAIPrompt(character, { style, language: 'en' })
     const chinesePrompt = generateAIPrompt(character, { style, language: 'zh' })
-    
+
     variations.push({
       style,
       en: englishPrompt,
       zh: chinesePrompt
     })
   })
-  
+
   return variations
 }
 
 /**
  * Export prompt for various AI image generators
  */
-export function exportPromptForPlatform(character, platform = 'midjourney') {
-  const basePrompt = generateAIPrompt(character, { language: 'en' })
-  
+export function exportPromptForPlatform(character, platform = 'midjourney', options = {}) {
+  const basePrompt = generateAIPrompt(character, { 
+    language: 'en',
+    viewType: options.viewType || 'single-view'
+  })
+
   const platformFormats = {
     'midjourney': {
       prompt: `${basePrompt} --ar 2:3 --v 6`,
@@ -271,7 +298,7 @@ export function exportPromptForPlatform(character, platform = 'midjourney') {
     },
     'stable-diffusion': {
       prompt: basePrompt,
-      negativePrompt: 'low quality, blurry, distorted, ugly, bad anatomy',
+      negativePrompt: 'low quality, blurry, distorted, ugly, bad anatomy, floating parts, disconnected elements',
       instructions: 'Use in Stable Diffusion with negative prompt'
     },
     'leonardo': {
@@ -279,6 +306,6 @@ export function exportPromptForPlatform(character, platform = 'midjourney') {
       instructions: 'Use in Leonardo.AI with Fantasy Art model'
     }
   }
-  
+
   return platformFormats[platform] || platformFormats['midjourney']
 }
