@@ -99,40 +99,32 @@ const CharacterSheet = ({ character }) => {
     return [...new Set(languages)] // Remove duplicates
   }
 
-  // Get subclass features from character data
+  // Get subclass features from the CLASSES data structure
   const getSubclassFeatures = () => {
     if (!character.subclass || !classData) return []
     
-    // Try to load subclass features from data file
     try {
-      const subclassData = require('../data/subclassFeatures.json')
-      const classKey = character.class?.toLowerCase()
-      const subclassKey = character.subclass?.toLowerCase()
+      // Find the subclass in the classData.subclasses array
+      const subclassData = classData.subclasses?.find(
+        sub => sub.name.toLowerCase() === character.subclass.toLowerCase()
+      )
       
-      if (subclassData[classKey] && subclassData[classKey][subclassKey]) {
-        const features = subclassData[classKey][subclassKey]
-        
-        // Add null check before Object.entries to prevent crash
-        if (!features || typeof features !== 'object') {
-          return []
-        }
-        
-        // Return features for level 3 and below
-        return Object.entries(features)
-          .filter(([level]) => parseInt(level) <= 3)
-          .flatMap(([level, levelFeatures]) => 
-            Array.isArray(levelFeatures) ? levelFeatures.map(f => ({
-              level: parseInt(level),
-              name: f.name_zh || f.name,
-              description: f.description_zh || f.description || ''
-            })) : []
-          )
+      if (!subclassData || !subclassData.features) {
+        return []
       }
+      
+      // Return features for level 3 and below
+      return subclassData.features
+        .filter(feature => feature.level <= 3)
+        .map(feature => ({
+          level: feature.level,
+          name: feature.name,
+          description: feature.description || ''
+        }))
     } catch (error) {
-      console.log('Subclass features not found:', error)
+      console.error('Subclass features not found:', error)
+      return []
     }
-    
-    return []
   }
 
   // Skill descriptions in Traditional Chinese
