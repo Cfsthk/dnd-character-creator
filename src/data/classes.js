@@ -28,9 +28,99 @@ export const CLASSES = {
     ],
     
     subclasses: [
-      { name: '戰鬥大師', description: '靈活戰技與戰場控制' },
-      { name: '冠軍', description: '強化基礎攻擊能力' },
-      { name: '魔劍士', description: '結合魔法與劍術' }
+    {
+      name: '戰鬥大師',
+      nameEn: 'Battle Master',
+      description: '靈活戰技與戰場控制',
+      features: [
+      {
+        level: 3,
+        name: '戰鬥優勢',
+        nameEn: 'Combat Superiority',
+        desc: '獲得戰技骰和戰技選項，可用於特殊戰鬥技巧。初始4個d8戰技骰，3個戰技。'
+      },
+      {
+        level: 7,
+        name: '知己知彼',
+        nameEn: 'Know Your Enemy',
+        desc: '觀察1分鐘後，可得知目標的等級、屬性和職業資訊。'
+      },
+      {
+        level: 10,
+        name: '強化戰鬥優勢',
+        nameEn: 'Improved Combat Superiority',
+        desc: '戰技骰升級為d10。'
+      },
+      {
+        level: 15,
+        name: '無情',
+        nameEn: 'Relentless',
+        desc: '先攻擲骰時如果沒有戰技骰，獲得1個戰技骰。'
+      }
+      ]
+    },
+    {
+      name: '冠軍',
+      nameEn: 'Champion',
+      description: '強化基礎攻擊能力',
+      features: [
+      {
+        level: 3,
+        name: '強化重擊',
+        nameEn: 'Improved Critical',
+        desc: '武器攻擊在擲出19或20時造成重擊。'
+      },
+      {
+        level: 7,
+        name: '卓越運動員',
+        nameEn: 'Remarkable Athlete',
+        desc: '在不具熟練的力量、敏捷或體質檢定中，可加上一半熟練加值（向上取整）。跳躍距離增加力量調整值英尺。'
+      },
+      {
+        level: 10,
+        name: '額外戰鬥風格',
+        nameEn: 'Additional Fighting Style',
+        desc: '選擇第二個戰鬥風格。'
+      },
+      {
+        level: 15,
+        name: '高等重擊',
+        nameEn: 'Superior Critical',
+        desc: '武器攻擊在擲出18-20時造成重擊。'
+      }
+      ]
+    },
+    {
+      name: '魔劍士',
+      nameEn: 'Eldritch Knight',
+      description: '結合魔法與劍術',
+      features: [
+      {
+        level: 3,
+        name: '施法',
+        nameEn: 'Spellcasting',
+        desc: '學習法師法術（專注防護和塑能學派）。獲得2個戲法和3個1級法術。使用智力作為施法屬性。'
+      },
+      {
+        level: 3,
+        name: '武器連結',
+        nameEn: 'Weapon Bond',
+        desc: '與最多2把武器建立連結，無法被繳械，可用附贈動作召喚到手中。'
+      },
+      {
+        level: 7,
+        name: '戰爭魔法',
+        nameEn: 'War Magic',
+        desc: '使用動作施展戲法後，可用附贈動作進行一次武器攻擊。'
+      },
+      {
+        level: 10,
+        name: '魔劍士打擊',
+        nameEn: 'Eldritch Strike',
+        desc: '命中生物後，該生物對你下一個法術的豁免檢定有劣勢。'
+      }
+      ]
+    }
     ],
     
     startingEquipment: [
@@ -90,9 +180,99 @@ export const CLASSES = {
     ],
     
     subclasses: [
-      { name: '刺客', description: '致命偷襲與偽裝專家' },
-      { name: '盜賊', description: '敏捷攀爬與快速行動' },
-      { name: '秘法騙徒', description: '結合魔法與詭計' }
+    {
+      name: '刺客',
+      nameEn: 'Assassin',
+      description: '致命偷襲與偽裝專家',
+      features: [
+      {
+        level: 3,
+        name: '額外熟練',
+        nameEn: 'Bonus Proficiencies',
+        desc: '獲得偽裝工具包和投毒工具包的熟練。'
+      },
+      {
+        level: 3,
+        name: '暗殺',
+        nameEn: 'Assassinate',
+        desc: '對尚未在戰鬥中行動的生物擁有優勢。在戰鬥第一輪對驚訝生物的任何命中都是重擊。'
+      },
+      {
+        level: 9,
+        name: '滲透專精',
+        nameEn: 'Infiltration Expertise',
+        desc: '可創造假身份，包括文件、偽裝和背景故事，需7天和25gp準備。'
+      },
+      {
+        level: 13,
+        name: '冒充者',
+        nameEn: 'Impostor',
+        desc: '能完美模仿他人的言行舉止。需觀察目標至少3小時。'
+      }
+      ]
+    },
+    {
+      name: '盜賊',
+      nameEn: 'Thief',
+      description: '敏捷攀爬與快速行動',
+      features: [
+      {
+        level: 3,
+        name: '快手',
+        nameEn: 'Fast Hands',
+        desc: '可使用狡詐行動的附贈動作進行巧手檢定、解除陷阱裝置或開鎖。'
+      },
+      {
+        level: 3,
+        name: '二樓作業',
+        nameEn: 'Second-Story Work',
+        desc: '攀爬不再消耗額外移動力。跳躍距離增加敏捷調整值英尺。'
+      },
+      {
+        level: 9,
+        name: '至高潛行',
+        nameEn: 'Supreme Sneak',
+        desc: '在移動中潛行時，敏捷（潛行）檢定擁有優勢。'
+      },
+      {
+        level: 13,
+        name: '使用魔法裝置',
+        nameEn: 'Use Magic Device',
+        desc: '忽略所有魔法物品的職業、種族和等級使用要求。'
+      }
+      ]
+    },
+    {
+      name: '秘法騙徒',
+      nameEn: 'Arcane Trickster',
+      description: '結合魔法與詭計',
+      features: [
+      {
+        level: 3,
+        name: '施法',
+        nameEn: 'Spellcasting',
+        desc: '學習法師法術（專注幻術和惑控學派）。獲得3個戲法和3個1級法術。使用智力作為施法屬性。'
+      },
+      {
+        level: 3,
+        name: '法師之手戲法',
+        nameEn: 'Mage Hand Legerdemain',
+        desc: '施展法師之手時可使其隱形。可用附贈動作控制它來開鎖、解除陷阱或偷竊物品（巧手檢定）。'
+      },
+      {
+        level: 9,
+        name: '魔法伏擊',
+        nameEn: 'Magical Ambush',
+        desc: '對生物隱藏時施法，該生物對此法術的豁免檢定有劣勢。'
+      },
+      {
+        level: 13,
+        name: '多才多藝騙徒',
+        nameEn: 'Versatile Trickster',
+        desc: '使用法師之手時，可用附贈動作分散注意力，對目標的攻擊擲骰擁有優勢。'
+      }
+      ]
+    }
     ],
     
     startingEquipment: [
@@ -216,9 +396,99 @@ export const CLASSES = {
     ],
     
     subclasses: [
-      { name: '塑能學派', description: '傷害法術專精' },
-      { name: '防護學派', description: '防禦與保護魔法' },
-      { name: '幻術學派', description: '幻象與心靈控制' }
+    {
+      name: '塑能學派',
+      nameEn: 'Evocation',
+      description: '傷害法術專精',
+      features: [
+      {
+        level: 2,
+        name: '塑能學者',
+        nameEn: 'Evocation Savant',
+        desc: '抄寫塑能法術到法術書的時間和花費減半。'
+      },
+      {
+        level: 2,
+        name: '塑形法術',
+        nameEn: 'Sculpt Spells',
+        desc: '施展塑能法術時，可選擇生物數量等於1+法術環階。被選擇的生物自動通過對該法術的豁免，如果會受到一半傷害則不受傷害。'
+      },
+      {
+        level: 6,
+        name: '強效戲法',
+        nameEn: 'Potent Cantrip',
+        desc: '生物成功豁免你的戲法時，仍受到一半傷害（但無其他效果）。'
+      },
+      {
+        level: 10,
+        name: '賦能塑能',
+        nameEn: 'Empowered Evocation',
+        desc: '施展塑能法術造成傷害時，可將你的智力調整值加到一次傷害擲骰上。'
+      }
+      ]
+    },
+    {
+      name: '防護學派',
+      nameEn: 'Abjuration',
+      description: '防禦與保護魔法',
+      features: [
+      {
+        level: 2,
+        name: '防護學者',
+        nameEn: 'Abjuration Savant',
+        desc: '抄寫防護法術到法術書的時間和花費減半。'
+      },
+      {
+        level: 2,
+        name: '奧術守衛',
+        nameEn: 'Arcane Ward',
+        desc: '施展防護法術時，創造魔法守衛吸收傷害。生命值等於法術環階x2+智力調整值。'
+      },
+      {
+        level: 6,
+        name: '預警防護',
+        nameEn: 'Projected Ward',
+        desc: '30英尺內盟友受到傷害時，可用反應讓你的奧術守衛替其吸收傷害。'
+      },
+      {
+        level: 10,
+        name: '強化防護',
+        nameEn: 'Improved Abjuration',
+        desc: '施展防護法術時，可用附贈動作讓法術嘗試解除目標身上的一個法術效果（施法檢定）。'
+      }
+      ]
+    },
+    {
+      name: '幻術學派',
+      nameEn: 'Illusion',
+      description: '幻象與心靈控制',
+      features: [
+      {
+        level: 2,
+        name: '幻術學者',
+        nameEn: 'Illusion Savant',
+        desc: '抄寫幻術法術到法術書的時間和花費減半。'
+      },
+      {
+        level: 2,
+        name: '強化幻術',
+        nameEn: 'Improved Minor Illusion',
+        desc: '學會次級幻影戲法（如已知則學其他戲法）。施展時可同時創造聲音和影像。'
+      },
+      {
+        level: 6,
+        name: '可塑幻象',
+        nameEn: 'Malleable Illusions',
+        desc: '持續時間為1分鐘或更長的幻術法術，可用動作改變其性質。'
+      },
+      {
+        level: 10,
+        name: '虛幻自我',
+        nameEn: 'Illusory Self',
+        desc: '被攻擊時可用反應創造幻象替身，使攻擊自動未中。短休或長休後才能再次使用。'
+      }
+      ]
+    }
     ],
     
     startingEquipment: [
