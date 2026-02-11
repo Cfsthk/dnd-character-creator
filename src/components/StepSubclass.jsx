@@ -49,7 +49,7 @@ const StepSubclass = ({ character, updateCharacter, nextStep, previousStep }) =>
           {classData.name}在3級時可以選擇子職業，定義您的專精方向
         </p>
         <p className="text-sm text-gray-500 mt-2">
-          建議：角色達到3級時再選擇子職業，或現在跳過此步驟
+          建議：角色達到3級時再選擇子職業，或珽在跳過此步驟
         </p>
       </div>
 
@@ -83,81 +83,70 @@ const StepSubclass = ({ character, updateCharacter, nextStep, previousStep }) =>
 
             {subclass.level3Feature && (
               <div className="mt-3 bg-blue-50 p-2 rounded">
-                <p className="text-xs font-semibold text-blue-800">3級特性</p>
-                <p className="text-xs text-blue-700">{subclass.level3Feature}</p>
+                <h5 className="font-semibold text-xs text-blue-900 mb-1">3級特銼</h5>
+                <p className="text-xs text-blue-800">{subclass.level3Feature}</p>
+                {subclass.skills && subclass.skills.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs font-semibold text-blue-900">技能轮顯：</p>
+                    <ul className="list-disc list-inside text-xs text-blue-800">
+                      {subclass.skills.map((skill, idx) => (
+                        <li key={idx}>{skill}</li>
+                      ))}
+                      </ul>
+                  </div>
+                )}
               </div>
             )}
           </div>
         ))}
       </div>
 
-      {/* Navigation */}
-      <div className="flex justify-between max-w-4xl mx-auto">
-        <button onClick={previousStep} className="btn-secondary">上一步</button>
-        <div className="flex gap-2">
-          <button onClick={handleSkip} className="btn-secondary">跳過（稍後選擇）</button>
-          <button onClick={handleNext} className="btn-primary">下一步</button>
-        </div>
-      </div>
-
-      {/* Subclass Detail Modal */}
+      {/* Modal for details */}
       {showModal && (
-        <SubclassModal
-          subclass={classData.subclasses.find(s => s.name === showModal)}
-          className={classData.name}
-          onClose={() => setShowModal(null)}
-        />
-      )}
-    </div>
-  )
-}
-
-const SubclassModal = ({ subclass, className, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-white border-b p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-800">{subclass.name}</h3>
-              <p className="text-gray-600">{className} - {subclass.nameEn}</p>
-            </div>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-2xl">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl max-h-[80vh] overflow-y-auto relative">
+            <button
+              onClick={() => setShowModal(null)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 text-2xl"
+            >
               ×
             </button>
+            {classData.subclasses
+              .filter((s) => s.name === showModal)
+              .map((subclass) => (
+                <div key={subclass.name}>
+                  <h3 className="text-2xl font-bold text-gray-800 mb-2">{subclass.name}</h3>
+                 <p className="text-sm text-gray-600 mb-4">{subclass.nameEn}</p>
+                  <p className="text-gray-700 mb-4">{subclass.detail}</p>
+
+                  {subclass.level3Feature && (
+                    <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                      <h4 className="font-bold text-blue-900 mb-2">3級特銋</h4>
+                      <p className="text-blue-800">{subclass.level3Feature}</p>
+                      {subclass.skills && subclass.skills.length > 0 && (
+                        <div className="mt-3">
+                          <p className="font-semibold text-blue-900 mb-1">抿能辭熫：</p>
+                          <ul className="list-disc list-inside text-blue-800">
+                            {subclass.skills.map((skill, idx) => (
+                              <li key={idx}>{skill}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
         </div>
+      )}
 
-        <div className="p-6 space-y-4">
-          <div>
-            <h4 className="font-bold text-gray-800 mb-2">子職業概述</h4>
-            <p className="text-gray-700">{subclass.description}</p>
-          </div>
-
-          {subclass.level3Feature && (
-            <div>
-              <h4 className="font-bold text-gray-800 mb-2">3級特性</h4>
-              <p className="text-gray-700">{subclass.level3Feature}</p>
-            </div>
-          )}
-
-          {subclass.features && subclass.features.length > 0 && (
-            <div>
-              <h4 className="font-bold text-gray-800 mb-2">核心特性</h4>
-              <ul className="list-disc list-inside text-gray-700 space-y-1">
-                {subclass.features.map((feature, idx) => (
-                  <li key={idx}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {subclass.playstyle && (
-            <div>
-              <h4 className="font-bold text-gray-800 mb-2">遊玩風格</h4>
-              <p className="text-gray-700">{subclass.playstyle}</p>
-            </div>
-          )}
+      {/* Navigation Buttons */}
+      <div className="flex justify-between max-w-4xl mx-auto mt-8">
+        <button onClick={previousStep} className="btn-secondary">返回選擇職業</button>
+        <div className="flex gap-2">
+          <button onClick={handleSkip} className="btn-secondary">讬过此高</button>
+          <button onClick={handleNext} className="btn-primary">績络</button>
         </div>
       </div>
     </div>
