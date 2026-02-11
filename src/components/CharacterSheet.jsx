@@ -119,7 +119,7 @@ const CharacterSheet = ({ character }) => {
         .map(feature => ({
           level: feature.level,
           name: feature.name,
-          description: feature.description || ''
+          desc: feature.desc || ''
         }))
     } catch (error) {
       console.error('Subclass features not found:', error)
@@ -559,9 +559,9 @@ const CharacterSheet = ({ character }) => {
                     </span>
                     <span className="font-semibold">{feature.name}</span>
                   </div>
-                  {feature.description && (
+                  {feature.desc && (
                     <div className="mt-1 pl-10 text-[11px]">
-                      {feature.description}
+                      {feature.desc}
                     </div>
                   )}
                 </div>
