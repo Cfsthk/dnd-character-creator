@@ -289,7 +289,7 @@ const CharacterSheet = ({ character }) => {
           <div className="text-center">
             <div className="text-xs text-gray-600 mb-1">生命值上限</div>
             <div className="text-3xl font-bold">
-              {classData ? parselnt(classData.hitDie.replace('d', ")) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              {classData ? parseInt(classData.hitDie.replace('d', '')) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
           <div className="text-center">
