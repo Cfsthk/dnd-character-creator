@@ -289,7 +289,7 @@ const CharacterSheet = ({ character }) => {
           <div className="text-center">
             <div className="text-xs text-gray-600 mb-1">生命值上限</div>
             <div className="text-3xl font-bold">
-              {classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              {classData ? classData.hit * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
           <div className="text-center">
@@ -297,7 +297,7 @@ const CharacterSheet = ({ character }) => {
             <input
               type="number"
               className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
-              defaultValue={classData ? classData.hitDice * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              defaultValue={classData ? classData.hit * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             />
           </div>
           <div className="text-center">
@@ -311,7 +311,7 @@ const CharacterSheet = ({ character }) => {
         </div>
         <div className="mt-4 text-center">
           <div className="text-xs text-gray-600 mb-1">生命骰</div>
-          <div className="text-xl">3d{classData?.hitDice || 8}</div>
+          <div className="text-xl">3d{classData?.hitDie || 8}</div>
         </div>
       </div>
 
