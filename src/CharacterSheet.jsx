@@ -379,8 +379,8 @@ const CharacterSheet = ({ character }) => {
             <div style={styles.statValue}>{character.hitPoints}</div>
           </div>
           <div style={styles.statBox}>
-            <div style={styles.statLabel}>Hit Dice</div>
-            <div style={styles.statValue}>{character.hitDice}</div>
+            <div style={styles.statLabel}>Hit Die</div>
+            <div style={styles.statValue}>{character.hitDie}</div>
           </div>
           <div style={styles.statBox}>
             <div style={styles.statLabel}>Proficiency Bonus</div>
