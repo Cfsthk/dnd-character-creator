@@ -1,1 +1,178 @@
-aW1wb3J0IHsgdXNlU3RhdGUgfSBmcm9tICdyZWFjdCcKaW1wb3J0IHsgQ0xBU1NFUyB9IGZyb20gJy4uL2RhdGEvY2xhc3NlcycKCmNvbnN0IFN0ZXBTdWJjbGFzcyA9ICh7IGNoYXJhY3RlciwgdXBkYXRlQ2hhcmFjdGVyLCBuZXh0U3RlcCwgcHJldmlvdXNTdGVwIH0pID0+IHsKICBjb25zdCBbc2VsZWN0ZWRTdWJjbGFzcywgc2V0U2VsZWN0ZWRTdWJjbGFzc10gPSB1c2VTdGF0ZShjaGFyYWN0ZXIuc3ViY2xhc3MpCiAgY29uc3QgW3Nob3dNb2RhbCwgc2V0U2hvd01vZGFsXSA9IHVzZVN0YXRlKG51bGwpCgogIC8vIEdldCB0aGUgY3VycmVudCBjbGFzcyBkYXRhCiAgY29uc3QgY2xhc3NEYXRhID0gY2hhcmFjdGVyLmNsYXNzID8gQ0xBU1NFU1tjaGFyYWN0ZXIuY2xhc3NdIDogbnVsbAoKICBjb25zdCBoYW5kbGVTZWxlY3QgPSAoc3ViY2xhc3NOYW1lKSA9PiB7CiAgICBzZXRTZWxlY3RlZFN1YmNsYXNzKHN1YmNsYXNzTmFtZSkKICAgIHVwZGF0ZUNoYXJhY3Rlcih7IHN1YmNsYXNzOiBzdWJjbGFzc05hbWUgfSkKICB9CgogIGNvbnN0IGhhbmRsZU5leHQgPSAoKSA9PiB7CiAgICBpZiAoc2VsZWN0ZWRTdWJjbGFzcykgewogICAgICBuZXh0U3RlcCgpCiAgICB9IGVsc2UgewogICAgICBhbGVydCgn6KuL6YG45pOH5LiA5YCL5a2Q6IG35qWtJykKICAgIH0KICB9CgogIGNvbnN0IGhhbmRsZVNraXAgPSAoKSA9PiB7CiAgICAvLyBBbGxvdyBza2lwcGluZyBpZiBjaGFyYWN0ZXIgbGV2ZWwgaXMgbm90IDMrCiAgICB1cGRhdGVDaGFyYWN0ZXIoeyBzdWJjbGFzczogbnVsbCB9KQogICAgbmV4dFN0ZXAoKQogIH0KCiAgaWYgKCFjbGFzc0RhdGEpIHsKICAgIHJldHVybiAoCiAgICAgIDxkaXYgY2xhc3NOYW1lPSJzcGFjZS15LTYiPgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJ0ZXh0LWNlbnRlciI+CiAgICAgICAgICA8aDIgY2xhc3NOYW1lPSJ0ZXh0LTN4bCBmb250LWJvbGQgdGV4dC1ncmF5LTgwMCBtYi0yIj7oq4vlhYjpgbjmk4fogbfmpa08L2gyPgogICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LWdyYXktNjAwIj7mgqjpnIDopoHlhYjpgbjmk4fogbfmpa3miY3og73pgbjmk4flrZDogbfmpa08L3A+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXgganVzdGlmeS1iZXR3ZWVuIG1heC13LTR4bCBteC1hdXRvIj4KICAgICAgICAgIDxidXR0b24gb25DbGljaz17cHJldmlvdXNTdGVwfSBjbGFzc05hbWU9ImJ0bi1zZWNvbmRhcnkiPui/lOWbnumBuOaTh+iBt+alrTwvYnV0dG9uPgogICAgICAgIDwvZGl2PgogICAgICA8L2Rpdj4KICAgICkKICB9CgogIHJldHVybiAoCiAgICA8ZGl2IGNsYXNzTmFtZT0ic3BhY2UteS02Ij4KICAgICAgPGRpdiBjbGFzc05hbWU9InRleHQtY2VudGVyIj4KICAgICAgICA8aDIgY2xhc3NOYW1lPSJ0ZXh0LTN4bCBmb250LWJvbGQgdGV4dC1ncmF5LTgwMCBtYi0yIj7pgbjmk4fmgqjnmoTlrZDogbfmpa08L2gyPgogICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1ncmF5LTYwMCI+CiAgICAgICAgICB7Y2xhc3NEYXRhLm5hbWV95ZyoM+e0muaZguWPr+S7pemBuOaTh+WtkOiBt+alre+8jOWumue+qeaCqOeahOWwiOeyvuaWueWQkQogICAgICAgIDwvcD4KICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gdGV4dC1ncmF5LTUwMCBtdC0yIj4KICAgICAgICAgIOW7uuitsO+8muinkuiJsumBlOWIsDPntJrmmYLlho3pgbjmk4flrZDogbfmpa3vvIzmiJbnj77lnKjot7PpgY7mraTmraXpqZ8KICAgICAgICA8L3A+CiAgICAgIDwvZGl2PgoKICAgICAgey8qIFN1YmNsYXNzIE9wdGlvbnMgKi99CiAgICAgIDxkaXYgY2xhc3NOYW1lPSJncmlkIGdyaWQtY29scy0xIG1kOmdyaWQtY29scy0yIGxnOmdyaWQtY29scy0zIGdhcC00Ij4KICAgICAgICB7Y2xhc3NEYXRhLnN1YmNsYXNzZXMubWFwKChzdWJjbGFzcykgPT4gKAogICAgICAgICAgPGRpdgogICAgICAgICAgICBrZXk9e3N1YmNsYXNzLm5hbWV9CiAgICAgICAgICAgIG9uQ2xpY2s9eygpID0+IGhhbmRsZVNlbGVjdChzdWJjbGFzcy5uYW1lKX0KICAgICAgICAgICAgY2xhc3NOYW1lPXtgY2FyZC1ob3ZlciBwLTQgJFx7CiAgICAgICAgICAgICAgc2VsZWN0ZWRTdWJjbGFzcyA9PT0gc3ViY2xhc3MubmFtZSA/ICdyaW5nLTQgcmluZy1kbmQtYmx1ZScgOiAnJwogICAgICAgICAgICB9YH0KICAgICAgICAgID4KICAgICAgICAgICAgPGRpdiBjbGFzc05hbWU9ImZsZXggaXRlbXMtc3RhcnQganVzdGlmeS1iZXR3ZWVuIG1iLTIiPgogICAgICAgICAgICAgIDxkaXY+CiAgICAgICAgICAgICAgICA8aDQgY2xhc3NOYW1lPSJmb250LWJvbGQgdGV4dC1sZyB0ZXh0LWdyYXktODAwIj57c3ViY2xhc3MubmFtZX08L2g0PgogICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LXhzIHRleHQtZ3JheS01MDAiPntzdWJjbGFzcy5uYW1lRW59PC9wPgogICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgIDxidXR0b24KICAgICAgICAgICAgICAgIG9uQ2xpY2s9eyhlKSA9PiB7CiAgICAgICAgICAgICAgICAgIGUuc3RvcFByb3BhZ2F0aW9uKCkKICAgICAgICAgICAgICAgICAgc2V0U2hvd01vZGFsKHN1YmNsYXNzLm5hbWUpCiAgICAgICAgICAgICAgICB9fQogICAgICAgICAgICAgICAgY2xhc3NOYW1lPSJ0ZXh0LWRuZC1ibHVlIGhvdmVyOnRleHQtYmx1ZS03MDAgdGV4dC14bCIKICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICDinZMKICAgICAgICAgICAgICA8L2J1dHRvbj4KICAgICAgICAgICAgPC9kaXY+CgogICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtZ3JheS03MDAgdGV4dC1zbSBtdC0yIj57c3ViY2xhc3MuZGVzY3JpcHRpb259PC9wPgoKICAgICAgICAgICAge3N1YmNsYXNzLmZlYXR1cmVzICYmIHN1YmNsYXNzLmZlYXR1cmVzLmxlbmd0aCA+IDAgJiYgKAogICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJtdC0zIHNwYWNlLXktMiI+CiAgICAgICAgICAgICAgICB7c3ViY2xhc3MuZmVhdHVyZXMuZmlsdGVyKGYgPT4gZi5sZXZlbCA9PT0gMykubWFwKChmZWF0dXJlLCBpZHgpID0+ICgKICAgICAgICAgICAgICAgICAgPGRpdiBrZXk9e2lkeH0gY2xhc3NOYW1lPSJiZy1ibHVlLTUwIHAtMiByb3VuZGVkIj4KICAgICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9ImZvbnQtc2VtaWJvbGQgdGV4dC1zbSI+M+e0muiDveWKm++8mjwvcD4KICAgICAgICAgICAgICAgICAgICA8cCBjbGFzc05hbWU9InRleHQtc20gZm9udC1tZWRpdW0iPntmZWF0dXJlLm5hbWV9PC9wPgogICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC14cyB0ZXh0LWdyYXktNjAwIj57ZmVhdHVyZS5uYW1lRW59PC9wPgogICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC14cyBtdC0xIj57ZmVhdHVyZS5kZXNjfTwvcD4KICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICApKX0KICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgKX0KICAgICAgICAgIDwvZGl2PgogICAgICAgICkpfQogICAgICA8L2Rpdj4KCiAgICAgIHsvKiBNb2RhbCAqL30KICAgICAge3Nob3dNb2RhbCAmJiAoCiAgICAgICAgPGRpdgogICAgICAgICAgY2xhc3NOYW1lPSJmaXhlZCBpbnNldC0wIGJnLWJsYWNrIGJnLW9wYWNpdHktNTAgZmxleCBpdGVtcy1jZW50ZXIganVzdGlmeS1jZW50ZXIgei01MCIKICAgICAgICAgIG9uQ2xpY2s9eygpID0+IHNldFNob3dNb2RhbChudWxsKX0KICAgICAgICA+CiAgICAgICAgICA8ZGl2CiAgICAgICAgICAgIG9uQ2xpY2s9eyhlKSA9PiBlLnN0b3BQcm9wYWdhdGlvbigpfQogICAgICAgICAgICBjbGFzc05hbWU9ImJnLXdoaXRlIHAtNiByb3VuZGVkLWxnIG1heC13LTJ4bCBteC00IG1heC1oWzkwdmhdIG92ZXJmbG93LXktYXV0byIKICAgICAgICAgID4KICAgICAgICAgICAgeygoKSA9PiB7CiAgICAgICAgICAgICAgY29uc3Qgc3ViY2xhc3NEYXRhID0gY2xhc3NEYXRhLnN1YmNsYXNzZXMuZmluZCgKICAgICAgICAgICAgICAgIChzKSA9PiBzLm5hbWUgPT09IHNob3dNb2RhbAogICAgICAgICAgICAgICkKICAgICAgICAgICAgICBpZiAoIXN1YmNsYXNzRGF0YSkgcmV0dXJuIG51bGwKCiAgICAgICAgICAgICAgcmV0dXJuICgKICAgICAgICAgICAgICAgIDw+CiAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGp1c3RpZnktYmV0d2VlbiBpdGVtcy1zdGFydCBtYi00Ij4KICAgICAgICAgICAgICAgICAgICA8ZGl2PgogICAgICAgICAgICAgICAgICAgICAgPGgyIGNsYXNzTmFtZT0idGV4dC0yeGwgZm9udC1ib2xkIj57c3ViY2xhc3NEYXRhLm5hbWV9PC9oMj4KICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNTAwIj57c3ViY2xhc3NEYXRhLm5hbWVFbn08L3A+CiAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgPGJ1dHRvbgogICAgICAgICAgICAgICAgICAgICAgb25DbGljaz17KCkgPT4gc2V0U2hvd01vZGFsKG51bGwpfQogICAgICAgICAgICAgICAgICAgICAgY2xhc3NOYW1lPSJ0ZXh0LWdyYXktNTAwIGhvdmVyOnRleHQtZ3JheS03MDAgdGV4dC0yeGwiCiAgICAgICAgICAgICAgICAgICAgPgogICAgICAgICAgICAgICAgICAgICAg4pyWCiAgICAgICAgICAgICAgICAgICAgPC9idXR0b24+CiAgICAgICAgICAgICAgICAgIDwvZGl2PgoKICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LWdyYXktNzAwIG1iLTQiPntzdWJjbGFzc0RhdGEuZGVzY3JpcHRpb259PC9wPgoKICAgICAgICAgICAgICAgICAgey8qIERpc3BsYXkgYWxsIGZlYXR1cmVzIGdyb3VwZWQgYnkgbGV2ZWwgKi99CiAgICAgICAgICAgICAgICAgIHtzdWJjbGFzc0RhdGEuZmVhdHVyZXMgJiYgc3ViY2xhc3NEYXRhLmZlYXR1cmVzLmxlbmd0aCA+IDAgJiYgKAogICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJzcGFjZS15LTQiPgogICAgICAgICAgICAgICAgICAgICAgPGgzIGNsYXNzTmFtZT0iZm9udC1ib2xkIHRleHQtbGcgbWItMiI+5a2Q6IG35qWt6IO95Yqb77yaPC9oMz4KICAgICAgICAgICAgICAgICAgICAgIHtzdWJjbGFzc0RhdGEuZmVhdHVyZXMubWFwKChmZWF0dXJlLCBpZHgpID0+ICgKICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBrZXk9e2lkeH0gY2xhc3NOYW1lPSJib3JkZXItbC00IGJvcmRlci1kbmQtYmx1ZSBwbC00IHB5LTIiPgogICAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPSJmbGV4IGl0ZW1zLWJhc2VsaW5lIGdhcC0yIj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzcGFuIGNsYXNzTmFtZT0iZm9udC1ib2xkIHRleHQtZG5kLWJsdWUiPntmZWF0dXJlLmxldmVsfee0mjwvc3Bhbj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxoNCBjbGFzc05hbWU9ImZvbnQtc2VtaWJvbGQgdGV4dC1sZyI+e2ZlYXR1cmUubmFtZX08L2g0PgogICAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzTmFtZT0idGV4dC1zbSB0ZXh0LWdyYXktNTAwIG1iLTEiPntmZWF0dXJlLm5hbWVFbn08L3A+CiAgICAgICAgICAgICAgICAgICAgICAgICAgPHAgY2xhc3NOYW1lPSJ0ZXh0LWdyYXktNzAwIj57ZmVhdHVyZS5kZXNjfTwvcD4KICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgICApKX0KICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgKX0KCiAgICAgICAgICAgICAgICAgIDxidXR0b24KICAgICAgICAgICAgICAgICAgICBvbkNsaWNrPXsoKSA9PiB7CiAgICAgICAgICAgICAgICAgICAgICBoYW5kbGVTZWxlY3Qoc3ViY2xhc3NEYXRhLm5hbWUpCiAgICAgICAgICAgICAgICAgICAgICBzZXRTaG93TW9kYWwobnVsbCkKICAgICAgICAgICAgICAgICAgICB9fQogICAgICAgICAgICAgICAgICAgIGNsYXNzTmFtZT0id2lkdGgtZnVsbCBidG4tcHJpbWFyeSBtdC00IgogICAgICAgICAgICAgICAgICA+CiAgICAgICAgICAgICAgICAgICAg6YG45pOH5q2k5a2Q6IG35qWtCiAgICAgICAgICAgICAgICAgIDwvYnV0dG9uPgogICAgICAgICAgICAgICAgPC8+CiAgICAgICAgICAgICAgKQogICAgICAgICAgICB9KSgpfQogICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgICl9CgogICAgICB7LyogTmF2aWdhdGlvbiBCdXR0b25zICovfQogICAgICA8ZGl2IGNsYXNzTmFtZT0iZmxleCBqdXN0aWZ5LWJldHdlZW4gbWF4LXctNHhsIG14LWF1dG8iPgogICAgICAgIDxidXR0b24gb25DbGljaz17cHJldmlvdXNTdGVwfSBjbGFzc05hbWU9ImJ0bi1zZWNvbmRhcnkiPui/lOWbnumHjemBuOiBt+alrTwvYnV0dG9uPgogICAgICAgIDxkaXYgY2xhc3NOYW1lPSJzcGFjZS14LTIiPgogICAgICAgICAgPGJ1dHRvbiBvbkNsaWNrPXtoYW5kbGVTa2lwfSBjbGFzc05hbWU9ImJ0bi1zZWNvbmRhcnkiPueVpemBjjwvYnV0dG9uPgogICAgICAgICAgPGJ1dHRvbiBvbkNsaWNrPXtoYW5kbGVOZXh0fSBjbGFzc05hbWU9ImJ0bi1wcmltYXJ5Ij7kuIvkuIDmraU8L2J1dHRvbj4KICAgICAgICA8L2Rpdj4KICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICApCn0KCmV4cG9ydCBkZWZhdWx0IFN0ZXBTdWJjbGFzcwo=
+import { useState } from 'react'
+import { CLASSES } from '../data/classes'
+
+const StepSubclass = ({ character, updateCharacter, nextStep, previousStep }) => {
+  const [selectedSubclass, setSelectedSubclass] = useState(character.subclass)
+  const [showModal, setShowModal] = useState(null)
+
+  // Get the current class data
+  const classData = character.class ? CLASSES[character.class] : null
+
+  const handleSelect = (subclassName) => {
+    setSelectedSubclass(subclassName)
+    updateCharacter({ subclass: subclassName })
+  }
+
+  const handleNext = () => {
+    if (selectedSubclass) {
+      nextStep()
+    } else {
+      alert('請選擇一個子職業')
+    }
+  }
+
+  const handleSkip = () => {
+    // Allow skipping if character level is not 3+
+    updateCharacter({ subclass: null })
+    nextStep()
+  }
+
+  if (!classData) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">請先選擇職業</h2>
+          <p className="text-gray-600">您需要先選擇職業才能選擇子職業</p>
+        </div>
+        <div className="flex justify-between max-w-4xl mx-auto">
+          <button onClick={previousStep} className="btn-secondary">返回選擇職業</button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">選擇您的子職業</h2>
+        <p className="text-gray-600">
+          {classData.name}在3級時可以選擇子職業，定義您的專精方向
+        </p>
+        <p className="text-sm text-gray-500 mt-2">
+          建議：角色達到3級時再選擇子職業，或現在跳過此步驟
+        </p>
+      </div>
+
+      {/* Subclass Options */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {classData.subclasses.map((subclass) => (
+          <div
+            key={subclass.name}
+            onClick={() => handleSelect(subclass.name)}
+            className={`card-hover p-4 ${
+              selectedSubclass === subclass.name ? 'ring-4 ring-dnd-blue' : ''
+            }`}
+          >
+            <div className="flex items-start justify-between mb-2">
+              <div>
+                <h4 className="font-bold text-lg text-gray-800">{subclass.name}</h4>
+                <p className="text-xs text-gray-500">{subclass.nameEn}</p>
+              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setShowModal(subclass.name)
+                }}
+                className="text-dnd-blue hover:text-blue-700 text-xl"
+              >
+                ❓
+              </button>
+            </div>
+
+            <p className="text-gray-700 text-sm mt-2">{subclass.description}</p>
+
+            {subclass.features && subclass.features.length > 0 && (
+              <div className="mt-3 space-y-2">
+                {subclass.features.filter(f => f.level === 3).map((feature, idx) => (
+                  <div key={idx} className="bg-blue-50 p-2 rounded">
+                    <p className="font-semibold text-sm">3級能力：</p>
+                    <p className="text-sm font-medium">{feature.name}</p>
+                    <p className="text-xs text-gray-600">{feature.nameEn}</p>
+                    <p className="text-xs mt-1">{feature.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setShowModal(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white p-6 rounded-lg max-w-2xl mx-4 max-h[90vh] overflow-y-auto"
+          >
+            {(() => {
+              const subclassData = classData.subclasses.find(
+                (s) => s.name === showModal
+              )
+              if (!subclassData) return null
+
+              return (
+                <>
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h2 className="text-2xl font-bold">{subclassData.name}</h2>
+                      <p className="text-sm text-gray-500">{subclassData.nameEn}</p>
+                    </div>
+                    <button
+                      onClick={() => setShowModal(null)}
+                      className="text-gray-500 hover:text-gray-700 text-2xl"
+                    >
+                      ✖
+                    </button>
+                  </div>
+
+                  <p className="text-gray-700 mb-4">{subclassData.description}</p>
+
+                  {/* Display all features grouped by level */}
+                  {subclassData.features && subclassData.features.length > 0 && (
+                    <div className="space-y-4">
+                      <h3 className="font-bold text-lg mb-2">子職業能力：</h3>
+                      {subclassData.features.map((feature, idx) => (
+                        <div key={idx} className="border-l-4 border-dnd-blue pl-4 py-2">
+                          <div className="flex items-baseline gap-2">
+                            <span className="font-bold text-dnd-blue">{feature.level}級</span>
+                            <h4 className="font-semibold text-lg">{feature.name}</h4>
+                          </div>
+                          <p className="text-sm text-gray-500 mb-1">{feature.nameEn}</p>
+                          <p className="text-gray-700">{feature.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      handleSelect(subclassData.name)
+                      setShowModal(null)
+                    }}
+                    className="width-full btn-primary mt-4"
+                  >
+                    選擇此子職業
+                  </button>
+                </>
+              )
+            })()}
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Buttons */}
+      <div className="flex justify-between max-w-4xl mx-auto">
+        <button onClick={previousStep} className="btn-secondary">返回重選職業</button>
+        <div className="space-x-2">
+          <button onClick={handleSkip} className="btn-secondary">略過</button>
+          <button onClick={handleNext} className="btn-primary">下一步</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default StepSubclass
