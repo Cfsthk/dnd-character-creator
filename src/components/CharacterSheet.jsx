@@ -54,6 +54,81 @@ const CharacterSheet = ({ character }) => {
   const classData = character.class ? CLASSES[character.class] : null
   const raceData = character.race ? races[character.race] : null
 
+  // Language mapping by race (based on D&D 5e Player's Handbook)
+  const RACE_LANGUAGES = {
+    'human': ['通用語 (Common)'],
+    'elf': ['通用語 (Common)', '精靈語 (Elvish)'],
+    'dwarf': ['通用語 (Common)', '矮人語 (Dwarvish)'],
+    'halfling': ['通用語 (Common)', '半身人語 (Halfling)'],
+    'dragonborn': ['通用語 (Common)', '龍語 (Draconic)'],
+    'gnome': ['通用語 (Common)', '侏儒語 (Gnomish)'],
+    'half-elf': ['通用語 (Common)', '精靈語 (Elvish)'],
+    'half-orc': ['通用語 (Common)', '獸人語 (Orc)'],
+    'tiefling': ['通用語 (Common)', '煉獄語 (Infernal)']
+  }
+
+  // Additional languages by class (some classes get bonus languages)
+  const CLASS_BONUS_LANGUAGES = {
+    'cleric': [], // Clerics may know additional languages based on deity
+    'druid': ['德魯伊語 (Druidic)'], // Druids get Druidic
+    'rogue': [], // Rogues with Assassin subclass get bonus language via background
+    'monk': [] // Monks don't get automatic language bonuses
+  }
+
+  // Get character's languages
+  const getCharacterLanguages = () => {
+    const languages = []
+    
+    // Add racial languages
+    const raceKey = character.race?.toLowerCase()
+    if (raceKey && RACE_LANGUAGES[raceKey]) {
+      languages.push(...RACE_LANGUAGES[raceKey])
+    }
+    
+    // Add class bonus languages
+    const classKey = character.class?.toLowerCase()
+    if (classKey && CLASS_BONUS_LANGUAGES[classKey]) {
+      languages.push(...CLASS_BONUS_LANGUAGES[classKey])
+    }
+    
+    // Add background language (most backgrounds grant 1-2 additional languages)
+    if (character.background) {
+      languages.push('背景語言 (Background Language)')
+    }
+    
+    return [...new Set(languages)] // Remove duplicates
+  }
+
+  // Get subclass features from character data
+  const getSubclassFeatures = () => {
+    if (!character.subclass || !classData) return []
+    
+    // Try to load subclass features from data file
+    try {
+      const subclassData = require('../data/subclassFeatures.json')
+      const classKey = character.class?.toLowerCase()
+      const subclassKey = character.subclass?.toLowerCase()
+      
+      if (subclassData[classKey] && subclassData[classKey][subclassKey]) {
+        const features = subclassData[classKey][subclassKey]
+        // Return features for level 3 and below
+        return Object.entries(features)
+          .filter(([level]) => parseInt(level) <= 3)
+          .flatMap(([level, levelFeatures]) => 
+            levelFeatures.map(f => ({
+              level: parseInt(level),
+              name: f.name_zh || f.name,
+              description: f.description_zh || f.description || ''
+            }))
+          )
+      }
+    } catch (error) {
+      console.log('Subclass features not found:', error)
+    }
+    
+    return []
+  }
+
   // Skill descriptions in Traditional Chinese
   const SKILL_DESCRIPTIONS = {
     acrobatics: "平衡、翻滾、空中特技和在困難地形上保持直立。",
@@ -108,6 +183,9 @@ const CharacterSheet = ({ character }) => {
     return num >= 0 ? `+${num}` : `${num}`
   }
 
+  const characterLanguages = getCharacterLanguages()
+  const subclassFeatures = getSubclassFeatures()
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-[#f4e4c1] min-h-screen" ref={sheetRef}>
       {/* Export Button */}
@@ -132,13 +210,14 @@ const CharacterSheet = ({ character }) => {
           <div>
             <label className="text-xs text-gray-600">職業與等級</label>
             <div className="text-xl border-b-2 border-[#8b4513]">
-              {classData?.name_zh || character.class} 3級
+              {classData?.name.zhTW || character.class} 3級
+              {character.subclass && ` (${character.subclass})`}
             </div>
           </div>
           <div>
             <label className="text-xs text-gray-600">種族</label>
             <div className="text-xl border-b-2 border-[#8b4513]">
-              {raceData?.name || character.race}
+              {raceData?.name.zhTW || character.race}
             </div>
           </div>
         </div>
@@ -252,7 +331,7 @@ const CharacterSheet = ({ character }) => {
                     />
                     <span className="w-8 font-semibold">{formatModifier(modifier)}</span>
                     <span className="font-semibold">{skill.name}</span>
-                    <span className="text-gray-600 ml-2">
+                    <span className="text-gray-600 ml-2 text-[10px]">
                       {SKILL_DESCRIPTIONS[skill.key]}
                     </span>
                   </div>
@@ -297,7 +376,7 @@ const CharacterSheet = ({ character }) => {
             <input
               type="number"
               className="w-full text-center text-2xl border-2 border-[#8b4513] rounded bg-white"
-              defaultValue={classData ? classData.hit * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              defaultValue={classData ? parseInt(classData.hitDie.replace('d', '')) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             />
           </div>
           <div className="text-center">
@@ -311,7 +390,7 @@ const CharacterSheet = ({ character }) => {
         </div>
         <div className="mt-4 text-center">
           <div className="text-xs text-gray-600 mb-1">生命骰</div>
-          <div className="text-xl">3{classData?.hitDie || 8}</div>
+          <div className="text-xl">3{classData?.hitDie || 'd8'}</div>
         </div>
       </div>
 
@@ -328,10 +407,9 @@ const CharacterSheet = ({ character }) => {
           </thead>
           <tbody>
             {(() => {
-              // Import equipment data to get weapon details
               const classKey = character.class?.toLowerCase();
               const classEquipment = equipmentByClass[classKey];
-              
+
               if (!classEquipment || !character.equipment) {
                 return (
                   <tr>
@@ -340,14 +418,10 @@ const CharacterSheet = ({ character }) => {
                 );
               }
 
-              // Get all weapons for this class
               const allWeapons = classEquipment.weapons || [];
-              
-              // Find weapons in character's equipment
               const characterWeapons = character.equipment
                 .map(equipItem => {
-                  // Try to match equipment item with weapon data
-                  const weapon = allWeapons.find(w => 
+                  const weapon = allWeapons.find(w =>
                     equipItem.includes(w.name) || w.name.includes(equipItem)
                   );
                   return weapon ? { ...weapon, equipName: equipItem } : null;
@@ -362,12 +436,10 @@ const CharacterSheet = ({ character }) => {
                 );
               }
 
-              // Determine which ability to use based on weapon properties
               const getWeaponAbility = (weapon) => {
                 if (weapon.properties?.includes('靈巧')) {
                   return character.abilities.dexterity;
                 }
-                // Default to strength for melee, dexterity for ranged
                 if (weapon.properties?.includes('彈藥') || weapon.properties?.includes('投擲')) {
                   return character.abilities.dexterity;
                 }
@@ -378,7 +450,7 @@ const CharacterSheet = ({ character }) => {
                 const ability = getWeaponAbility(weapon);
                 const abilityMod = getAbilityModifierNum(ability);
                 const attackBonus = abilityMod + getProficiencyBonus();
-                
+
                 return (
                   <tr key={index} className="border-b border-[#8b4513]">
                     <td className="p-2">{weapon.name}</td>
@@ -394,14 +466,14 @@ const CharacterSheet = ({ character }) => {
 
       {/* Spellcasting Stats - Only for spellcasting classes */}
       {classData?.spellcastingAbility && (
-        <div className="mt-4 grid grid-cols-2 gap-4">
-          <div className="text-center p-2 border border-[#8b4513] rounded bg-white">
+        <div className="mb-4 grid grid-cols-2 gap-4">
+          <div className="text-center p-2 border-2 border-[#8b4513] bg-[#fdf5e6] rounded">
             <div className="text-xs text-gray-600">法術攻擊加值</div>
             <div className="text-lg font-bold">
               {formatModifier(getAbilityModifierNum(character.abilities[classData.spellcastingAbility]) + getProficiencyBonus())}
             </div>
           </div>
-          <div className="text-center p-2 border border-[#8b4513] rounded bg-white">
+          <div className="text-center p-2 border-2 border-[#8b4513] bg-[#fdf5e6] rounded">
             <div className="text-xs text-gray-600">法術豁免 DC</div>
             <div className="text-lg font-bold">
               {8 + getAbilityModifierNum(character.abilities[classData.spellcastingAbility]) + getProficiencyBonus()}
@@ -410,20 +482,20 @@ const CharacterSheet = ({ character }) => {
         </div>
       )}
 
-      {/* Equipment */}
+      {/* Equipment - HORIZONTAL LAYOUT */}
       <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
         <div className="text-sm font-bold mb-3 text-center">裝備</div>
-        <div className="space-y-2">
-          {character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0 ? (
-            character.equipment.map((item, index) => (
-              <div key={index} className="border-b border-[#8b4513] pb-1">
-                • {item}
+        {character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {character.equipment.map((item, index) => (
+              <div key={index} className="bg-[#eddeca] px-3 py-1 rounded-lg text-sm border border-[#8b4513]">
+                {item}
               </div>
-            ))
-          ) : (
-            <div className="text-gray-500 text-center">無裝備</div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-gray-500 text-center">無裝備</div>
+        )}
         <div className="mt-4 flex justify-between items-center border-t-2 border-[#8b4513] pt-2">
           <span className="font-bold">金幣 (GP):</span>
           <input
@@ -434,14 +506,29 @@ const CharacterSheet = ({ character }) => {
         </div>
       </div>
 
-      {/* Features & Traits */}
+      {/* Languages Section - NEW */}
+      <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
+        <div className="text-sm font-bold mb-3 text-center">語言</div>
+        <div className="flex flex-wrap gap-2">
+          {characterLanguages.map((language, index) => (
+            <div key={index} className="bg-[#eddeca] px-3 py-1 rounded-lg text-sm border border-[#8b4513]">
+              {language}
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 text-xs text-gray-600 text-center">
+          基於種族與職業的標準語言
+        </div>
+      </div>
+
+      {/* Features & Traits - WITH SUBCLASS FEATURES */}
       <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
         <div className="text-sm font-bold mb-3 text-center">特性與特質</div>
         <div className="space-y-3">
           {/* Race Features */}
           {raceData?.traits && typeof raceData.traits === 'string' && (
             <div>
-              <div className="font-bold text-sm mb-1">種族特性:</div>
+              <div className="font-bold text-sm mb-1 text-[#8b4513]">種族特性:</div>
               <div className="text-xs text-gray-700 pl-2">
                 {raceData.traits}
               </div>
@@ -451,10 +538,34 @@ const CharacterSheet = ({ character }) => {
           {/* Class Features */}
           {classData?.keyFeatures && Array.isArray(classData.keyFeatures) && classData.keyFeatures.length > 0 && (
             <div className="mt-3">
-              <div className="font-bold text-sm mb-1">職業特性:</div>
+              <div className="font-bold text-sm mb-1 text-[#8b4513]">職業特性:</div>
               {classData.keyFeatures.map((feature, index) => (
                 <div key={index} className="text-xs text-gray-700 pl-2 mb-1">
-                  {feature}
+                  • {feature}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Subclass Features - NEW */}
+          {subclassFeatures.length > 0 && (
+            <div className="mt-3">
+              <div className="font-bold text-sm mb-1 text-[#8b4513]">
+                子職特性 ({character.subclass}):
+              </div>
+              {subclassFeatures.map((feature, index) => (
+                <div key={index} className="text-xs text-gray-700 pl-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block bg-[#8b4513] text-white px-2 py-0.5 rounded text-[10px] font-bold">
+                      Lv{feature.level}
+                    </span>
+                    <span className="font-semibold">{feature.name}</span>
+                  </div>
+                  {feature.description && (
+                    <div className="mt-1 pl-10 text-[11px]">
+                      {feature.description}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
