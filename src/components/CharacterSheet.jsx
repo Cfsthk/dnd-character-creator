@@ -108,21 +108,6 @@ const CharacterSheet = ({ character }) => {
     return num >= 0 ? `+${num}` : `${num}`
   }
 
-  // Get subclass features based on level
-  const getSubclassFeatures = () => {
-    if (!character.subclass || !classData?.subclasses) return []
-    
-    const subclassData = classData.subclasses[character.subclass]
-    if (!subclassData?.features) return []
-    
-    const currentLevel = character.level || 3
-    
-    // Filter features based on level
-    return subclassData.features.filter(feature => feature.level <= currentLevel)
-  }
-
-  const subclassFeatures = getSubclassFeatures()
-
   return (
     <div className="max-w-4xl mx-auto p-8 bg-[#f4e4c1] min-h-screen" ref={sheetRef}>
       {/* Export Button */}
@@ -425,18 +410,18 @@ const CharacterSheet = ({ character }) => {
         </div>
       )}
 
-      {/* Equipment */}
+      {/* Equipment - FIXED: Now using flex-wrap for horizontal layout */}
       <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
         <div className="text-sm font-bold mb-3 text-center">裝備</div>
-        <div className="space-y-2">
+        <div className="flex flex-wrap gap-2">
           {character.equipment && Array.isArray(character.equipment) && character.equipment.length > 0 ? (
             character.equipment.map((item, index) => (
-              <div key={index} className="border-b border-[#8b4513] pb-1">
-                • {item}
+              <div key={index} className="border border-[#8b4513] bg-white px-3 py-1 rounded text-sm">
+                {item}
               </div>
             ))
           ) : (
-            <div className="text-gray-500 text-center">無裝備</div>
+            <div className="text-gray-500 text-center w-full">無裝備</div>
           )}
         </div>
         <div className="mt-4 flex justify-between items-center border-t-2 border-[#8b4513] pt-2">
@@ -449,7 +434,7 @@ const CharacterSheet = ({ character }) => {
         </div>
       </div>
 
-      {/* Features & Traits */}
+      {/* Features & Traits - FIXED: Now includes subclass features under 職業特性 */}
       <div className="border-2 border-[#8b4513] bg-[#fdf5e6] p-4 mb-4">
         <div className="text-sm font-bold mb-3 text-center">特性與特質</div>
         <div className="space-y-3">
@@ -463,38 +448,37 @@ const CharacterSheet = ({ character }) => {
             </div>
           )}
 
-          {/* Class Features */}
-          {classData?.keyFeatures && Array.isArray(classData.keyFeatures) && classData.keyFeatures.length > 0 && (
+          {/* Class Features - Now includes subclass features */}
+          {classData && (
             <div className="mt-3">
               <div className="font-bold text-sm mb-1">職業特性:</div>
-              {classData.keyFeatures.map((feature, index) => (
-                <div key={index} className="text-xs text-gray-700 pl-2 mb-1">
-                  {feature}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Subclass Features - MOVED HERE from abilities section */}
-          {subclassFeatures.length > 0 && (
-            <div className="mt-3">
-              <div className="font-bold text-sm mb-2">
-                {classData?.subclasses?.[character.subclass]?.name} 特性:
-              </div>
-              {subclassFeatures.map((feature, idx) => (
-                <div key={idx} className="text-xs text-gray-700 pl-2 mb-2 border-l-2 border-[#8b4513] pl-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="inline-block px-2 py-0.5 bg-[#8b4513] text-white text-xs rounded">
-                      Lv{feature.level}
-                    </span>
-                    <span className="font-bold">
-                      {feature.name}
-                      {feature.nameEn && <span className="text-gray-500 font-normal"> ({feature.nameEn})</span>}
-                    </span>
+              
+              {/* Main class features */}
+              {classData.keyFeatures && Array.isArray(classData.keyFeatures) && classData.keyFeatures.length > 0 && (
+                <>
+                  {classData.keyFeatures.map((feature, index) => (
+                    <div key={`class-${index}`} className="text-xs text-gray-700 pl-2 mb-1">
+                      {feature}
+                    </div>
+                  ))}
+                </>
+              )}
+              
+              {/* Subclass features */}
+              {character.subclass && classData.subclasses && classData.subclasses[character.subclass] && (
+                <>
+                  <div className="font-semibold text-xs text-gray-800 pl-2 mt-2 mb-1">
+                    {character.subclass}特性:
                   </div>
-                  <div className="text-gray-700">{feature.description}</div>
-                </div>
-              ))}
+                  {classData.subclasses[character.subclass].features && 
+                   Array.isArray(classData.subclasses[character.subclass].features) && 
+                   classData.subclasses[character.subclass].features.map((feature, index) => (
+                    <div key={`subclass-${index}`} className="text-xs text-gray-700 pl-4 mb-1">
+                      • {feature}
+                    </div>
+                  ))}
+                </>
+              )}
             </div>
           )}
         </div>
