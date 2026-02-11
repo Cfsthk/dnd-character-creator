@@ -289,7 +289,7 @@ const CharacterSheet = ({ character }) => {
           <div className="text-center">
             <div className="text-xs text-gray-600 mb-1">生命值上限</div>
             <div className="text-3xl font-bold">
-              {classData ? classData.hit * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
+              {classData ? classData.hitDie.replace('d', ")) * 3 + getAbilityModifierNum(character.abilities.constitution) * 3 : 0}
             </div>
           </div>
           <div className="text-center">
@@ -311,7 +311,7 @@ const CharacterSheet = ({ character }) => {
         </div>
         <div className="mt-4 text-center">
           <div className="text-xs text-gray-600 mb-1">生命骰</div>
-          <div className="text-xl">3d{classData?.hitDie || 8}</div>
+          <div className="text-xl">3{classData?.hitDie || 8}</div>
         </div>
       </div>
 
