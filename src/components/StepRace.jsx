@@ -12,7 +12,7 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
     { id: 'halfling', icon: '🌾' },
     { id: 'dragonborn', icon: '🐉' },
     { id: 'gnome', icon: '🎩' },
-    { id: 'half-elf', icon: '🧙' },
+    { id: 'half-elf', icon: '🧥' },
     { id: 'half-orc', icon: '💪' },
     { id: 'tiefling', icon: '😈' },
   ]
@@ -82,18 +82,14 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
                 <button
                   key={index}
                   onClick={() => handleSubraceSelect(subraceName)}
-                  className={`w-full text-left p-4 border-2 rounded-lg hover:border-dnd-blue transition-colors ${
-                    selectedSubrace === subraceName
-                      ? 'border-dnd-blue bg-blue-50 ring-2 ring-dnd-blue'
-                      : 'border-gray-200'
+                  className={`card-hover text-left p-4 ${
+                    selectedSubrace === subraceName ? 'ring-4 ring-dnd-blue bg-blue-50' : ''
                   }`}
                 >
-                  <h4 className="font-bold text-gray-800 mb-1">
-                    {subraceData?.name || subraceName}
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    {subraceData?.description || '無描述'}
-                  </p>
+                  <h4 className="font-bold text-gray-800 mb-2">{subraceName}</h4>
+                  {subraceData && (
+                    <p className="text-sm text-gray-600">{subraceData.description}</p>
+                  )}
                 </button>
               )
             })}
@@ -101,40 +97,18 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
         </div>
       )}
 
-      {/* Race Details */}
-      {currentRaceData && (
-        <div className="card max-w-3xl mx-auto p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-3">種族特性</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold text-gray-700 mb-2">能力值加成</h4>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(currentRaceData.abilityBonus || {}).map(([ability, bonus]) => (
-                  <span key={ability} className="badge-primary">
-                    {ability} +{bonus}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-700 mb-2">種族特質</h4>
-              <p className="text-sm text-gray-600">{currentRaceData.traits}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Next Button */}
-      <div className="flex justify-center">
-        <button
-          onClick={handleNext}
-          disabled={!selectedRace || (subraceNames.length > 0 && !selectedSubrace)}
-          className="btn-primary px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          下一步
-        </button>
-      </div>
+      <button
+        onClick={handleNext}
+        disabled={!selectedRace || !selectedSubrace}
+        className={`${
+          selectedRace && selectedSubrace
+            ? 'bg-dnd-blue hover:bg-blue-700 text-white'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        } font-semibold py-3 px-6 rounded-lg shadow-md transition-colors w-full`}
+      >
+        下一步
+      </button>
     </div>
   )
 }
