@@ -23,7 +23,7 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">選擇您的職業</h2>
-        <p className="text-gray-600">職業定義了您的角色擁有什麼技能、擁有什麼特殊能力</p>
+        <p className="text-gray-600">職業定義了您的角色擅長什麼、擁有什麼特殊能力</p>
       </div>
 
       {/* Helper Buttons */}
@@ -48,11 +48,11 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
             {category.classes.map((classId) => {
               const classData = CLASSES[classId]
               const difficulty = DIFFICULTY_LABELS[classData.difficulty]
-
+              
               return (
                 <div
                   key={classId}
-                  onClick={() => setShowModal(classId)}
+                  onClick={() => handleSelect(classId)}
                   className={`card-hover p-4 ${
                     selectedClass === classId ? 'ring-4 ring-dnd-blue' : ''
                   }`}
@@ -76,21 +76,28 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
                     </button>
                   </div>
 
-                  <p>{classData.description}</p>
+                  <p className="text-sm text-gray-600 mb-3">{classData.description}</p>
 
-                  {classData.bestFor && (
-                    <div className="mt-2">
-                      <p className="text-sm font-medium text-gray-700">最適合：🎯</p>
-                      <p className="text-sm text-gray-600">{classData.bestFor}</p>
-                    </div>
-                  )}
-
-                  <div className="mt-2">
-                    <p className="text-sm font-medium text-gray-700">【難度】</p>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs" style={{ color: difficulty.color }}>
-                        {difficulty.emoji} {difficulty.text}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="font-semibold text-gray-700">小際電度度</span>
+                      <span className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <span 
+                            key={i} 
+                            className={i < classData.difficulty ? 'text-yellow-500' : 'text-gray-300'}
+                          >
+★
+                          </span>
+                        ))}
                       </span>
+                      <span className="text-gray-500">({difficulty})</span>
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      <span className="font-semibold">主要素:</span> {classData.primaryAbility}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      <span className="font-semibold">生命倯</span> {classData.hitDie}
                     </div>
                   </div>
                 </div>
@@ -100,193 +107,164 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
         </div>
       ))}
 
-      {/* Modal */}
-      {showModal && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setShowModal(null)}
-        >
-          <div
-            className="bg-white rounded-lg p-8 max-w-2xl max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {(() => {
-              const classData = CLASSES[showModal]
-              const difficulty = DIFFICULTY_LABELS[classData.difficulty]
+      {/* Class Modal */}
+      {(() => {
+        if (!showModal) return null
+        
+        const classData = CLASSES[showModal]
+        const difficulty = DIFFICULTY_LABELS[classData.difficulty]
 
-              return (
-                <>
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-4xl">{classData.icon}</span>
-                      <div>
-                        <h3 className="text-2xl font-bold text-gray-800">{classData.name}</h3>
-                        <p className="text-gray-600">{classData.nameEn}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setShowModal(null)}
-                      className="text-gray-500 hover:text-gray-700 text-2xl"
-                    >
-                      ✖
-                    </button>
-                  </div>
-
-                  {/* Description */}
-                  <p>{classData.description}</p>
-
-                  {/* Difficulty */}
-                  <div className="mt-4">
-                    <h4 className="font-bold text-lg mb-2">📊 難度等級</h4>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg" style={{ color: difficulty.color }}>
-                        {difficulty.emoji} {difficulty.text}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Hit Die */}
-                  <div className="mt-4">
-                    <h4 className="font-bold text-lg mb-2">❤️ 生命骰</h4>
-                    <p className="text-gray-700">{classData.hitDie}</p>
-                  </div>
-
-                  {/* Saving Throws */}
-                  {classData.savingThrows && (
-                    <div className="mt-4">
-                      <h4 className="font-bold text-lg mb-2">🛡️ 豁免擲骰</h4>
-                      <p className="text-gray-700">{classData.savingThrows}</p>
-                    </div>
-                  )}
-
-                  {/* Best For */}
-                  {classData.bestFor && (
-                    <div className="mt-4">
-                      <h4 className="font-bold text-lg mb-2">🎯 最適合</h4>
-                      <p className="text-gray-700">{classData.bestFor}</p>
-                    </div>
-                  )}
-
-                  {/* Key Features */}
-                  {classData.keyFeatures && (
-                    <div className="mt-4">
-                      <h4 className="font-bold text-lg mb-2">⭐ 關鍵特性</h4>
-                      <ul className="list-disc list-inside space-y-1 text-gray-700">
-                        {classData.keyFeatures.map((feature, index) => (
-                          <li key={index}>{feature}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  {/* Starting Equipment */}
-                  {classData.startingEquipment && (
-                    <div className="mt-4">
-                      <h4 className="font-bold text-lg mb-2">⚔️ 起始裝備</h4>
-                      <p className="text-gray-700">{classData.startingEquipment}</p>
-                    </div>
-                  )}
-
-                  {/* Subclasses */}
-                  {classData.subclasses && classData.subclasses.length > 0 && (
-                    <div className="mt-4">
-                      <h4 className="font-bold text-lg mb-2">🌟 子職業</h4>
-                      <div className="space-y-2">
-                        {classData.subclasses.map((subclass, index) => (
-                          <div key={index} className="bg-gray-50 p-3 rounded">
-                            <p className="font-medium text-gray-800">{subclass.name}</p>
-                            {subclass.description && (
-                              <p className="text-sm text-gray-600 mt-1">{subclass.description}</p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )
-            })()}
-          </div>
-        </div>
-      )}
-
-      {/* Helper Modal */}
-      {showHelper && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setShowHelper(false)}
-        >
-          <div
-            className="bg-white rounded-lg p-8 max-w-2xl max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-bold text-gray-800">🎯 職業選擇助手</h3>
+        return (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4" onClick={() => setShowModal(null)}>
+            <div className="bg-white rounded-xl p-6 max-w-4xl max-h-[90%] overflow-y-auto shadow-2xl relative" onClick={(e) => e.stopPropagation()}>
               <button
-                onClick={() => setShowHelper(false)}
-                className="text-gray-500 hover:text-gray-700 text-2xl"
+                onClick={() => setShowModal(null)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
               >
-                ✖
+                ×
               </button>
-            </div>
 
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-bold text-lg mb-2">我想...</h4>
-                <div className="space-y-2">
-                  {Object.entries(CLASS_CATEGORIES).map(([catId, cat]) => (
-                    <div key={catId} className="bg-gray-50 p-3 rounded">
-                      <p className="font-medium">{cat.icon} {cat.name}</p>
-                      <p className="text-sm text-gray-600">{cat.description}</p>
-                    </div>
-                  ))}
+              <div className="space-y-4">
+                {/* Header */}
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-5xl">{classData.icon}</span>
+                  <div>
+                    <h3 className="text-3xl font-bold text-gray-800">{classData.name}</h3>
+                    <p className="text-gray-500">{classData.nameEn}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <h4 className="font-bold text-lg mb-2">新手推薦</h4>
-                <div className="space-y-2">
-                  {Object.entries(CLASSES)
-                    .filter(([_, classData]) => classData.difficulty === 'easy')
-                    .map(([classId, classData]) => (
-                      <div
-                        key={classId}
-                        onClick={() => {
-                          handleSelect(classId)
-                          setShowHelper(false)
-                        }}
-                        className="bg-green-50 p-3 rounded cursor-pointer hover:bg-green-100"
+                {/* Difficulty */}
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-700">雥度度屦:</span>
+                  <span className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <span 
+                        key={i} 
+                        className={i < classData.difficulty ? 'text-yellow-500 text-xl' : 'text-gray-300 text-xl'}
                       >
-                        <p className="font-medium">{classData.icon} {classData.name}</p>
-                        <p className="text-sm text-gray-600">{classData.description}</p>
+★
+                      </span>
+                    ))}
+                  </span>
+                  <span className="text-gray-500">({difficulty})</span>
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-600">{classData.description}</p>
+
+                {/* Basic Info */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs text-gray-500">主屬性</p>
+                    <p className="font-semibold">{classData.primaryAbility}</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-xs text-gray-500">生命倯</p>
+                    <p className="font-semibold">{classData.hitDie}</p>
+                  </div>
+                </div>
+
+                {/* Saving Throws */}
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">熆用擰楼</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {classData.savingThrows.map((save) => (
+                      <span key={save} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+{save}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Best For */}
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">鶅合選擇給次</h4>
+                  <ul className="space-y-1">
+                    {classData.bestFor.map((item, i) => (
+                      <li key={i} className="text-gray-600 flex items-start gap-2">
+                        <span>✓</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Key Features */}
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">關鍵特能</h4>
+                  <ul className="space-y-1">
+                    {classData.keyFeatures.map((feature, i) => (
+                      <li key={i} className="text-gray-600 flex items-start gap-2">
+                        <span>•</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Subclasses */}
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-3">子職業 <span className="text-sm text-gray-500">(第3級現擇-強级）</span></h4>
+                  <div className="space-y-3">
+                    {classData.subclasses.map((subclass) => (
+                      <div key={subclass.nameEn} className="bg-gray-50 p-4 rounded-lg">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h5 className="font-bold text-gray-800">{subclass.name}</h5>
+                            <p className="text-xs text-gray-500">{subclass.nameEn}</p>
+                          </div>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-3">{subclass.description}</p>
+                        <div className="space-y-2">
+                          {subclass.features.map((feat) => (
+                            <div key={feat.level} className="text-xs">
+                              <span className="font-semibold text-gray-700">第{feat.level}缚 - {feat.name}:</span>
+                              <span className="text-gray-600"> {feat.desc}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Starting Equipment */}
+                <div>
+                  <h4 className="font-semibold text-gray-800 mb-2">初妋装傉</h4>
+                  <ul className="space-y-1">
+                    {classData.startingEquipment.map((item, i) => (
+                      <li key={i} className="text-gray-600 flex items-start gap-2">
+                        <span>•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* Navigation */}
-      <div className="flex gap-4">
+      <div className="flex justify-between gap-4">
         <button
           onClick={previousStep}
-          className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-3 px-6 rounded-lg shadow-md transition-colors"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg shadow-md transition-colors"
         >
-          ← 上一步
+          ♤ 上一步
         </button>
         <button
           onClick={handleNext}
-          disabled={!selectedClass}
-          className={`flex-1 font-semibold py-3 px-6 rounded-lg shadow-md transition-colors ${
+          className={`${
             selectedClass
-              ? 'bg-dnd-blue hover:bg-blue-700 text-white'
+              ? 'bg-dnd-blue hover:bs-blue-700 text-white'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          }`}
+          } font-semibold py-3 px-6 rounded-lg shadow-md transition-colors flex-1`}
+          disabled={!selectedClass}
         >
-          下一步 →
+          下一步 ♦
         </button>
       </div>
     </div>
