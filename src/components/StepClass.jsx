@@ -52,8 +52,8 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
               return (
                 <div
                   key={classId}
-                  onClick={() => handleSelect(classId)}
-                  className={`card-hover p-4 ${
+                  onClick={() => setShowModal(classId)}
+                  className={`card-hover p-4 cursor-pointer ${
                     selectedClass === classId ? 'ring-4 ring-dnd-blue' : ''
                   }`}
                 >
@@ -103,6 +103,11 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
         <ClassModal
           classData={CLASSES[showModal]}
           onClose={() => setShowModal(null)}
+          onSelect={() => {
+            handleSelect(showModal)
+            setShowModal(null)
+          }}
+          isSelected={selectedClass === showModal}
         />
       )}
 
@@ -120,7 +125,7 @@ const StepClass = ({ character, updateCharacter, nextStep, previousStep }) => {
   )
 }
 
-const ClassModal = ({ classData, onClose }) => {
+const ClassModal = ({ classData, onClose, onSelect, isSelected }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
@@ -207,6 +212,28 @@ const ClassModal = ({ classData, onClose }) => {
             </ul>
           </div>
         </div>
+
+        {/* Action buttons */}
+        <div className="sticky bottom-0 bg-white border-t p-6">
+          <div className="flex gap-4">
+            <button 
+              onClick={onSelect} 
+              className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-colors ${
+                isSelected 
+                  ? 'bg-green-600 text-white hover:bg-green-700' 
+                  : 'bg-dnd-blue text-white hover:bg-blue-700'
+              }`}
+            >
+              {isSelected ? '✓ 已選擇' : '選擇此職業'}
+            </button>
+            <button 
+              onClick={onClose} 
+              className="px-6 py-3 border-2 border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+            >
+              關閉
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -262,11 +289,11 @@ const HelperModal = ({ onClose, onSelect }) => {
         scores[classId] = (scores[classId] || 0) + points
       })
     })
-    
+
     const sorted = Object.entries(scores)
       .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
-    
+
     return sorted.map(([classId, score]) => ({
       classId,
       classData: CLASSES[classId],
@@ -323,7 +350,7 @@ const HelperModal = ({ onClose, onSelect }) => {
             <div className="space-y-4">
               <h4 className="text-xl font-bold text-gray-800">推薦結果</h4>
               <p className="text-gray-600">根據您的偏好，以下是最適合您的職業：</p>
-              
+
               {results.map((result, idx) => (
                 <div
                   key={result.classId}
