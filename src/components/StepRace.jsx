@@ -8,13 +8,19 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
   const raceList = [
     { id: 'human', icon: '👤' },
     { id: 'elf', icon: '🧝' },
-    { id: 'dwarf', icon: '⛏️' },
+    { id: 'dwarf', icon: '⚒️' },
     { id: 'halfling', icon: '🌾' },
     { id: 'dragonborn', icon: '🐉' },
     { id: 'gnome', icon: '🎩' },
     { id: 'half-elf', icon: '🧙' },
     { id: 'half-orc', icon: '💪' },
     { id: 'tiefling', icon: '😈' },
+    { id: 'tabaxi', icon: '🐆' },
+    { id: 'aasimar', icon: '😇' },
+    { id: 'kenku', icon: '🐦' },
+    { id: 'goliath', icon: '🗿' },
+    { id: 'firbolg', icon: '🌲' },
+    { id: 'yuanti', icon: '🐍' },
   ]
 
   const handleRaceSelect = (raceId) => {
@@ -42,7 +48,7 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-3xl font-bold text-gray-800 mb-2">選擇你的種族</h2>
-        <p className="text-gray-600">你的種族決定了基礎能力和特性</p>
+        <p className="text-gray-600">你的種族決定了你的基礎能力和特性</p>
       </div>
 
       {/* Race Selection */}
@@ -82,18 +88,19 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
                 <button
                   key={index}
                   onClick={() => handleSubraceSelect(subraceName)}
-                  className={`w-full text-left p-4 border-2 rounded-lg hover:border-dnd-blue transition-colors ${
+                  className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                     selectedSubrace === subraceName
-                      ? 'border-dnd-blue bg-blue-50 ring-2 ring-dnd-blue'
-                      : 'border-gray-200'
+                      ? 'border-dnd-blue bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
-                  <h4 className="font-bold text-gray-800 mb-1">
-                    {subraceData?.name || subraceName}
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    {subraceData?.description || '無描述'}
-                  </p>
+                  <h4 className="font-bold text-gray-800">{subraceData?.nameChinese || subraceName}</h4>
+                  <p className="text-gray-600 text-sm mt-1">{subraceData?.description || ''}</p>
+                  {subraceData?.abilityScoreIncrease && (
+                    <p className="text-dnd-red text-sm mt-2">
+                      能力值加成: {subraceData.abilityScoreIncrease}
+                    </p>
+                  )}
                 </button>
               )
             })}
@@ -101,36 +108,12 @@ const StepRace = ({ character, updateCharacter, nextStep }) => {
         </div>
       )}
 
-      {/* Race Details */}
-      {currentRaceData && (
-        <div className="card max-w-3xl mx-auto p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-3">種族特性</h3>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold text-gray-700 mb-2">能力值加成</h4>
-              <div className="flex flex-wrap gap-2">
-                {Object.entries(currentRaceData.abilityBonus || {}).map(([ability, bonus]) => (
-                  <span key={ability} className="badge-primary">
-                    {ability} +{bonus}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold text-gray-700 mb-2">種族特質</h4>
-              <p className="text-sm text-gray-600">{currentRaceData.traits}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Next Button */}
-      <div className="flex justify-center">
+      <div className="flex justify-end">
         <button
           onClick={handleNext}
-          disabled={!selectedRace || (subraceNames.length > 0 && !selectedSubrace)}
-          className="btn-primary px-8 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={!selectedRace || !selectedSubrace}
+          className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
           下一步
         </button>
